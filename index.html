@@ -317,21 +317,22 @@ svg{flex-shrink:0;}
 .home-card-title .count{font-size:.68rem;font-weight:600;color:var(--text-3);background:var(--bg);padding:1px 8px;border-radius:10px;}
 .home-card-title .spacer{flex:1;}
 
-.home-timeline{list-style:none;margin:0;padding:0;}
-.home-timeline li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px dashed var(--border);}
+.home-timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:space-between;height:100%;min-height:0;}
+.home-timeline li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--border);}
 .home-timeline li:last-child{border-bottom:none;padding-bottom:0;}
 .home-timeline li:first-child{padding-top:0;}
-.ht-time{flex:0 0 46px;font-size:.7rem;font-weight:700;color:var(--primary-dark);background:var(--primary-weak);border-radius:9px;text-align:center;padding:5px 0;line-height:1.3;}
+.ht-time{flex:0 0 44px;font-size:.66rem;font-weight:700;color:var(--primary-dark);background:var(--primary-weak);border-radius:8px;text-align:center;padding:4px 0;line-height:1.25;}
 .ht-time.now{background:var(--primary);color:#fff;}
 .ht-body{flex:1;min-width:0;}
-.ht-subj{font-weight:700;font-size:.92rem;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ht-subj{font-weight:700;font-size:.86rem;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ht-subj.mine{color:var(--sc,#C2185B);font-weight:800;}
 .ht-subj.other{color:var(--sc,var(--text-3));font-weight:600;}
-.ht-meta{font-size:.72rem;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ht-dot{flex:0 0 6px;height:6px;border-radius:50%;background:var(--border-strong);margin-top:10px;}
+.ht-meta{font-size:.68rem;color:var(--text-3);margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ht-dot{flex:0 0 5px;height:5px;border-radius:50%;background:var(--border-strong);}
 .home-timeline li.has .ht-dot{background:var(--primary);}
 .home-timeline li.now .ht-dot{background:var(--primary);box-shadow:0 0 0 3px rgba(14,165,164,.18);}
 .home-timeline li.break .ht-dot{background:#cbd5e1;}
+.ht-dining{font-size:.66rem;color:#0C807F;background:#E6F6F1;border-radius:6px;padding:1px 6px;display:inline-block;margin-top:2px;font-weight:600;}
 
 .todo-list{list-style:none;margin:0;padding:0;}
 .todo-list li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px dashed var(--border);cursor:pointer;}
@@ -343,6 +344,8 @@ svg{flex-shrink:0;}
 .todo-list .tt{flex:1;font-size:.85rem;line-height:1.35;}
 .todo-list .tm{font-size:.65rem;color:var(--text-3);margin-top:1px;}
 .todo-list .tag{font-size:.55rem;padding:0 5px;border-radius:5px;margin-left:4px;}
+.todo-more{display:flex;align-items:center;justify-content:center;padding:7px;font-size:.75rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);border-radius:9px;cursor:pointer;margin-top:8px;transition:background .15s;}
+.todo-more:hover{background:var(--primary-weak-2);}
 
 .home-aux{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 @media(max-width:1100px){.home-aux{grid-template-columns:repeat(2,1fr);}}
@@ -364,22 +367,11 @@ svg{flex-shrink:0;}
 .home-cls-tag{margin-left:auto;font-size:.7rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);padding:2px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
 .home-cls-tag:hover{background:var(--primary-weak-2);}
 
-/* 首页学生速览 */
-.home-stu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
-.home-stu-list li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--bg);transition:background .15s;cursor:pointer;}
-.home-stu-list li:hover{background:var(--primary-weak);}
-.home-stu-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary-weak);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
-.home-stu-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.home-stu-name{font-size:.86rem;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.home-stu-meta{font-size:.68rem;color:var(--text-3);white-space:nowrap;}
-.home-stu-more{display:flex;align-items:center;justify-content:center;padding:8px;font-size:.78rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);border-radius:10px;cursor:pointer;margin-top:6px;transition:background .15s;}
-.home-stu-more:hover{background:var(--primary-weak-2);}
-
 /* ============ 课表 ============ */
 .sched-cell.break{background:repeating-linear-gradient(135deg,#E9FAF9 0 10px,#DCF4F1 10px 20px);color:#0C807F;font-weight:600;border:1px dashed #A7E3DE;}
 .sched-cell.break .break-lbl{font-size:.7rem;letter-spacing:1px;opacity:.9;}
 .sched-cell.break .break-time{font-size:.6rem;opacity:.7;font-weight:500;display:block;}
-.sched-cell.break .dining-lbl{font-size:.58rem;background:#fff;border-radius:6px;padding:1px 5px;margin-top:3px;display:inline-block;color:#0C807F;}
+.sched-cell.break .dining-lbl{font-size:.7rem;background:#fff;border-radius:7px;padding:3px 7px;margin-top:4px;display:inline-block;color:#0C807F;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.06);}
 .today-break{display:flex;align-items:center;justify-content:center;gap:8px;margin:5px 0;padding:6px;border-radius:11px;font-size:.75rem;font-weight:600;color:#0C807F;background:repeating-linear-gradient(135deg,#E9FAF9 0 10px,#DCF4F1 10px 20px);border:1px dashed #A7E3DE;}
 
 .sched-table{width:100%;border-collapse:separate;border-spacing:6px;table-layout:fixed;}
@@ -404,10 +396,10 @@ svg{flex-shrink:0;}
 .sched-table tr.now-row td{background:#DCF4F1;}
 .sched-table tr.now-row td.sched-cell.filled{background:var(--scbg,var(--primary-weak));box-shadow:0 0 0 1.5px var(--primary);}
 .sched-table tr.now-row th{background:#DCF4F1;}
-.sched-cell.break{background:#EEF2F6;color:var(--text-3);}
+.sched-cell.break{background:#EEF2F6;color:var(--text-3);min-height:64px;height:64px;}
 .sched-cell.break .break-lbl{font-size:.7rem;font-weight:600;letter-spacing:.5px;opacity:.85;display:block;}
 .sched-cell.break .break-time{font-size:.58rem;opacity:.65;font-weight:500;display:block;margin-top:1px;}
-.sched-cell.break .dining-lbl{font-size:.62rem;background:#fff;border-radius:6px;padding:2px 6px;margin-top:3px;display:inline-block;color:#0C807F;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.sched-cell.break .dining-lbl{font-size:.7rem;background:#fff;border-radius:7px;padding:3px 7px;margin-top:4px;display:inline-block;color:#0C807F;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.06);}
 .dining-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border);}
 .dining-summary-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;}
 .dining-summary-item.today{background:var(--primary-weak);border-color:var(--primary-weak-2);box-shadow:inset 0 0 0 1.5px var(--primary);}
@@ -891,13 +883,10 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
 .countdown-strip .cd-item b{color:var(--primary-dark);font-size:.92rem;font-weight:700;}
 .home-scroll{overflow:auto;min-height:0;}
 .home-grid{
-  display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-areas:"sched todo stu";
+  display:grid;grid-template-columns:1.7fr 1fr;
   gap:16px;margin-bottom:16px;min-height:0;align-items:stretch;
 }
-.home-schedule{grid-area:sched;}
-.home-todo{grid-area:todo;}
-.home-stu{grid-area:stu;}
-.home-col-right{display:contents;}
+.home-schedule,.home-todo{display:flex;flex-direction:column;min-height:0;}
 @media(min-width:701px){
   #view-today.active{display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:560px;overflow:hidden;}
   #view-today.active .today-top{flex:0 0 auto;}
@@ -905,16 +894,16 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
   #view-today.active .home-grid{flex:1 1 auto;min-height:0;}
   #view-today.active .home-aux{flex:0 0 auto;}
   #view-today.active .home-card{display:flex;flex-direction:column;min-height:0;}
-  #view-today.active .home-card > .home-scroll{flex:1 1 auto;overflow:auto;}
+  #view-today.active #todaySched{flex:1 1 auto;}
+  #view-today.active #todayTodos{flex:1 1 auto;overflow:auto;max-height:380px;}
 }
 @media(max-width:1180px){
-  .home-grid{grid-template-columns:1.5fr 1fr;grid-template-areas:"sched todo" "sched stu";}
+  .home-grid{grid-template-columns:1fr 1fr;}
 }
-@media(max-width:700px){
-  .today-top{grid-template-columns:1fr;}
-  .countdown-strip{min-width:0;padding:12px 14px;}
-  .home-grid{grid-template-columns:1fr;grid-template-areas:"sched" "todo" "stu";}
-  .home-col-right{display:grid;grid-template-rows:auto auto;gap:16px;}
+@media(max-width:900px){
+  .home-grid{grid-template-columns:1fr;}
+  #view-today.active{height:auto;overflow:visible;}
+  #view-today.active #todayTodos{max-height:none;}
 }
 /* ============ 课表 · 我的课粉色 / 其他学科原色 ============ */
 .s-mine{--sc:#C2185B;--scbg:#FCE4EC;}
@@ -1078,7 +1067,7 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
     <!-- 统计数字 -->
     <div class="stats-strip" id="statsStrip"></div>
 
-    <!-- 主区：今日课程 + 待办 + 学生速览（三列，填满宽度） -->
+    <!-- 主区：今日课程（完整显示） + 今日待办 -->
     <div class="home-grid">
       <div class="home-card home-schedule">
         <div class="home-card-title">
@@ -1088,7 +1077,7 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
           <button class="btn-text" onclick="switchView('sched')">编辑课表</button>
         </div>
         <div id="homeSwapBanner"></div>
-        <div id="todaySched" class="home-scroll"></div>
+        <div id="todaySched"></div>
       </div>
       <div class="home-card home-todo">
         <div class="home-card-title">
@@ -1097,11 +1086,7 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
           <span class="spacer"></span>
           <button class="btn-text" onclick="goAddTodo()">添加</button>
         </div>
-        <div id="todayTodos" class="home-scroll"></div>
-      </div>
-      <div class="home-card home-stu">
-        <div class="home-card-title"><span class="hct-icon">🎒</span> 学生速览 <span class="count" id="homeStuCount"></span><span class="spacer"></span><button class="btn-text" onclick="switchView('students')">查看全部</button></div>
-        <div id="homeStuPreview" class="home-scroll"></div>
+        <div id="todayTodos"></div>
       </div>
     </div>
 
@@ -1543,14 +1528,36 @@ function fallbackCopy(txt){
 /* ================= 数据 ================= */
 function defaultState(){
   const stus = [
-    {id:'s1', no:'01', name:'王小雨', gender:'女', xueji:'G310107201803120128', phone:'13812345601', parentName:'王建国', parentJob:'公司职员', address:'普陀区中山北路1200弄3号', birth:'2018-03-12', nation:'汉', club:'美术社', care:false, remark:'宣传委员'},
-    {id:'s2', no:'02', name:'李明轩', gender:'男', xueji:'G310107201809051034', phone:'13812345602', parentName:'李伟', parentJob:'工程师', address:'普陀区光新路255弄12号', birth:'2018-09-05', nation:'汉', club:'足球社', care:false, remark:''},
-    {id:'s3', no:'03', name:'陈思思', gender:'女', xueji:'G310107201812200245', phone:'13812345603', parentName:'陈芳', parentJob:'教师', address:'普陀区旬阳新村12号', birth:'2018-12-20', nation:'汉', club:'合唱团', care:false, remark:'文娱委员'},
-    {id:'s4', no:'04', name:'张浩宇', gender:'男', xueji:'G310107201806150311', phone:'13812345604', parentName:'张涛', parentJob:'个体经营', address:'普陀区甘泉路50弄6号', birth:'2018-06-15', nation:'汉', club:'', care:true, remark:''},
-    {id:'s5', no:'05', name:'刘诗涵', gender:'女', xueji:'G310107201811030188', phone:'13812345605', parentName:'刘强', parentJob:'医生', address:'普陀区宜川路300弄9号', birth:'2018-11-03', nation:'汉', club:'', care:false, remark:'班长'},
-    {id:'s6', no:'06', name:'赵子墨', gender:'男', xueji:'G310107201804220096', phone:'13812345606', parentName:'赵磊', parentJob:'公务员', address:'普陀区岚皋路100弄4号', birth:'2018-04-22', nation:'汉', club:'', care:false, remark:''},
-    {id:'s7', no:'07', name:'孙悦然', gender:'女', xueji:'G310107201810180077', phone:'13812345607', parentName:'孙丽', parentJob:'会计', address:'普陀区管弄路60弄21号', birth:'2018-10-18', nation:'汉', club:'', care:false, remark:''},
-    {id:'s8', no:'08', name:'周子航', gender:'男', xueji:'G310107201807090054', phone:'13812345608', parentName:'周斌', parentJob:'司机', address:'普陀区骊山路20弄8号', birth:'2018-07-09', nation:'汉', club:'', care:true, remark:'体育委员'}
+    {id:'s01', no:'01', name:'王小雨', gender:'女', xueji:'G310107201803120128', idcard:'310107201803120128', phone:'13812345601', parentName:'王建国', parentJob:'公司职员', address:'普陀区中山北路1200弄3号', birth:'2018-03-12', nation:'汉', club:'美术社', care:false, remark:'宣传委员'},
+    {id:'s02', no:'02', name:'李明轩', gender:'男', xueji:'G310107201809051034', idcard:'310107201809051034', phone:'13812345602', parentName:'李伟', parentJob:'工程师', address:'普陀区光新路255弄12号', birth:'2018-09-05', nation:'汉', club:'足球社', care:false, remark:''},
+    {id:'s03', no:'03', name:'陈思思', gender:'女', xueji:'G310107201812200245', idcard:'310107201812200245', phone:'13812345603', parentName:'陈芳', parentJob:'教师', address:'普陀区旬阳新村12号', birth:'2018-12-20', nation:'汉', club:'合唱团', care:false, remark:'文娱委员'},
+    {id:'s04', no:'04', name:'张浩宇', gender:'男', xueji:'G310107201806150311', idcard:'310107201806150311', phone:'13812345604', parentName:'张涛', parentJob:'个体经营', address:'普陀区甘泉路50弄6号', birth:'2018-06-15', nation:'汉', club:'', care:true, remark:''},
+    {id:'s05', no:'05', name:'刘诗涵', gender:'女', xueji:'G310107201811030188', idcard:'310107201811030188', phone:'13812345605', parentName:'刘强', parentJob:'医生', address:'普陀区宜川路300弄9号', birth:'2018-11-03', nation:'汉', club:'', care:false, remark:'班长'},
+    {id:'s06', no:'06', name:'赵子墨', gender:'男', xueji:'G310107201804220096', idcard:'310107201804220096', phone:'13812345606', parentName:'赵磊', parentJob:'公务员', address:'普陀区岚皋路100弄4号', birth:'2018-04-22', nation:'汉', club:'', care:false, remark:''},
+    {id:'s07', no:'07', name:'孙悦然', gender:'女', xueji:'G310107201810180077', idcard:'310107201810180077', phone:'13812345607', parentName:'孙丽', parentJob:'会计', address:'普陀区管弄路60弄21号', birth:'2018-10-18', nation:'汉', club:'', care:false, remark:''},
+    {id:'s08', no:'08', name:'周子航', gender:'男', xueji:'G310107201807090054', idcard:'310107201807090054', phone:'13812345608', parentName:'周斌', parentJob:'司机', address:'普陀区骊山路20弄8号', birth:'2018-07-09', nation:'汉', club:'', care:true, remark:'体育委员'},
+    {id:'s09', no:'09', name:'吴佳琪', gender:'女', xueji:'G310107201805090061', idcard:'310107201805090061', phone:'13812345609', parentName:'吴敏', parentJob:'护士', address:'普陀区石泉路88弄15号', birth:'2018-05-09', nation:'汉', club:'舞蹈社', care:false, remark:'学习委员'},
+    {id:'s10', no:'10', name:'郑宇航', gender:'男', xueji:'G310107201807230112', idcard:'310107201807230112', phone:'13812345610', parentName:'郑伟', parentJob:'程序员', address:'普陀区长寿路300弄2号', birth:'2018-07-23', nation:'汉', club:'', care:true, remark:''},
+    {id:'s11', no:'11', name:'冯子涵', gender:'女', xueji:'G310107201811170023', idcard:'310107201811170023', phone:'13812345611', parentName:'冯静', parentJob:'银行职员', address:'普陀区武宁路500弄7号', birth:'2018-11-17', nation:'汉', club:'', care:false, remark:''},
+    {id:'s12', no:'12', name:'杨晨曦', gender:'男', xueji:'G310107201802280156', idcard:'310107201802280156', phone:'13812345612', parentName:'杨波', parentJob:'警察', address:'普陀区真华路99弄18号', birth:'2018-02-28', nation:'汉', club:'篮球社', care:false, remark:''},
+    {id:'s13', no:'13', name:'朱欣怡', gender:'女', xueji:'G310107201810050099', idcard:'310107201810050099', phone:'13812345613', parentName:'朱丽', parentJob:'设计师', address:'普陀区新村路400弄11号', birth:'2018-10-05', nation:'汉', club:'', care:true, remark:''},
+    {id:'s14', no:'14', name:'秦子睿', gender:'男', xueji:'G310107201803300044', idcard:'310107201803300044', phone:'13812345614', parentName:'秦强', parentJob:'律师', address:'普陀区金沙江路600弄5号', birth:'2018-03-30', nation:'汉', club:'科技社', care:false, remark:''},
+    {id:'s15', no:'15', name:'许嘉欣', gender:'女', xueji:'G310107201809180033', idcard:'310107201809180033', phone:'13812345615', parentName:'许芳', parentJob:'人事主管', address:'普陀区曹杨路700弄22号', birth:'2018-09-18', nation:'汉', club:'', care:false, remark:'纪律委员'},
+    {id:'s16', no:'16', name:'何天宇', gender:'男', xueji:'G310107201806210088', idcard:'310107201806210088', phone:'13812345616', parentName:'何军', parentJob:'销售经理', address:'普陀区大渡河路800弄1号', birth:'2018-06-21', nation:'汉', club:'', care:true, remark:''},
+    {id:'s17', no:'17', name:'林诗琪', gender:'女', xueji:'G310107201812010055', idcard:'310107201812010055', phone:'13812345617', parentName:'林燕', parentJob:'会计', address:'普陀区梅岭北路100弄19号', birth:'2018-12-01', nation:'汉', club:'合唱社', care:false, remark:''},
+    {id:'s18', no:'18', name:'罗子豪', gender:'男', xueji:'G310107201804140066', idcard:'310107201804140066', phone:'13812345618', parentName:'罗刚', parentJob:'厨师', address:'普陀区桃浦路200弄10号', birth:'2018-04-14', nation:'汉', club:'', care:false, remark:''},
+    {id:'s19', no:'19', name:'高梦琪', gender:'女', xueji:'G310107201807080022', idcard:'310107201807080022', phone:'13812345619', parentName:'高玲', parentJob:'医生', address:'普陀区华灵路300弄14号', birth:'2018-07-08', nation:'汉', club:'', care:true, remark:''},
+    {id:'s20', no:'20', name:'马俊杰', gender:'男', xueji:'G310107201811250011', idcard:'310107201811250011', phone:'13812345620', parentName:'马明', parentJob:'建筑师', address:'普陀区灵石路500弄3号', birth:'2018-11-25', nation:'汉', club:'足球社', care:false, remark:''},
+    {id:'s21', no:'21', name:'唐雨萱', gender:'女', xueji:'G310107201805160077', idcard:'310107201805160077', phone:'13812345621', parentName:'唐丽', parentJob:'教师', address:'普陀区延长西路600弄8号', birth:'2018-05-16', nation:'汉', club:'', care:false, remark:''},
+    {id:'s22', no:'22', name:'韩子轩', gender:'男', xueji:'G310107201809270099', idcard:'310107201809270099', phone:'13812345622', parentName:'韩涛', parentJob:'工程师', address:'普陀区交通路400弄16号', birth:'2018-09-27', nation:'汉', club:'', care:true, remark:''},
+    {id:'s23', no:'23', name:'曹欣悦', gender:'女', xueji:'G310107201803080044', idcard:'310107201803080044', phone:'13812345623', parentName:'曹芳', parentJob:'财务', address:'普陀区沪太路700弄12号', birth:'2018-03-08', nation:'汉', club:'美术社', care:false, remark:''},
+    {id:'s24', no:'24', name:'彭志远', gender:'男', xueji:'G310107201810120011', idcard:'310107201810120011', phone:'13812345624', parentName:'彭伟', parentJob:'公务员', address:'普陀区志丹路300弄6号', birth:'2018-10-12', nation:'汉', club:'', care:false, remark:''},
+    {id:'s25', no:'25', name:'于嘉怡', gender:'女', xueji:'G310107201806050088', idcard:'310107201806050088', phone:'13812345625', parentName:'于静', parentJob:'护士', address:'普陀区万镇路200弄9号', birth:'2018-06-05', nation:'汉', club:'', care:true, remark:''},
+    {id:'s26', no:'26', name:'董子涵', gender:'男', xueji:'G310107201812280055', idcard:'310107201812280055', phone:'13812345626', parentName:'董强', parentJob:'警察', address:'普陀区清峪路400弄17号', birth:'2018-12-28', nation:'汉', club:'', care:false, remark:''},
+    {id:'s27', no:'27', name:'袁梦瑶', gender:'女', xueji:'G310107201804210066', idcard:'310107201804210066', phone:'13812345627', parentName:'袁丽', parentJob:'设计师', address:'普陀区金沙江路900弄13号', birth:'2018-04-21', nation:'汉', club:'', care:false, remark:''},
+    {id:'s28', no:'28', name:'蒋子墨', gender:'男', xueji:'G310107201808300077', idcard:'310107201808300077', phone:'13812345628', parentName:'蒋明', parentJob:'程序员', address:'普陀区祁连山路300弄4号', birth:'2018-08-30', nation:'汉', club:'科技社', care:true, remark:''},
+    {id:'s29', no:'29', name:'沈佳妮', gender:'女', xueji:'G310107201811100033', idcard:'310107201811100033', phone:'13812345629', parentName:'沈芳', parentJob:'人事主管', address:'普陀区真北路800弄20号', birth:'2018-11-10', nation:'汉', club:'', care:false, remark:''},
+    {id:'s30', no:'30', name:'顾正阳', gender:'男', xueji:'G310107201805010011', idcard:'310107201805010011', phone:'13812345630', parentName:'顾强', parentJob:'律师', address:'普陀区云岭东路500弄2号', birth:'2018-05-01', nation:'汉', club:'', care:false, remark:'劳动委员'}
   ];
   const y = new Date().getFullYear();
   const m = String(new Date().getMonth()+1).padStart(2,'0');
@@ -1560,20 +1567,20 @@ function defaultState(){
   return {
     demo:true,
     students: stus,
-    seat: {rows:4, cols:4, order:['s1','s2','s3','s4','s5','s6','s7','s8']},
+    seat: {rows:5, cols:6, order:['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20','s21','s22','s23','s24','s25','s26','s27','s28','s29','s30']},
     duty: { groups:[
-      {day:'周一', members:['s1','s5']},
-      {day:'周二', members:['s2','s6']},
-      {day:'周三', members:['s3','s7']},
-      {day:'周四', members:['s4','s8']},
-      {day:'周五', members:['s1','s6']}
+      {day:'周一', members:['s01','s05','s09','s13']},
+      {day:'周二', members:['s02','s06','s10','s14']},
+      {day:'周三', members:['s03','s07','s11','s15']},
+      {day:'周四', members:['s04','s08','s12','s16']},
+      {day:'周五', members:['s17','s18','s19','s20']}
       ],
       even:[
-        {day:'周一', members:['s2','s6']},
-        {day:'周二', members:['s3','s7']},
-        {day:'周三', members:['s4','s8']},
-        {day:'周四', members:['s1','s5']},
-        {day:'周五', members:['s2','s7']}
+        {day:'周一', members:['s21','s22','s23','s24']},
+        {day:'周二', members:['s25','s26','s27','s28']},
+        {day:'周三', members:['s29','s30','s01','s02']},
+        {day:'周四', members:['s03','s04','s05','s06']},
+        {day:'周五', members:['s07','s08','s09','s10']}
       ],
       next:[
         {day:'周一', members:[]},
@@ -1605,12 +1612,15 @@ function defaultState(){
       {id:'t3', title:'找李明轩家长沟通课堂纪律', date:todayStr(), time:'16:30', imp:true, urg:true, done:false},
       {id:'t4', title:'布置班级文化墙', date:todayStr(), time:'', imp:false, urg:false, done:false},
       {id:'t5', title:'领取新学期教材', date:todayStr(), time:'10:00', imp:false, urg:true, done:true},
+      {id:'t8', title:'填写学生成长手册', date:todayStr(), time:'12:30', imp:true, urg:false, done:false},
+      {id:'t9', title:'准备家长群周小结', date:todayStr(), time:'17:00', imp:false, urg:true, done:false},
+      {id:'t10', title:'检查班级卫生角', date:todayStr(), time:'15:30', imp:false, urg:false, done:false},
       {id:'t6', title:'备课：第2课《花的学校》', date:fmt(new Date(Date.now()+86400000)), time:'09:00', imp:true, urg:false, done:false},
       {id:'t7', title:'周末家访：陈思思家庭', date:fmt(new Date(Date.now()+86400000)), time:'15:00', imp:false, urg:false, done:false}
     ],
     exams: [
-      {id:'e1', name:'第一单元练习', date:`${y}-09-28`, scores:{s1:92,s2:85,s3:96,s4:78,s5:94,s6:81,s7:88,s8:76}},
-      {id:'e2', name:'期中测试', date:`${y}-11-10`, scores:{s1:95,s2:83,s3:94,s4:82,s5:96,s6:79,s7:90,s8:74}}
+      {id:'e1', name:'第一单元练习', date:`${y}-09-28`, scores:{s01:92,s02:85,s03:96,s04:78,s05:94,s06:81,s07:88,s08:76,s09:91,s10:84,s11:97,s12:79,s13:93,s14:86,s15:95,s16:80,s17:89,s18:77,s19:94,s20:82,s21:96,s22:83,s23:90,s24:87,s25:92,s26:81,s27:95,s28:78,s29:89,s30:84}},
+      {id:'e2', name:'期中测试', date:`${y}-11-10`, scores:{s01:95,s02:83,s03:94,s04:82,s05:96,s06:79,s07:90,s08:74,s09:93,s10:85,s11:98,s12:80,s13:94,s14:87,s15:96,s16:81,s17:91,s18:76,s19:95,s20:83,s21:97,s22:84,s23:92,s24:88,s25:94,s26:82,s27:96,s28:77,s29:90,s30:85}}
     ],
     materials: [
       {id:'m1', name:'第一单元教案+课件', type:'教学资料', date:`${y}-09-05`, link:'', note:'含《大青树下的小学》课件'},
@@ -1697,6 +1707,10 @@ function migrateState(){
     });
   }
   if(!state.dining || typeof state.dining !== 'object') state.dining = {};
+  /* 若陪餐完全未设置，填充默认示例值，方便新用户/清空后看到效果 */
+  if(Object.keys(state.dining).length === 0 && state.demo !== false){
+    state.dining = { '1':'王老师', '2':'李老师', '3':'张老师', '4':'陈老师', '5':'刘老师' };
+  }
 }
 migrateState();
 if(_hadSaved) save();   /* 老数据迁移后立即回写，避免每次打开重复迁移 */
@@ -1766,13 +1780,14 @@ function renderToday(){
     '<div class="stat-pill"><div class="v">' + pend.length + '</div><div class="k">待办</div></div>' +
     '<div class="stat-pill"><div class="v">' + doneToday + '</div><div class="k">已完成</div></div>';
 
-  // 今日待办
-  const todayTodos = state.todos.filter(x => !x.done && x.date <= t).sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
-  $('#todoCount').textContent = todayTodos.length ? todayTodos.length + ' 项' : '';
+  // 今日待办（显示前 6 条）
+  const allTodayTodos = state.todos.filter(x => !x.done && x.date <= t).sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+  const todayTodos = allTodayTodos.slice(0, 6);
+  $('#todoCount').textContent = allTodayTodos.length ? allTodayTodos.length + ' 项' : '';
   if(!todayTodos.length){
     $('#todayTodos').innerHTML = '<div class="empty-tip">今天没有待办</div>';
   } else {
-    $('#todayTodos').innerHTML = '<ul class="todo-list">' + todayTodos.map(x => {
+    let html = '<ul class="todo-list">' + todayTodos.map(x => {
       const od = x.date < t;
       return '<li onclick="finishTodo(\'' + x.id + '\')">' +
         '<span class="cb"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5L10 17.5L19 7" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
@@ -1780,6 +1795,10 @@ function renderToday(){
         '<div class="tm">' + (od ? '<span class="tag tag-red">逾期顺延</span> ' : '') + (x.time ? esc(x.time) + ' ' : '') +
         (x.imp&&x.urg ? '<span class="tag tag-red">重要·紧急</span>' : x.imp ? '<span class="tag tag-blue">重要</span>' : x.urg ? '<span class="tag tag-orange">紧急</span>' : '') + '</div></div></li>';
     }).join('') + '</ul>';
+    if(allTodayTodos.length > 6){
+      html += '<div class="todo-more" onclick="switchView(\'todo\')">还有 ' + (allTodayTodos.length - 6) + ' 条待办 →</div>';
+    }
+    $('#todayTodos').innerHTML = html;
   }
 
   // 今日课表（时间轴风格）
@@ -1805,12 +1824,24 @@ function renderToday(){
       const time = tt.start || '';
       if(isBreak){
         const dv = d >= 1 && d <= 5 ? diningOf(d) : '';
-        const mine = cell && isMySubject(cell.s);
-        const subjCls = cell ? (mine ? 's-mine mine' : (subjClass(cell.s) + ' other')) : '';
-        html += '<li class="break'+(isNow?' now':'')+'"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + esc(p) + '</span><div class="ht-body">' +
-          (cell ? '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">休息 / 用餐</div>') +
-          (dv ? '<div class="ht-meta">陪餐：' + esc(dv) + '</div>' : '') +
-          '</div></li>';
+        const isNoon = p.indexOf('午休') > -1;
+        const isAfterSchool = p.indexOf('晚托') > -1;
+        let bodyHtml = '';
+        if(isNoon){
+          bodyHtml += '<div class="ht-subj">午休</div>';
+          if(dv) bodyHtml += '<div class="ht-dining">陪餐：' + esc(dv) + '</div>';
+        } else if(isAfterSchool && cell){
+          const mine = isMySubject(cell.s);
+          const subjCls = mine ? 's-mine mine' : (subjClass(cell.s) + ' other');
+          bodyHtml += '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + (cell.t ? esc(cell.t) : '') + (cell.c ? ' · ' + esc(cell.c) : '') + '</div>';
+        } else if(cell){
+          const mine = isMySubject(cell.s);
+          const subjCls = mine ? 's-mine mine' : (subjClass(cell.s) + ' other');
+          bodyHtml += '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>';
+        } else {
+          bodyHtml += '<div class="ht-meta">休息 / 用餐</div>';
+        }
+        html += '<li class="break'+(isNow?' now':'')+'"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + (time || esc(p)) + '</span><div class="ht-body">' + bodyHtml + '</div></li>';
         return;
       }
       const mine = cell && isMySubject(cell.s);
@@ -1841,36 +1872,6 @@ function renderToday(){
   renderWinterCountdown();
   renderDutyBoard();
   renderAttendance();
-  renderHomeStudents();
-}
-
-/* ================= 首页学生速览 ================= */
-function renderHomeStudents(){
-  const box = $('#homeStuPreview'), cnt = $('#homeStuCount');
-  if(!box) return;
-  const list = state.students || [];
-  if(!list.length){
-    box.innerHTML = '<div class="empty-tip">暂无学生，点击右上角添加或导入</div>';
-    if(cnt) cnt.textContent = '';
-    return;
-  }
-  if(cnt) cnt.textContent = list.length + ' 人';
-  const preview = list.slice(0, 6);
-  let html = '<ul class="home-stu-list">';
-  preview.forEach(s => {
-    const avatar = s.photo ? '<img src="' + esc(s.photo) + '" alt="">' : esc((s.name || '?').charAt(0));
-    const meta = s.no ? '学号 ' + esc(s.no) : (s.gender || '');
-    html += '<li onclick="openStudentDetail(\'' + s.id + '\')">' +
-      '<div class="home-stu-avatar">' + avatar + '</div>' +
-      '<div class="home-stu-name">' + esc(s.name) + '</div>' +
-      '<div class="home-stu-meta">' + esc(meta) + '</div>' +
-      '</li>';
-  });
-  html += '</ul>';
-  if(list.length > 6){
-    html += '<div class="home-stu-more" onclick="switchView(\'students\')">还有 ' + (list.length - 6) + ' 名学生 →</div>';
-  }
-  box.innerHTML = html;
 }
 
 /* ================= 天气与紫外线 ================= */
@@ -2741,13 +2742,18 @@ function renderSched(){
       if(overridden) cls.push('overridden');
       let inner;
       if(isBreak){
+        const isNoon = p.indexOf('午休') > -1;
+        const isAfterSchool = p.indexOf('晚托') > -1;
         let extra = (rng ? '<span class="break-time">' + rng + '</span>' : '');
-        if(p.indexOf('晚托') > -1 && cell){
-          extra += '<span class="subj-name" style="font-size:.62rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
-          if(cell.t) extra += '<span class="subj-teacher" style="font-size:.55rem;">'+esc(cell.t)+'</span>';
+        if(isAfterSchool && cell){
+          extra += '<span class="subj-name" style="font-size:.7rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
+          if(cell.t) extra += '<span class="subj-teacher" style="font-size:.6rem;">'+esc(cell.t)+'</span>';
+        } else if(isNoon && cell){
+          extra += '<span class="subj-name" style="font-size:.7rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
+          if(cell.t) extra += '<span class="subj-teacher" style="font-size:.6rem;">'+esc(cell.t)+'</span>';
         }
         inner = '<span class="break-lbl">' + esc(p) + '</span>' + extra +
-                (p.indexOf('午休') > -1 && d>=1 && d<=5 ? (state.dining && state.dining[d] ? '<span class="dining-lbl">陪餐 ' + esc(state.dining[d]) + '</span>' : '') : '');
+                (isNoon && d>=1 && d<=5 ? (state.dining && state.dining[d] ? '<span class="dining-lbl">陪餐 ' + esc(state.dining[d]) + '</span>' : '') : '');
       } else if(cell){
         inner = '<span class="subj-name">'+esc(cell.s)+'</span>' +
                 (cell.c?'<span class="subj-room">'+esc(cell.c)+'</span>':'') +
