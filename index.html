@@ -177,6 +177,8 @@ svg{flex-shrink:0;}
 .btn-ghost.offline{color:#ffe4bd;border-color:rgba(255,255,255,.32);background:rgba(217,126,6,.3);}
 
 .container{max-width:1280px;margin:0 auto;padding:26px 30px 20px;}
+@media(min-width:1440px){.container{max-width:1520px;padding:28px 36px 22px;}}
+@media(min-width:1700px){.container{max-width:1680px;padding:28px 44px 22px;}}
 
 /* ============ 卡片（统一 · 干净留白） ============ */
 .card{
@@ -323,8 +325,8 @@ svg{flex-shrink:0;}
 .ht-time.now{background:var(--primary);color:#fff;}
 .ht-body{flex:1;min-width:0;}
 .ht-subj{font-weight:700;font-size:.92rem;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ht-subj.mine{color:var(--primary-dark);font-weight:800;}
-.ht-subj.other{color:var(--text-3);font-weight:500;}
+.ht-subj.mine{color:var(--sc,#C2185B);font-weight:800;}
+.ht-subj.other{color:var(--sc,var(--text-3));font-weight:600;}
 .ht-meta{font-size:.72rem;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ht-dot{flex:0 0 6px;height:6px;border-radius:50%;background:var(--border-strong);margin-top:10px;}
 .home-timeline li.has .ht-dot{background:var(--primary);}
@@ -342,7 +344,7 @@ svg{flex-shrink:0;}
 .todo-list .tm{font-size:.65rem;color:var(--text-3);margin-top:1px;}
 .todo-list .tag{font-size:.55rem;padding:0 5px;border-radius:5px;margin-left:4px;}
 
-.home-aux{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.home-aux{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 @media(max-width:1100px){.home-aux{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:640px){.home-aux{grid-template-columns:1fr;}}
 
@@ -361,6 +363,17 @@ svg{flex-shrink:0;}
 .home-countdown .cd-item b{font-weight:700;color:var(--text);}
 .home-cls-tag{margin-left:auto;font-size:.7rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);padding:2px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
 .home-cls-tag:hover{background:var(--primary-weak-2);}
+
+/* 首页学生速览 */
+.home-stu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.home-stu-list li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--bg);transition:background .15s;cursor:pointer;}
+.home-stu-list li:hover{background:var(--primary-weak);}
+.home-stu-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary-weak);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.home-stu-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.home-stu-name{font-size:.86rem;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.home-stu-meta{font-size:.68rem;color:var(--text-3);white-space:nowrap;}
+.home-stu-more{display:flex;align-items:center;justify-content:center;padding:8px;font-size:.78rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);border-radius:10px;cursor:pointer;margin-top:6px;transition:background .15s;}
+.home-stu-more:hover{background:var(--primary-weak-2);}
 
 /* ============ 课表 ============ */
 .sched-cell.break{background:repeating-linear-gradient(135deg,#E9FAF9 0 10px,#DCF4F1 10px 20px);color:#0C807F;font-weight:600;border:1px dashed #A7E3DE;}
@@ -394,7 +407,14 @@ svg{flex-shrink:0;}
 .sched-cell.break{background:#EEF2F6;color:var(--text-3);}
 .sched-cell.break .break-lbl{font-size:.7rem;font-weight:600;letter-spacing:.5px;opacity:.85;display:block;}
 .sched-cell.break .break-time{font-size:.58rem;opacity:.65;font-weight:500;display:block;margin-top:1px;}
-.sched-cell.break .dining-lbl{font-size:.55rem;background:#fff;border-radius:5px;padding:1px 4px;margin-top:2px;display:inline-block;color:#0C807F;}
+.sched-cell.break .dining-lbl{font-size:.62rem;background:#fff;border-radius:6px;padding:2px 6px;margin-top:3px;display:inline-block;color:#0C807F;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.dining-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border);}
+.dining-summary-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;}
+.dining-summary-item.today{background:var(--primary-weak);border-color:var(--primary-weak-2);box-shadow:inset 0 0 0 1.5px var(--primary);}
+.dining-summary-item .ds-day{font-size:.68rem;color:var(--text-3);margin-bottom:2px;}
+.dining-summary-item .ds-teacher{font-size:.86rem;font-weight:700;color:var(--text);}
+.dining-summary-item .ds-empty{font-size:.78rem;color:var(--text-3);}
+@media(max-width:860px){.dining-summary{grid-template-columns:repeat(3,1fr);}.dining-summary-item:nth-child(4),.dining-summary-item:nth-child(5){grid-column:span 1;}}
 .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);}
 .sched-cell.break.overridden{box-shadow:inset 0 0 0 2px var(--warning);background:rgba(245,158,11,.10);}
 .swap-banner{display:flex;align-items:center;gap:8px;background:var(--warning-weak);border:1px solid #F6D9A8;color:#B45309;border-radius:10px;padding:8px 12px;font-weight:600;font-size:.82rem;margin-bottom:10px;}
@@ -870,8 +890,14 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
 .countdown-strip .cd-item{border:none;padding:0;font-size:.72rem;color:var(--text-3);}
 .countdown-strip .cd-item b{color:var(--primary-dark);font-size:.92rem;font-weight:700;}
 .home-scroll{overflow:auto;min-height:0;}
-.home-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;margin-bottom:14px;}
-.home-col-right{display:grid;grid-template-rows:1.15fr 1fr;gap:14px;min-height:0;}
+.home-grid{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-areas:"sched todo stu";
+  gap:16px;margin-bottom:16px;min-height:0;align-items:stretch;
+}
+.home-schedule{grid-area:sched;}
+.home-todo{grid-area:todo;}
+.home-stu{grid-area:stu;}
+.home-col-right{display:contents;}
 @media(min-width:701px){
   #view-today.active{display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:560px;overflow:hidden;}
   #view-today.active .today-top{flex:0 0 auto;}
@@ -881,27 +907,31 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
   #view-today.active .home-card{display:flex;flex-direction:column;min-height:0;}
   #view-today.active .home-card > .home-scroll{flex:1 1 auto;overflow:auto;}
 }
+@media(max-width:1180px){
+  .home-grid{grid-template-columns:1.5fr 1fr;grid-template-areas:"sched todo" "sched stu";}
+}
 @media(max-width:700px){
   .today-top{grid-template-columns:1fr;}
   .countdown-strip{min-width:0;padding:12px 14px;}
-  .home-grid{grid-template-columns:1fr;}
-  .home-col-right{grid-template-rows:auto auto;}
+  .home-grid{grid-template-columns:1fr;grid-template-areas:"sched" "todo" "stu";}
+  .home-col-right{display:grid;grid-template-rows:auto auto;gap:16px;}
 }
-/* ============ 课表 · 我的课彩色 / 其他学科灰色 ============ */
-.sched-cell.filled{background:#EEF3F0;color:#8A968F;font-weight:600;}
-.sched-cell.filled.mine{background:var(--primary-weak);color:var(--primary-dark);font-weight:800;box-shadow:inset 0 0 0 1.5px var(--primary-weak-2);}
-.sched-cell.filled.other{opacity:.7;filter:grayscale(.35);}
+/* ============ 课表 · 我的课粉色 / 其他学科原色 ============ */
+.s-mine{--sc:#C2185B;--scbg:#FCE4EC;}
+.sched-cell.filled{background:var(--scbg,#EEF3F0);color:var(--sc,#5C6B62);font-weight:700;}
+.sched-cell.filled.mine{background:var(--scbg,#FCE4EC);color:var(--sc,#C2185B);font-weight:800;box-shadow:inset 0 0 0 1.5px rgba(194,24,88,.18);}
+.sched-cell.filled.s-yw,.sched-cell.filled.s-sx,.sched-cell.filled.s-yy,.sched-cell.filled.s-df,.sched-cell.filled.s-ty,.sched-cell.filled.s-mu,.sched-cell.filled.s-ms,.sched-cell.filled.s-zh,.sched-cell.filled.s-sf,.sched-cell.filled.s-bd,.sched-cell.filled.s-kx,.sched-cell.filled.s-xx,.sched-cell.filled.s-yd{opacity:1;filter:none;}
 .sched-cell.today-col{background:#EAF6F1;}
-.sched-cell.today-col.filled{background:#EAF6F1;box-shadow:0 0 0 1.5px var(--primary-weak-2);}
-.sched-cell.today-col.filled.mine{background:var(--primary-weak);box-shadow:0 0 0 1.5px var(--primary);}
+.sched-cell.today-col.filled{background:var(--scbg,#EAF6F1);box-shadow:0 0 0 1.5px var(--sc,var(--primary-weak-2));}
+.sched-cell.today-col.filled.mine{background:var(--scbg,#FCE4EC);box-shadow:0 0 0 1.5px var(--sc,#C2185B);}
 .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);}
 .sched-cell.filled.overridden{box-shadow:inset 0 0 0 2px var(--warning);}
 .sched-cell.break{background:#EAF4EF;color:var(--text-3);}
 .sched-cell.break.overridden{background:rgba(245,158,11,.10);box-shadow:inset 0 0 0 2px var(--warning);}
 .sched-cell .swap-chip{display:inline-block;position:absolute;top:3px;right:3px;font-size:.52rem;font-weight:700;line-height:1;padding:1px 4px;border-radius:6px;background:var(--warning);color:#fff;letter-spacing:.5px;}
 .sched-table tr.now-row td{background:#EAF6F1;}
-.sched-table tr.now-row td.sched-cell.filled{background:#EAF6F1;box-shadow:0 0 0 1.5px var(--primary);}
-.sched-table tr.now-row td.sched-cell.filled.mine{background:var(--primary-weak);}
+.sched-table tr.now-row td.sched-cell.filled{background:var(--scbg,#EAF6F1);box-shadow:0 0 0 1.5px var(--sc,var(--primary));}
+.sched-table tr.now-row td.sched-cell.filled.mine{background:var(--scbg,#FCE4EC);}
 </style>
 </head>
 <body>
@@ -1048,7 +1078,7 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
     <!-- 统计数字 -->
     <div class="stats-strip" id="statsStrip"></div>
 
-    <!-- 主区：今日课程（左，高） + 待办 / 出勤（右） -->
+    <!-- 主区：今日课程 + 待办 + 学生速览（三列，填满宽度） -->
     <div class="home-grid">
       <div class="home-card home-schedule">
         <div class="home-card-title">
@@ -1060,25 +1090,22 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
         <div id="homeSwapBanner"></div>
         <div id="todaySched" class="home-scroll"></div>
       </div>
-      <div class="home-col-right">
-        <div class="home-card home-todo">
-          <div class="home-card-title">
-            <span class="hct-icon">✅</span> 今日待办
-            <span class="count" id="todoCount"></span>
-            <span class="spacer"></span>
-            <button class="btn-text" onclick="goAddTodo()">添加</button>
-          </div>
-          <div id="todayTodos" class="home-scroll"></div>
+      <div class="home-card home-todo">
+        <div class="home-card-title">
+          <span class="hct-icon">✅</span> 今日待办
+          <span class="count" id="todoCount"></span>
+          <span class="spacer"></span>
+          <button class="btn-text" onclick="goAddTodo()">添加</button>
         </div>
-        <div class="home-card home-attend">
-          <div class="home-card-title"><span class="hct-icon">📋</span> 今日出勤 <span class="home-cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span></div>
-          <div id="attendCount"></div>
-          <div id="morningReport"></div>
-        </div>
+        <div id="todayTodos" class="home-scroll"></div>
+      </div>
+      <div class="home-card home-stu">
+        <div class="home-card-title"><span class="hct-icon">🎒</span> 学生速览 <span class="count" id="homeStuCount"></span><span class="spacer"></span><button class="btn-text" onclick="switchView('students')">查看全部</button></div>
+        <div id="homeStuPreview" class="home-scroll"></div>
       </div>
     </div>
 
-    <!-- 底部小卡：值日 / 放学 -->
+    <!-- 底部小卡：值日 / 放学 / 出勤 -->
     <div class="home-aux">
       <div class="home-card home-duty">
         <div class="home-card-title"><span class="hct-icon">🧹</span> 值日看板 <span class="spacer"></span><span id="dutyWeekPill"></span></div>
@@ -1087,6 +1114,11 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
       <div class="home-card home-dismiss">
         <div class="home-card-title"><span class="hct-icon">🚗</span> 放学提醒 <span class="spacer"></span><button class="btn-text" onclick="switchView('dismiss')">详情</button></div>
         <div id="todayDismiss"></div>
+      </div>
+      <div class="home-card home-attend">
+        <div class="home-card-title"><span class="hct-icon">📋</span> 今日出勤 <span class="home-cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span></div>
+        <div id="attendCount"></div>
+        <div id="morningReport"></div>
       </div>
     </div>
   </section>
@@ -1268,6 +1300,7 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
         <div class="week-bar" id="weekBar"></div>
         <div class="muted mb8" id="schedHint"></div>
         <div class="table-wrap"><table class="sched-table" id="schedTable"></table></div>
+        <div class="dining-summary" id="diningSummary"></div>
       </div>
     </div>
 
@@ -1453,7 +1486,7 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&am
 const SUBJ_STYLE = {'语文':'s-yw','数学':'s-sx','英语':'s-yy','道法':'s-df','体育':'s-ty','音乐':'s-mu','美术':'s-ms','综合':'s-zh','书法':'s-sf','班队':'s-bd','科学':'s-kx','信息':'s-xx','阅读':'s-yd'};
 function subjClass(s){
   if(!s) return '';
-  for(const k in SUBJ_STYLE){ if(String(s).indexOf(k) > -1) return ' ' + SUBJ_STYLE[k]; }
+  for(const k in SUBJ_STYLE){ if(String(s).indexOf(k) > -1) return SUBJ_STYLE[k]; }
   return '';
 }
 /* 我本人任教的学科（班主任通常教语文/道法/班队），这些课彩色显示，其余灰色 */
@@ -1772,14 +1805,18 @@ function renderToday(){
       const time = tt.start || '';
       if(isBreak){
         const dv = d >= 1 && d <= 5 ? diningOf(d) : '';
+        const mine = cell && isMySubject(cell.s);
+        const subjCls = cell ? (mine ? 's-mine mine' : (subjClass(cell.s) + ' other')) : '';
         html += '<li class="break'+(isNow?' now':'')+'"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + esc(p) + '</span><div class="ht-body">' +
-          (cell ? '<div class="ht-subj' + isMySubject(cell.s)?' mine':' other' + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">休息 / 用餐</div>') +
+          (cell ? '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">休息 / 用餐</div>') +
           (dv ? '<div class="ht-meta">陪餐：' + esc(dv) + '</div>' : '') +
           '</div></li>';
         return;
       }
+      const mine = cell && isMySubject(cell.s);
+      const subjCls = cell ? (mine ? 's-mine mine' : (subjClass(cell.s) + ' other')) : '';
       html += '<li class="' + (cell?'has':'') + (isNow?' now':'') + '"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + (time || esc(p)) + '</span><div class="ht-body">' +
-        (cell ? '<div class="ht-subj' + isMySubject(cell.s)?' mine':' other' + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">空堂</div>') +
+        (cell ? '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">空堂</div>') +
         '</div></li>';
     });
     html += '</ul>';
@@ -1804,6 +1841,36 @@ function renderToday(){
   renderWinterCountdown();
   renderDutyBoard();
   renderAttendance();
+  renderHomeStudents();
+}
+
+/* ================= 首页学生速览 ================= */
+function renderHomeStudents(){
+  const box = $('#homeStuPreview'), cnt = $('#homeStuCount');
+  if(!box) return;
+  const list = state.students || [];
+  if(!list.length){
+    box.innerHTML = '<div class="empty-tip">暂无学生，点击右上角添加或导入</div>';
+    if(cnt) cnt.textContent = '';
+    return;
+  }
+  if(cnt) cnt.textContent = list.length + ' 人';
+  const preview = list.slice(0, 6);
+  let html = '<ul class="home-stu-list">';
+  preview.forEach(s => {
+    const avatar = s.photo ? '<img src="' + esc(s.photo) + '" alt="">' : esc((s.name || '?').charAt(0));
+    const meta = s.no ? '学号 ' + esc(s.no) : (s.gender || '');
+    html += '<li onclick="openStudentDetail(\'' + s.id + '\')">' +
+      '<div class="home-stu-avatar">' + avatar + '</div>' +
+      '<div class="home-stu-name">' + esc(s.name) + '</div>' +
+      '<div class="home-stu-meta">' + esc(meta) + '</div>' +
+      '</li>';
+  });
+  html += '</ul>';
+  if(list.length > 6){
+    html += '<div class="home-stu-more" onclick="switchView(\'students\')">还有 ' + (list.length - 6) + ' 名学生 →</div>';
+  }
+  box.innerHTML = html;
 }
 
 /* ================= 天气与紫外线 ================= */
@@ -2664,13 +2731,13 @@ function renderSched(){
       const overridden = ov !== undefined && JSON.stringify(ov===null?null:ov) !== JSON.stringify(base||null);
       const isToday = isThisWeek && wd===d;
       const mine = cell && isMySubject(cell.s);
-      const otherCls = (cell && !mine) ? ' other' : '';
+      const subjCls = (cell && !isBreak) ? (mine ? 's-mine' : subjClass(cell.s)) : '';
       const cls = ['sched-cell'];
       if(isBreak) cls.push('break');
       else if(cell) cls.push('filled');
+      if(subjCls) cls.push(subjCls);
       if(mine) cls.push('mine');
       if(isToday) cls.push('today-col');
-      if(otherCls) cls.push('other');
       if(overridden) cls.push('overridden');
       let inner;
       if(isBreak){
@@ -2684,7 +2751,7 @@ function renderSched(){
       } else if(cell){
         inner = '<span class="subj-name">'+esc(cell.s)+'</span>' +
                 (cell.c?'<span class="subj-room">'+esc(cell.c)+'</span>':'') +
-                (cell.t && !mine?'<span class="subj-teacher">'+esc(cell.t)+'</span>':'');
+                (cell.t?'<span class="subj-teacher">'+esc(cell.t)+'</span>':'');
       } else inner = '<span style="opacity:.35;font-size:1rem;line-height:1;">+</span>';
       if(overridden) inner += '<span class="swap-chip">换</span>';
       row += '<td class="'+cls.join(' ')+'" onclick="openSchedModal(' + d + ',' + (i+1) + ')">' + inner + '</td>';
@@ -2696,7 +2763,8 @@ function renderSched(){
   const filled = Object.keys(state.sched.grid).length;
   const adj = Object.keys(wkGrid).length;
   $('#schedInfo').textContent = '已排 ' + filled + ' 节课' + (adj ? ' · 本周 ' + adj + ' 处调整' : '');
-  $('#schedHint').innerHTML = '同一张课表：你的课正常显示，其他老师课灰显；<b style="color:var(--warning);">左侧橙条</b>表示本周有换课。';
+  $('#schedHint').innerHTML = '同一张课表：<b style="color:#C2185B;">粉色 = 我的课</b>，其他学科保留各自颜色；<b style="color:var(--warning);">橙框</b>表示本周有换课。';
+  renderDiningSummary();
   renderSchedSwapBanner();
   renderSchedNow();
 }
@@ -2919,6 +2987,17 @@ function saveDining(){
     if(v) state.dining[d] = v; else delete state.dining[d];
   });
   save(); renderAll(); showToast('陪餐安排已保存，午休时段已更新');
+}
+function renderDiningSummary(){
+  const el = $('#diningSummary');
+  if(!el) return;
+  const days = ['周一','周二','周三','周四','周五'];
+  const wd = todayWeekday();
+  el.innerHTML = days.map((d,i) => {
+    const teacher = diningOf(i+1);
+    const isToday = wd === i+1;
+    return '<div class="dining-summary-item '+(isToday?'today':'')+'"><div class="ds-day">'+d+'</div>'+(teacher?'<div class="ds-teacher">'+esc(teacher)+'</div>':'<div class="ds-empty">未安排</div>')+'</div>';
+  }).join('');
 }
 
 /* ================= 成绩 ================= */
@@ -3666,14 +3745,6 @@ function renderDutyBoard(){
     html += '<div class="duty-mini">' + names.map(n => '<span>' + esc(n) + '</span>').join('') + '</div>';
   } else {
     html += '<div class="empty-tip">今天无值日安排</div>';
-  }
-  // 其余天数 mini 标签
-  const other = groups.filter((g,i) => i !== wd-1);
-  if(other.length){
-    html += '<div class="dd-list" style="margin-top:8px;">' + other.map(g => {
-      const names = g.members.map(id => { const s = state.students.find(x => x.id === id); return s ? s.name : '?'; });
-      return esc(g.day.replace('星期','')) + ' ' + (names.length ? names.slice(0,2).map(esc).join('、') + (names.length>2?'…':'') : '无');
-    }).join(' · ') + '</div>';
   }
   el.innerHTML = html;
 }
