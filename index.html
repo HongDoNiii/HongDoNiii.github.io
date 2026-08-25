@@ -303,29 +303,88 @@
   .s-yd{--sc:#0d9488;--scbg:#e0f5f2}  /* 阅读 */
 
   /* ===== 今日主视觉横幅（扁平双色） ===== */
-  .hero-card{
-    position:relative;overflow:hidden;border-radius:var(--radius-lg);
-    padding:26px 28px;margin-bottom:18px;color:#fff;
-    background:linear-gradient(120deg,#0d9488 0%,#0ea5e9 100%);
-    box-shadow:var(--shadow-card);
-    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  /* ===== 今日助手 · 清爽操作台 ===== */
+  .home-hero{
+    background:linear-gradient(135deg,#e8f4f8 0%,#f5f0ff 100%);
+    border:1px solid rgba(13,148,136,.10);border-radius:var(--radius-lg);
+    padding:22px 26px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
   }
-  .hero-card::before{
-    content:"";position:absolute;top:0;bottom:0;right:0;width:26%;
-    background:rgba(255,255,255,.10);pointer-events:none;
+  .home-hero-greet{font-size:1.5rem;font-weight:800;color:var(--text-1);line-height:1.3;}
+  .home-hero-sub{font-size:.86rem;color:var(--text-2);margin-top:4px;}
+  .home-hero-date{text-align:right;color:var(--text-2);font-size:.85rem;line-height:1.6;}
+  .home-hero-date .d{font-size:1.1rem;font-weight:700;color:var(--text-1);}
+
+  .stats-strip{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px;
   }
-  .hero-card::after{content:none;}
-  .hero-main{position:relative;z-index:1;}
-  .hero-date{font-size:1.7rem;font-weight:800;letter-spacing:.5px;line-height:1.35;}
-  .hero-sub{font-size:.82rem;color:rgba(255,255,255,.88);margin-top:3px;}
-  .hero-stats{margin-left:auto;display:flex;gap:10px;position:relative;z-index:1;}
-  .hero-stat{
-    background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.38);
-    border-radius:12px;padding:10px 18px;text-align:center;min-width:88px;
+  .stat-pill{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:12px 6px;text-align:center;transition:transform .12s,box-shadow .12s;
   }
-  .hero-stat .v{font-size:1.45rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2;}
-  .hero-stat .k{font-size:.7rem;color:rgba(255,255,255,.85);}
-  @media(max-width:560px){.hero-stats{margin-left:0;width:100%;}.hero-stat{flex:1;}}
+  .stat-pill:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+  .stat-pill .v{font-size:1.25rem;font-weight:800;color:var(--text-1);line-height:1.2;font-variant-numeric:tabular-nums;}
+  .stat-pill .k{font-size:.62rem;color:var(--text-3);margin-top:3px;white-space:nowrap;}
+  @media(max-width:920px){.stats-strip{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:420px){.stats-strip{grid-template-columns:repeat(2,1fr);}}
+
+  .home-main{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;align-items:start;}
+  @media(max-width:920px){.home-main{grid-template-columns:1fr;}}
+
+  .home-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+    padding:16px 18px;box-shadow:var(--shadow-sm);
+  }
+  .home-card-title{
+    display:flex;align-items:center;gap:6px;font-size:.95rem;font-weight:700;color:var(--text-1);margin-bottom:12px;
+  }
+  .home-card-title .hct-icon{font-size:1.1rem;}
+  .home-card-title .count{font-size:.65rem;font-weight:600;color:var(--text-3);background:var(--bg);padding:1px 7px;border-radius:10px;}
+  .home-card-title .spacer{flex:1;}
+
+  .home-timeline{list-style:none;margin:0;padding:0;}
+  .home-timeline li{
+    display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed var(--border);
+  }
+  .home-timeline li:last-child{border-bottom:none;padding-bottom:0;}
+  .home-timeline li:first-child{padding-top:0;}
+  .ht-time{
+    flex:0 0 44px;font-size:.7rem;font-weight:700;color:var(--primary);background:var(--primary-weak);
+    border-radius:8px;text-align:center;padding:4px 0;line-height:1.3;
+  }
+  .ht-time.now{background:var(--primary);color:#fff;}
+  .ht-body{flex:1;min-width:0;}
+  .ht-subj{font-weight:700;font-size:.9rem;color:var(--sc,var(--text-1));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ht-subj.s-yw,.ht-subj.s-sx,.ht-subj.s-yy,.ht-subj.s-df,.ht-subj.s-ty,.ht-subj.s-mu,.ht-subj.s-ms,.ht-subj.s-zh{color:var(--sc);}
+  .ht-meta{font-size:.72rem;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ht-dot{flex:0 0 6px;height:6px;border-radius:50%;background:var(--border);margin-top:10px;}
+  .home-timeline li.has .ht-dot{background:var(--primary);}
+  .home-timeline li.now .ht-dot{background:var(--primary);box-shadow:0 0 0 3px rgba(13,148,136,.15);}
+  .home-timeline li.break .ht-dot{background:#cbd5e1;}
+
+  .todo-list{list-style:none;margin:0;padding:0;}
+  .todo-list li{
+    display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px dashed var(--border);cursor:pointer;
+  }
+  .todo-list li:last-child{border-bottom:none;}
+  .todo-list .cb{
+    flex:0 0 18px;width:18px;height:18px;border-radius:50%;border:2px solid var(--border);margin-top:1px;
+    display:flex;align-items:center;justify-content:center;transition:all .12s;
+  }
+  .todo-list li:hover .cb{border-color:var(--primary);}
+  .todo-list .cb svg{width:10px;height:10px;opacity:0;}
+  .todo-list li:hover .cb svg{opacity:1;}
+  .todo-list .tt{flex:1;font-size:.85rem;line-height:1.35;}
+  .todo-list .tm{font-size:.65rem;color:var(--text-3);margin-top:1px;}
+  .todo-list .tag{font-size:.55rem;padding:0 5px;border-radius:5px;margin-left:4px;}
+
+  .home-aux{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:1100px){.home-aux{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.home-aux{grid-template-columns:1fr;}}
+
+  .home-attend .attend-count{padding:4px 0 10px;}
+  .home-attend .ac-num{font-size:1.3rem;font-weight:800;}
+  .home-attend .ac-bad{font-size:1.1rem;font-weight:800;color:var(--danger);margin:0 4px;}
+  .home-attend .ac-good{font-size:1.1rem;font-weight:800;color:var(--success);margin:0 4px;}
 
   /* ===== 课表特殊行（午休 / 晚托）改为可编辑格子 ===== */
   .sched-cell.break{
@@ -344,46 +403,42 @@
     border:1px dashed #99f6e4;
   }
 
-  /* ===== 课表 ===== */
-  .sched-table{width:100%;border-collapse:separate;border-spacing:5px;table-layout:fixed;}
-  .sched-table th{font-size:.75rem;color:var(--text-2);font-weight:600;padding:6px 2px;letter-spacing:.3px;}
+  /* ===== 课表：清爽表格 ===== */
+  .sched-table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;}
+  .sched-table th{font-size:.72rem;color:var(--text-2);font-weight:600;padding:6px 2px;letter-spacing:.3px;text-align:center;}
   .sched-cell{
-    background:var(--bg);border-radius:12px;padding:6px 4px;text-align:center;
-    font-size:.78rem;min-height:54px;height:54px;cursor:pointer;color:var(--text-3);
-    transition:all .15s;border:1px solid transparent;vertical-align:middle;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:hidden;
+    background:var(--bg);border-radius:10px;padding:5px 4px;text-align:center;
+    font-size:.78rem;min-height:46px;height:46px;cursor:pointer;color:var(--text-3);
+    transition:all .12s;border:1px solid transparent;vertical-align:middle;overflow:hidden;
   }
-  .sched-cell:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 16px -8px rgba(13,148,136,.4);}
+  .sched-cell:hover{border-color:var(--primary);transform:translateY(-1px);}
   .sched-cell.filled{
     background:var(--scbg,var(--primary-weak));
     color:var(--sc,var(--primary));
-    font-weight:700;border:1px solid rgba(0,0,0,.06);
-    box-shadow:inset 4px 0 0 var(--sc,var(--primary));
-    text-align:center;
+    font-weight:700;
   }
-  .sched-cell.filled .subj-emoji{font-size:1.15rem;line-height:1;margin-bottom:1px;}
-  .sched-cell.filled .subj-name{font-size:.82rem;font-weight:800;line-height:1.1;}
-  .sched-cell .subj-emoji{font-size:1.05rem;line-height:1;}
-  .sched-cell .subj-name{font-weight:800;font-size:.8rem;}
-  .sched-cell.today-col{outline:2px solid var(--primary);outline-offset:-2px;background:var(--primary-weak);}
-  .sched-cell.today-col.filled{outline:none;box-shadow:inset 4px 0 0 var(--sc,var(--primary)), 0 0 0 2px var(--primary);}
+  .sched-cell.filled .subj-name{font-size:.78rem;font-weight:700;line-height:1.25;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sched-cell.filled .subj-room{font-size:.6rem;font-weight:500;opacity:.75;display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sched-cell.filled .subj-teacher{font-size:.55rem;font-weight:600;opacity:.65;display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sched-cell.today-col{background:#e8f8f5;}
+  .sched-cell.today-col.filled{background:var(--scbg,var(--primary-weak));box-shadow:0 0 0 1.5px var(--sc,var(--primary));}
   .sched-empty{color:var(--text-3);text-align:center;padding:20px;font-size:.85rem;}
-  /* === 阶段四：班级课表 / 当前节次 / 换课提醒 === */
   .sched-cell{position:relative;}
-  .sched-cell.other{opacity:.4;filter:grayscale(.65);}
-  .sched-cell.other:hover{opacity:.65;}
-  .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);background:rgba(245,158,11,.12);}
-  .sched-cell .subj-room{font-size:.58rem;font-weight:500;opacity:.72;display:block;margin-top:1px;line-height:1.1;}
-  .sched-cell .subj-teacher{font-size:.56rem;font-weight:700;color:#fff;background:rgba(15,23,42,.5);border-radius:6px;padding:0 5px;display:inline-block;margin-top:2px;}
-  .sched-cell .swap-chip{position:absolute;top:3px;right:3px;background:var(--warning);color:#fff;font-size:9px;font-weight:800;line-height:1.5;padding:0 4px;border-radius:6px;}
-  .sched-cell .now-chip{position:absolute;top:3px;left:3px;background:var(--primary);color:#fff;font-size:8px;font-weight:800;line-height:1.4;padding:1px 5px;border-radius:6px;letter-spacing:.5px;}
-  .sched-table tr.now-row td{box-shadow:inset 4px 0 0 var(--primary);background:var(--primary-weak);}
-  .sched-table tr.now-row td.sched-cell.filled{box-shadow:inset 4px 0 0 var(--primary);}
-  .sched-table tr.now-row th{position:relative;background:var(--primary-weak);}
-  .swap-banner{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#fff4e5,#ffe8cc);border:1px solid #ffd8a8;color:#b45309;border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;margin-bottom:12px;box-shadow:0 4px 14px -8px rgba(180,83,9,.4);}
-  .sched-now{font-size:13px;font-weight:700;color:var(--primary);display:inline-flex;align-items:center;gap:7px;}
-  .sched-now .pulse{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 0 rgba(13,148,136,.55);animation:pulse 1.8s infinite;}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(13,148,136,.55);}70%{box-shadow:0 0 0 7px rgba(13,148,136,0);}100%{box-shadow:0 0 0 0 rgba(13,148,136,0);}}
+  .sched-cell.other{opacity:.45;filter:grayscale(.6);}
+  .sched-cell.other:hover{opacity:.7;}
+  .sched-cell.overridden{border-left:3px solid var(--warning);padding-left:3px;}
+  .sched-cell .swap-chip{display:none;}
+  .sched-table tr.now-row td{background:#dff7f3;}
+  .sched-table tr.now-row td.sched-cell.filled{background:var(--scbg,var(--primary-weak));box-shadow:0 0 0 1.5px var(--primary);}
+  .sched-table tr.now-row th{background:#dff7f3;}
+  .sched-cell.break{background:#f4f6f8;color:var(--text-3);}
+  .sched-cell.break .break-lbl{font-size:.7rem;font-weight:600;letter-spacing:.5px;opacity:.85;display:block;}
+  .sched-cell.break .break-time{font-size:.58rem;opacity:.65;font-weight:500;display:block;margin-top:1px;}
+  .sched-cell.break .dining-lbl{font-size:.55rem;background:#fff;border-radius:5px;padding:1px 4px;margin-top:2px;display:inline-block;color:#0f766e;}
+  .swap-banner{display:flex;align-items:center;gap:8px;background:#fff4e5;border:1px solid #ffd8a8;color:#b45309;border-radius:10px;padding:8px 12px;font-weight:600;font-size:.82rem;margin-bottom:10px;}
+  .sched-now{font-size:.82rem;font-weight:700;color:var(--primary);display:inline-flex;align-items:center;gap:6px;}
+  .sched-now .pulse{width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 0 rgba(13,148,136,.55);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(13,148,136,.55);}70%{box-shadow:0 0 0 6px rgba(13,148,136,0);}100%{box-shadow:0 0 0 0 rgba(13,148,136,0);}}
   .todo-line.now-row{background:var(--primary-weak);border-radius:11px;}
   .today-break.now-row{outline:2px solid var(--primary);outline-offset:-2px;}
   .todo-line .today-break{background:repeating-linear-gradient(135deg,#f0fdfa 0 10px,#e6fbf6 10px 20px);color:#0f766e;border:1px dashed #99f6e4;padding:2px 8px;border-radius:9px;}
@@ -746,15 +801,18 @@
   .cls-tag:hover{filter:brightness(.97);}
 
   /* ===== 今日助手 · 操作台分层布局 ===== */
-  .home-sec-label{font-size:.72rem;font-weight:800;letter-spacing:2.5px;color:var(--text-3);margin:22px 2px 0;display:flex;align-items:center;gap:8px;}
-  .home-sec-label::before{content:'';width:14px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--primary),var(--primary-dark));}
-  .home-priority{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;margin-top:2px;}
-  .home-secondary{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;align-items:start;margin-top:18px;}
-  .card-prio{box-shadow:0 8px 26px -14px rgba(13,148,136,.55);border-color:transparent;}
-  .card-prio .card-title{font-size:1rem;font-weight:700;}
-  .card-prio .card-title svg{width:19px;height:19px;}
-  @media(max-width:920px){.home-priority{grid-template-columns:1fr;}}
-  @media(max-width:640px){.home-secondary{grid-template-columns:1fr;}}
+  .home-dismiss .dd-today{font-size:.9rem;font-weight:700;color:var(--text-1);margin-bottom:6px;}
+  .home-dismiss .dd-list{font-size:.78rem;color:var(--text-3);line-height:1.6;}
+  .home-duty .duty-mini{display:flex;flex-wrap:wrap;gap:6px;}
+  .home-duty .duty-mini span{font-size:.72rem;background:var(--bg);padding:3px 8px;border-radius:8px;color:var(--text-2);}
+  .home-countdown .cd-item{font-size:.78rem;color:var(--text-2);padding:6px 0;border-bottom:1px dashed var(--border);}
+  .home-countdown .cd-item:last-child{border-bottom:none;padding-bottom:0;}
+  .home-countdown .cd-item b{font-weight:700;color:var(--text-1);}
+  .home-cls-tag{
+    margin-left:auto;font-size:.7rem;font-weight:500;color:var(--text-2);background:var(--bg);
+    padding:2px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;
+  }
+  .home-cls-tag:hover{color:var(--primary);background:var(--primary-weak);}
 
   /* ===== 学生档案 ===== */
   .archive-layout{display:grid;grid-template-columns:270px 1fr;gap:18px;align-items:start;}
@@ -826,7 +884,7 @@
     .modal-actions .btn{min-height:46px;}
     .btn-text{min-height:40px;}
     /* 宽表格在手机上横向滚动，避免被截断看不到 */
-    .sched-table{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
     table.data{display:block;width:100%;overflow-x:auto;white-space:nowrap;}
     .duty-grid{display:block;width:100%;overflow-x:auto;}
     /* 文本域/输入在手机上保持 16px，避免 iOS 自动放大 */
@@ -839,15 +897,23 @@
     .mobile-nav a{min-width:54px;padding:5px 5px;font-size:.62rem;}
   }
 
-  /* ============ 学生信息：卡片网格 + 资料卡 ============ */
-  .stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;}
-  .stu-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:transform .12s, box-shadow .12s, border-color .12s;}
-  .stu-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(31,41,55,.10);border-color:var(--primary);}
-  .stu-avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 8px;object-fit:cover;background:linear-gradient(135deg,#6a8dff,#9b6bff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.25rem;}
-  .stu-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
-  .stu-card .nm{font-weight:700;font-size:.92rem;line-height:1.2;}
-  .stu-card .no{color:var(--muted);font-size:.72rem;margin-top:2px;}
-  .stu-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:28px 0;}
+  /* ============ 学生信息：清晰表格 + 资料卡 ============ */
+  .stu-table{width:100%;border-collapse:collapse;}
+  .stu-table th{font-size:.72rem;font-weight:600;color:var(--text-2);padding:10px 8px;background:var(--bg);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+  .stu-table td{padding:10px 8px;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle;cursor:pointer;transition:background .12s;white-space:nowrap;}
+  .stu-table td:nth-child(6){white-space:normal;}
+  .stu-table tr:hover td{background:#f8fafc;}
+  .stu-table tr:last-child td{border-bottom:none;}
+  @media(max-width:640px){
+    .stu-table th:nth-child(6), .stu-table td:nth-child(6){display:none;}
+    .stu-table th:nth-child(4), .stu-table td:nth-child(4){display:none;}
+  }
+  .stu-name{font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:8px;}
+  .stu-name .stu-mini-av{width:28px;height:28px;border-radius:50%;object-fit:cover;background:linear-gradient(135deg,#6a8dff,#9b6bff);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:800;flex:0 0 auto;overflow:hidden;}
+  .stu-name .stu-mini-av img{width:100%;height:100%;object-fit:cover;}
+  .stu-tag{display:inline-block;font-size:.6rem;padding:1px 6px;border-radius:6px;background:var(--bg);color:var(--text-2);white-space:nowrap;}
+  .stu-phone{font-family:var(--font-mono,monospace);font-size:.78rem;color:var(--text-2);}
+  .stu-empty{text-align:center;color:var(--muted);padding:28px 0;}
 
   .detail-back{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--primary);font-weight:600;margin-bottom:12px;}
   .detail-back:hover{text-decoration:underline;}
@@ -989,110 +1055,73 @@
 
   <!-- ============ 今日助手 ============ -->
   <section class="view active" id="view-today">
+    <!-- 顶部速记 -->
     <div class="quick-note-top">
       <div class="qnt-input-wrap">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V16.5C20 17.33 19.33 18 18.5 18H13L8 21.5V18H5.5C4.67 18 4 17.33 4 16.5V5.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9.5H16M8 13H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <textarea id="noteInput" class="qnt-input" placeholder="一句话速记：像跟助理说话一样，可写复合指令（如「本周二第二节劳动课改语文，再把王小明调到第三排，提醒我周五交表」）" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitNote();}"></textarea>
+        <textarea id="noteInput" class="qnt-input" placeholder="一句话速记：像跟助理说话一样，可写复合指令" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitNote();}"></textarea>
       </div>
       <button class="btn qnt-btn" onclick="submitNote()">录入</button>
     </div>
     <div id="noteUnderstand"></div>
-    <div class="hero-card hmod" id="heroCard" data-mod="hero"></div>
     <div id="todayNotices"></div>
-    <div class="home-sec-label">今日要点</div>
-    <div class="home-priority">
-      <div class="card ca-amber card-prio" data-mod="todo">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="var(--primary)" stroke-width="1.8"/><path d="M8 10.5H16M8 14.5H13" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          今日待办 <span class="count" id="todoCount"></span>
-          <span class="spacer"></span>
-          <button class="btn-text" onclick="goAddTodo()">添加</button>
-        </div>
-        <div id="todayTodos"></div>
+
+    <!-- 问候 Hero -->
+    <div class="home-hero" id="heroCard">
+      <div class="home-hero-main">
+        <div class="home-hero-greet" id="heroGreet">Hi，洪老师</div>
+        <div class="home-hero-sub" id="heroSub">开启元气满满的一天！</div>
       </div>
-      <div class="card ca-sky card-prio" data-mod="sched">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          今日课表 <span class="count" id="todayWeek"></span>
+      <div class="home-hero-date" id="heroDate">—</div>
+    </div>
+
+    <!-- 统计数字 -->
+    <div class="stats-strip" id="statsStrip"></div>
+
+    <!-- 今日主面板：课程 + 待办 -->
+    <div class="home-main">
+      <div class="home-card home-schedule">
+        <div class="home-card-title">
+          <span class="hct-icon">📅</span> 今日课程
+          <span class="count" id="todayWeek"></span>
           <span class="spacer"></span>
           <button class="btn-text" onclick="switchView('sched')">编辑课表</button>
         </div>
         <div id="homeSwapBanner"></div>
         <div id="todaySched"></div>
       </div>
-      <div class="card ca-teal card-prio" data-mod="dismiss">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3.5C7.8 3.5 4.5 6.8 4.5 11V15C4.5 16.4 5.6 17.5 7 17.5H8.5V11.5H6.6C6.9 8.4 9.2 6 12 6C14.8 6 17.1 8.4 17.4 11.5H15.5V17.5H17C18.4 17.5 19.5 16.4 19.5 15V11C19.5 6.8 16.2 3.5 12 3.5Z" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          放学提醒
+      <div class="home-card home-todo">
+        <div class="home-card-title">
+          <span class="hct-icon">✅</span> 今日待办
+          <span class="count" id="todoCount"></span>
           <span class="spacer"></span>
-          <button class="btn-text" onclick="switchView('dismiss')">详情</button>
+          <button class="btn-text" onclick="goAddTodo()">添加</button>
         </div>
-        <div id="todayDismiss"></div>
+        <div id="todayTodos"></div>
       </div>
-      </div><!-- /home-priority -->
-      <div class="home-sec-label">更多面板</div>
-      <div class="home-secondary">
-      <div class="card ca-violet" data-mod="note" style="display:none;">
-        <div class="note-filters" id="noteFilters"></div>
-        <div id="noteList"></div>
-      </div>
-      <div class="card ca-rose" data-mod="holiday">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          节假日倒计时
-          <span class="spacer"></span>
-        </div>
-        <div id="holidayCD"></div>
-      </div>
-      <div class="card ca-sky" data-mod="winter">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3.5V20M3.5 12H20M6.5 6.5L17.5 17.5M17.5 6.5L6.5 17.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M12 3.5C12 6 10 7 8 7C10 7 11 8.5 11 10.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          寒假倒计时
-          <span class="spacer"></span>
-        </div>
-        <div id="winterCD"></div>
-      </div>
-      <div class="card ca-teal" data-mod="attend">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 4H6.5C5.67 4 5 4.67 5 5.5V19.5C5 20.33 5.67 21 6.5 21H17.5C18.33 21 19 20.33 19 19.5V8.5L14.5 4H9Z" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 4V9H19" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/></svg>
-          今日出勤 <span class="cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span>
-          <span class="spacer"></span>
-          <button class="btn-text" onclick="copyMorningReport()">复制晨报</button>
-          <button class="btn-text" onclick="openMorningTpl()">编辑格式</button>
-        </div>
+    </div>
+
+    <!-- 辅助小卡：出勤 / 值日 / 放学 / 倒计时 -->
+    <div class="home-aux">
+      <div class="home-card home-attend">
+        <div class="home-card-title"><span class="hct-icon">📋</span> 今日出勤 <span class="home-cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span></div>
         <div id="attendCount"></div>
         <div id="morningReport"></div>
       </div>
-      <div class="card ca-amber" data-mod="week">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 13.5H11M7.5 16.5H13.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          本周待办 <span class="count" id="weekTodoCount"></span>
-          <span class="spacer"></span>
-          <button class="btn-text" onclick="goAddTodo()">去添加</button>
-        </div>
-        <div id="weekTodos"></div>
-      </div>
-      <div class="card ca-violet" data-mod="duty">
-        <div class="card-title">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M14.5 3.5L20.5 9.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M17 6L7.5 15.5C6.2 16.8 6.2 18.2 7 20.5C4.7 19.7 3.3 18.3 3.5 15.5L14.5 6" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 13.5L12 16" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-          本周值日看板
-          <span class="spacer"></span>
-          <span id="dutyWeekPill"></span>
-        </div>
+      <div class="home-card home-duty">
+        <div class="home-card-title"><span class="hct-icon">🧹</span> 值日看板 <span class="spacer"></span><span id="dutyWeekPill"></span></div>
         <div id="dutyBoard"></div>
       </div>
-      <div class="card ca-rose" data-mod="tips" style="background:#fffbf2;">
-        <div class="card-title">使用小贴士
-          <span class="spacer"></span>
-        </div>
-        <div class="muted" style="line-height:2;">
-          · 待办和课表可直接在页面内编辑；换课、图片识别课表、语音待办等 AI 能力，把内容发到 WorkBuddy 对话里即可帮你录入<br>
-          · 学生信息、成绩支持 CSV 文件导入或直接粘贴表格文字（Excel 里复制即可）<br>
-          · 数据存在当前设备浏览器中，换设备前请先「导出备份」，在新设备「导入恢复」<br>
-          · 自动备份已开启（每小时快照，保留最近 5 份）：<span id="snapInfo">—</span>，<span class="link" onclick="showSnaps()">查看 / 恢复快照</span>
-        </div>
+      <div class="home-card home-dismiss">
+        <div class="home-card-title"><span class="hct-icon">🚗</span> 放学提醒 <span class="spacer"></span><button class="btn-text" onclick="switchView('dismiss')">详情</button></div>
+        <div id="todayDismiss"></div>
       </div>
-      </div><!-- /home-secondary -->
+      <div class="home-card home-countdown">
+        <div class="home-card-title"><span class="hct-icon">🎯</span> 倒计时</div>
+        <div id="holidayCD"></div>
+        <div id="winterCD"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ============ 学生信息 ============ -->
@@ -1105,8 +1134,8 @@
           <button class="btn btn-sm" onclick="openStudentModal()">添加学生</button>
           <button class="btn btn-sm btn-outline" onclick="openImportStudents()">Excel/批量导入</button>
         </div>
-        <div class="muted mb8">点击任意学生卡片，查看 / 编辑个人资料卡（照片、学籍号、家长信息等）。支持全班 Excel 一键上传。</div>
-        <div class="stu-grid" id="stuTable"></div>
+        <div class="muted mb8">点击表格任意一行，查看 / 编辑个人资料卡（照片、学籍号、家长信息等）。支持全班 Excel 一键上传。</div>
+        <div class="table-wrap"><table class="data stu-table" id="stuTable"></table></div>
       </div>
     </div>
 
@@ -1694,6 +1723,8 @@ function pendingTodos(){
 function renderToday(){
   const t = todayStr();
   const wd = WEEK[todayWeekday()];
+  const d = todayWeekday();
+  const cw = currentWeekNum();
   $('#todayLabel').textContent = t + ' ' + wd;
   if($('#sideDate')) $('#sideDate').textContent = t + ' ' + wd;
 
@@ -1707,42 +1738,46 @@ function renderToday(){
   if(total >= 30 && total % 30 < 5) notices.push('<div class="notice notice-amber">数据已积累 ' + total + ' 条，建议点击右上角「导出备份」保存一份</div>');
   $('#todayNotices').innerHTML = notices.join('');
 
+  // 问候 Hero
+  const teacherName = state.teacherName || '老师';
+  const teacherTitle = (teacherName.slice(-1) === '师') ? teacherName : (teacherName.charAt(0) + '老师');
+  const heroSub = overdue.length ? '有 ' + overdue.length + ' 项待办已逾期，先处理它们吧' : (pend.length ? '今天还有 ' + pend.length + ' 项待办' : '今天没有待办，好好享受~');
+  $('#heroGreet').textContent = 'Hi，' + teacherTitle;
+  $('#heroSub').textContent = heroSub;
+  $('#heroDate').innerHTML = '<div class="d">' + wd + ' · ' + t.slice(5).replace('-','/') + '</div><div>第 ' + cw + ' 教学周</div>';
+
+  // 统计条
+  const totalStu = state.students.length;
+  const boys = state.students.filter(s => s.gender === '男').length;
+  const girls = state.students.filter(s => s.gender === '女').length;
+  const absList = todayAbsences();
+  const healthy = totalStu - absList.length;
+  const doneToday = state.todos.filter(x => x.done && x.date === t).length;
+  $('#statsStrip').innerHTML =
+    '<div class="stat-pill"><div class="v">' + totalStu + '</div><div class="k">班级人数</div></div>' +
+    '<div class="stat-pill"><div class="v">' + boys + '</div><div class="k">男生</div></div>' +
+    '<div class="stat-pill"><div class="v">' + girls + '</div><div class="k">女生</div></div>' +
+    '<div class="stat-pill"><div class="v">' + healthy + '</div><div class="k">今日出勤</div></div>' +
+    '<div class="stat-pill"><div class="v">' + pend.length + '</div><div class="k">待办</div></div>' +
+    '<div class="stat-pill"><div class="v">' + doneToday + '</div><div class="k">已完成</div></div>';
+
   // 今日待办
   const todayTodos = state.todos.filter(x => !x.done && x.date <= t).sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
-  $('#todoCount').textContent = todayTodos.length ? todayTodos.length + ' 项待办' : '';
-
-  // 主视觉横幅
-  const heroWeek = currentWeekNum();
-  const doneToday = state.todos.filter(x => x.done && x.date === t).length;
-  $('#heroCard').innerHTML =
-    '<div class="hero-main"><div class="hero-date">' + wd + ' · ' + t.slice(5).replace('-','/') + '</div>' +
-    '<div class="hero-sub">第 ' + heroWeek + ' 教学周 · 今日安排一目了然</div></div>' +
-    '<div class="hero-stats">' +
-    '<div class="hero-stat"><div class="v" id="heroWeather">…</div><div class="k" id="heroWeatherK">天气</div></div>' +
-    '<div class="hero-stat"><div class="v" id="heroUV">…</div><div class="k" id="heroUVK">紫外线</div></div>' +
-    '<div class="hero-stat"><div class="v">' + todayTodos.length + '</div><div class="k">今日待办</div></div>' +
-    '<div class="hero-stat"><div class="v">' + doneToday + '</div><div class="k">今日已完成</div></div>' +
-    '<div class="hero-stat"><div class="v">' + state.students.length + '</div><div class="k">全班人数</div></div>' +
-    '</div>';
-  applyWeatherDOM();
+  $('#todoCount').textContent = todayTodos.length ? todayTodos.length + ' 项' : '';
   if(!todayTodos.length){
-    $('#todayTodos').innerHTML = '<div class="empty-tip">今天没有待办，好好享受~</div>';
+    $('#todayTodos').innerHTML = '<div class="empty-tip">今天没有待办</div>';
   } else {
-    $('#todayTodos').innerHTML = todayTodos.map(x => {
+    $('#todayTodos').innerHTML = '<ul class="todo-list">' + todayTodos.map(x => {
       const od = x.date < t;
-      return '<div class="todo-line' + (od?' overdue':'') + '">' +
-        '<button class="todo-check" onclick="finishTodo(\'' + x.id + '\')" title="标记完成"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5L10 17.5L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
-        '<div style="flex:1"><div class="todo-title">' + esc(x.title) + '</div><div class="todo-meta">' +
-        (od ? '<span class="tag tag-red">逾期顺延</span>' : '') +
-        (x.time ? '<span>' + esc(x.time) + '</span>' : '') +
-        (x.imp&&x.urg ? '<span class="tag tag-red">重要·紧急</span>' : x.imp ? '<span class="tag tag-blue">重要</span>' : x.urg ? '<span class="tag tag-orange">紧急</span>' : '') +
-        '</div></div></div>';
-    }).join('');
+      return '<li onclick="finishTodo(\'' + x.id + '\')">' +
+        '<span class="cb"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5L10 17.5L19 7" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<div class="tt">' + esc(x.title) +
+        '<div class="tm">' + (od ? '<span class="tag tag-red">逾期顺延</span> ' : '') + (x.time ? esc(x.time) + ' ' : '') +
+        (x.imp&&x.urg ? '<span class="tag tag-red">重要·紧急</span>' : x.imp ? '<span class="tag tag-blue">重要</span>' : x.urg ? '<span class="tag tag-orange">紧急</span>' : '') + '</div></div></li>';
+    }).join('') + '</ul>';
   }
 
-  // 今日课表（按当前周的实际课表，含本周换课）
-  const d = todayWeekday();
-  const cw = currentWeekNum();
+  // 今日课表（时间轴风格）
   const np = (d>=1 && d<=5) ? currentPeriodIndex() : -1;
   $('#todayWeek').textContent = wd + ' · 第' + cw + '周' + (d===0||d===6 ? '（周末）' : '');
   if(d===0||d===6){
@@ -1750,7 +1785,7 @@ function renderToday(){
     const hb=$('#homeSwapBanner'); if(hb) hb.innerHTML='';
   } else {
     const wkGrid = (state.sched.weeks && state.sched.weeks[cw]) || {};
-    let html = '';
+    let html = '<ul class="home-timeline">';
     let swapN = 0;
     state.sched.periods.forEach((p, i) => {
       const tt = state.timetable[i] || {};
@@ -1762,38 +1797,41 @@ function renderToday(){
       const isSwap = ov !== undefined && JSON.stringify(ov===null?null:ov) !== JSON.stringify(base||null);
       if(isSwap) swapN++;
       const isNow = i===np;
+      const time = tt.start || '';
       if(isBreak){
         const dv = d >= 1 && d <= 5 ? diningOf(d) : '';
-        html += '<div class="todo-line'+(isNow?' now-row':'')+'"><div class="todo-title" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span class="muted" style="min-width:56px;">' + esc(p) + (tt.start ? '<br><span style="font-size:.62rem;">' + tt.start + '</span>' : '') + '</span>' +
-          (cell ? '<b class="today-subj'+subjClass(cell.s)+'">' + esc(cell.s) + '</b><span class="muted">' + esc(cell.c) + '</span>' + (cell.t?' <span class="tag tag-blue">'+esc(cell.t)+'</span>':'') : '<span class="today-break" style="margin:0;">' + ttEmoji(p) + ' ' + esc(p) + '</span>') +
-          (dv ? ' <span class="tag tag-blue" style="margin-left:4px;">🍱 陪餐：' + esc(dv) + '</span>' : '') +
-          (isSwap?'<span class="tag tag-orange">换课</span>':'') +
-          '</div></div>';
+        html += '<li class="break'+(isNow?' now':'')+'"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + esc(p) + '</span><div class="ht-body">' +
+          (cell ? '<div class="ht-subj' + subjClass(cell.s) + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">休息 / 用餐</div>') +
+          (dv ? '<div class="ht-meta">陪餐：' + esc(dv) + '</div>' : '') +
+          '</div></li>';
         return;
       }
-      html += '<div class="todo-line'+(isNow?' now-row':'')+'"><div class="todo-title" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span class="muted" style="min-width:56px;">' + esc(p) + (tt.start ? '<br><span style="font-size:.62rem;">' + tt.start + '</span>' : '') + '</span>' +
-        (cell ? '<b class="today-subj'+subjClass(cell.s)+'">' + esc(cell.s) + '</b><span class="muted">' + esc(cell.c) + '</span>' + (cell.t && cell.t!==state.teacherName?' <span class="tag tag-blue">'+esc(cell.t)+'</span>':'') + (isSwap?'<span class="tag tag-orange">换课</span>':'') : '<span class="muted">空堂</span>') +
-        '</div></div>';
+      html += '<li class="' + (cell?'has':'') + (isNow?' now':'') + '"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + (time || esc(p)) + '</span><div class="ht-body">' +
+        (cell ? '<div class="ht-subj' + subjClass(cell.s) + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">空堂</div>') +
+        '</div></li>';
     });
+    html += '</ul>';
     $('#todaySched').innerHTML = html;
     const hb=$('#homeSwapBanner');
-    if(hb) hb.innerHTML = swapN ? '<div class="swap-banner" style="margin-bottom:10px;">🔔 今天有 '+swapN+' 处换课</div>' : '';
+    if(hb) hb.innerHTML = swapN ? '<div class="swap-banner">今天有 ' + swapN + ' 处换课</div>' : '';
   }
 
-  // 放学提醒
-  const dm = calcDismissForDay(todayWeekday());
-  $('#todayDismiss').innerHTML =
-    '<div class="notice notice-red" style="margin-bottom:8px;"><b>5:30 放学 ' + dm.late.length + ' 人</b></div>' +
-    dm.late.map(x => '<div class="dismiss-row"><span class="name">' + esc(x.name) + '</span><span class="desc">' + esc(x.reasons.join(' · ')) + '</span></div>').join('') +
-    '<div class="notice notice-blue" style="margin:10px 0 8px;"><b>4:30 放学 ' + dm.rest.length + ' 人</b></div>' +
-    (dm.late.length===0 ? '<div class="empty-tip">暂无社团/看护/值日数据，请在「班级管理」登记</div>' : '');
+  // 放学提醒（小卡）
+  const dm = calcDismissForDay(d);
+  if(!dm.late.length && !dm.rest.length){
+    $('#todayDismiss').innerHTML = '<div class="empty-tip">暂无放学数据</div>';
+  } else {
+    $('#todayDismiss').innerHTML =
+      '<div class="dd-today">5:30 放学 · ' + dm.late.length + ' 人</div>' +
+      '<div class="dd-list">' + (dm.late.length ? dm.late.map(x => esc(x.name)).join('、') : '无') + '</div>' +
+      '<div class="dd-today" style="margin-top:8px;">4:30 放学 · ' + dm.rest.length + ' 人</div>';
+  }
 
-  // 首页新增模块
+  // 首页小卡
   renderHolidayCountdown();
   renderWinterCountdown();
   renderDutyBoard();
   renderAttendance();
-  renderNotes();     /* 同步首页速记模块 */
 }
 
 /* ================= 天气与紫外线 ================= */
@@ -1965,17 +2003,25 @@ function renderStudents(){
   $('#cls-student-detail').classList.add('hidden');
   $('#cls-students').classList.remove('hidden');
   if(!state.students.length){
-    el.innerHTML = '<div class="stu-empty">暂无学生，点击右上角「添加学生」或「Excel/批量导入」</div>';
+    el.innerHTML = '<tr><td colspan="6" class="stu-empty">暂无学生，点击右上角「添加学生」或「Excel/批量导入」</td></tr>';
     return;
   }
-  el.innerHTML = state.students.map(s => {
+  const rows = state.students.map(s => {
     const av = s.photo
-      ? '<div class="stu-avatar"><img src="' + s.photo + '" alt=""></div>'
-      : '<div class="stu-avatar">' + esc((s.name||'?').charAt(0)) + '</div>';
-    return '<div class="stu-card" onclick="openStudentDetail(\'' + s.id + '\')">' + av +
-      '<div class="nm">' + esc(s.name) + '</div>' +
-      '<div class="no">学号 ' + esc(s.no||'-') + '</div></div>';
+      ? '<span class="stu-mini-av"><img src="' + s.photo + '" alt=""></span>'
+      : '<span class="stu-mini-av">' + esc((s.name||'?').charAt(0)) + '</span>';
+    return '<tr onclick="openStudentDetail(\'' + s.id + '\')">' +
+      '<td><span class="stu-name">' + av + esc(s.name) + '</span></td>' +
+      '<td>' + esc(s.no||'-') + '</td>' +
+      '<td><span class="stu-tag">' + esc(s.gender||'-') + '</span></td>' +
+      '<td class="stu-phone">' + esc(s.phone||'-') + '</td>' +
+      '<td>' + esc(s.parentName||'-') + '</td>' +
+      '<td>' + esc(s.address||'-') + '</td>' +
+      '</tr>';
   }).join('');
+  el.innerHTML = '<thead><tr>' +
+    '<th>姓名</th><th>学号</th><th>性别</th><th>家长电话</th><th>家长姓名</th><th>住址</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody>';
 }
 function openStudentDetail(id){
   const s = state.students.find(x=>x.id===id);
@@ -2629,7 +2675,7 @@ function renderSched(){
   const wkGrid = weekGridOf(viewWeek);
   const tn = state.teacherName || '';
   const np = (isThisWeek && wd>=1 && wd<=5) ? currentPeriodIndex() : -1;
-  let head = '<tr><th style="width:56px;"></th>' + ['周一','周二','周三','周四','周五'].map((d,i)=>'<th'+(isThisWeek&&wd===i+1?' style="color:var(--primary);font-weight:700;"':'')+'>'+d+'</th>').join('') + '</tr>';
+  let head = '<tr><th style="width:54px;"></th>' + ['周一','周二','周三','周四','周五'].map((d,i)=>'<th'+(isThisWeek&&wd===i+1?' style="color:var(--primary);font-weight:700;"':'')+'>'+d+'</th>').join('') + '</tr>';
   let body = '';
   state.sched.periods.forEach((p,i) => {
     const tt = state.timetable[i] || {};
@@ -2645,7 +2691,6 @@ function renderSched(){
       const base = state.sched.grid[key];
       const overridden = ov !== undefined && JSON.stringify(ov===null?null:ov) !== JSON.stringify(base||null);
       const isToday = isThisWeek && wd===d;
-      const isNowCell = isThisWeek && wd===d && i===np;
       const isMineCell = !cell || cell.t===undefined || cell.t===tn;
       const otherCls = (cell && !isMineCell) ? ' other' : '';
       const cls = ['sched-cell'];
@@ -2658,18 +2703,15 @@ function renderSched(){
       if(isBreak){
         let extra = (rng ? '<span class="break-time">' + rng + '</span>' : '');
         if(p.indexOf('晚托') > -1 && cell){
-          extra += '<br><span class="subj-room">'+esc(cell.s||'')+'</span>' + (cell.t ? '<br><span class="subj-teacher">'+esc(cell.t)+'</span>' : '');
+          extra += '<span class="subj-name" style="font-size:.62rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
         }
-        inner = '<span class="break-lbl">' + ttEmoji(p) + ' ' + esc(p) + '</span>' + extra +
-                (p.indexOf('午休') > -1 && d>=1 && d<=5 ? (state.dining && state.dining[d] ? '<span class="dining-lbl">🍱 陪餐 ' + esc(state.dining[d]) + '</span>' : '') : '');
+        inner = '<span class="break-lbl">' + esc(p) + '</span>' + extra +
+                (p.indexOf('午休') > -1 && d>=1 && d<=5 ? (state.dining && state.dining[d] ? '<span class="dining-lbl">陪餐 ' + esc(state.dining[d]) + '</span>' : '') : '');
       } else if(cell){
-        inner = '<span class="subj-emoji">'+subjEmoji(cell.s)+'</span>' +
-                '<span class="subj-name">'+esc(cell.s)+'</span>' +
+        inner = '<span class="subj-name">'+esc(cell.s)+'</span>' +
                 (cell.c?'<span class="subj-room">'+esc(cell.c)+'</span>':'') +
-                (cell.t?'<span class="subj-teacher">'+esc(cell.t)+'</span>':'') +
-                (overridden?'<span class="swap-chip">换</span>':'') +
-                (isNowCell?'<span class="now-chip">进行中</span>':'');
-      } else inner = '+';
+                (cell.t && !isMineCell?'<span class="subj-teacher">'+esc(cell.t)+'</span>':'');
+      } else inner = '<span style="opacity:.35;font-size:1rem;line-height:1;">+</span>';
       row += '<td class="'+cls.join(' ')+'" onclick="openSchedModal(' + d + ',' + (i+1) + ')">' + inner + '</td>';
     }
     row += '</tr>';
@@ -2679,7 +2721,7 @@ function renderSched(){
   const filled = Object.keys(state.sched.grid).length;
   const adj = Object.keys(wkGrid).length;
   $('#schedInfo').textContent = '已排 ' + filled + ' 节课' + (adj ? ' · 本周 ' + adj + ' 处调整' : '');
-  $('#schedHint').innerHTML = '同一张课表：洪老师的课正常高亮，其他老师灰显；午休/晚托为淡青色可编辑格子；<b style="color:var(--warning);">橙框+「换」标</b>表示本周有调整。';
+  $('#schedHint').innerHTML = '同一张课表：你的课正常显示，其他老师课灰显；<b style="color:var(--warning);">左侧橙条</b>表示本周有换课。';
   renderSchedSwapBanner();
   renderSchedNow();
 }
@@ -3618,14 +3660,14 @@ function renderHolidayCountdown(){
   const hs = HOLIDAYS.filter(h => h.date >= now).sort((a,b)=>a.date.localeCompare(b.date));
   if(!hs.length){ el.innerHTML = '<div class="empty-tip">今年假期已排完</div>'; return; }
   const h = hs[0], d = daysBetween(h.date);
-  const tail = d===0 ? ' · 就是今天！' : (d>0 ? ' · 还有 '+d+' 天' : ' · 已过去 '+(-d)+' 天');
-  el.innerHTML = '<div class="cd-row"><div class="cd-bignum">'+Math.max(d,0)+'</div><div><div class="cd-name">'+esc(h.name)+'</div><div class="cd-sub">'+h.date.slice(5).replace('-','/')+tail+'</div></div></div>';
+  const tail = d===0 ? '就是今天！' : (d>0 ? '还有 '+d+' 天' : '已过去 '+(-d)+' 天');
+  el.innerHTML = '<div class="cd-item"><b>'+esc(h.name)+'</b> · '+h.date.slice(5).replace('-','/')+' · '+tail+'</div>';
 }
 function renderWinterCountdown(){
   const el = $('#winterCD'); if(!el) return;
   const d = daysBetween(WINTER_BREAK);
-  const tail = d===0 ? ' · 今天放假！' : (d>0 ? ' · 还有 '+d+' 天' : ' · 已放假 '+(-d)+' 天');
-  el.innerHTML = '<div class="cd-row"><div class="cd-bignum">'+Math.max(d,0)+'</div><div><div class="cd-name">寒假</div><div class="cd-sub">'+WINTER_BREAK.slice(5).replace('-','/')+' 开始'+tail+'</div></div></div>';
+  const tail = d===0 ? '今天放假！' : (d>0 ? '还有 '+d+' 天' : '已放假 '+(-d)+' 天');
+  el.innerHTML = '<div class="cd-item"><b>寒假</b> · '+WINTER_BREAK.slice(5).replace('-','/')+' 开始 · '+tail+'</div>';
 }
 
 /* --- 值日看板（单双周自动滚动） --- */
@@ -3639,11 +3681,26 @@ function renderDutyBoard(){
   const parity = dutyParity();
   const groups = parity === 'odd' ? state.duty.groups : state.duty.even;
   if(pill) pill.innerHTML = '<span class="week-pill '+parity+'">'+(parity==='odd'?'本周（单周）':'本周（双周）')+'</span>';
-  if(!groups || !groups.length){ el.innerHTML = '<div class="empty-tip">尚未设置值日安排，请在「班级管理 · 值日表」添加</div>'; return; }
-  el.innerHTML = '<div class="duty-grid">' + groups.map(g => {
-    const names = g.members.map(id => { const s = state.students.find(x => x.id === id); return s ? s.name : '?'; });
-    return '<div class="duty-cell"><div class="dday">'+esc(g.day)+'</div><div class="dm">'+names.map(n => '<span>· '+esc(n)+'</span>').join('')+'</div></div>';
-  }).join('') + '</div>';
+  if(!groups || !groups.length){ el.innerHTML = '<div class="empty-tip">尚未设置值日安排</div>'; return; }
+  const wd = todayWeekday();
+  const todayGroup = groups[wd-1];
+  let html = '';
+  if(todayGroup && todayGroup.members.length){
+    const names = todayGroup.members.map(id => { const s = state.students.find(x => x.id === id); return s ? s.name : '?'; });
+    html += '<div class="dd-today">今天 · ' + esc(todayGroup.day) + '</div>';
+    html += '<div class="duty-mini">' + names.map(n => '<span>' + esc(n) + '</span>').join('') + '</div>';
+  } else {
+    html += '<div class="empty-tip">今天无值日安排</div>';
+  }
+  // 其余天数 mini 标签
+  const other = groups.filter((g,i) => i !== wd-1);
+  if(other.length){
+    html += '<div class="dd-list" style="margin-top:8px;">' + other.map(g => {
+      const names = g.members.map(id => { const s = state.students.find(x => x.id === id); return s ? s.name : '?'; });
+      return esc(g.day.replace('星期','')) + ' ' + (names.length ? names.slice(0,2).map(esc).join('、') + (names.length>2?'…':'') : '无');
+    }).join(' · ') + '</div>';
+  }
+  el.innerHTML = html;
 }
 
 /* --- 今日出勤 + 晨报 --- */
@@ -3755,14 +3812,18 @@ function renderAttendance(){
   const cnt = $('#attendCount'), mr = $('#morningReport');
   const total = classTotal();
   const tag = $('#clsTag'); if(tag) tag.textContent = (state.className||'') + ' · ' + total + '人';
-  const list = todayAbsences();          // 只算一次，保证卡片与晨报绝对一致
+  const list = todayAbsences();
   const healthy = total - list.length;
   if(cnt){
-    if(!list.length) cnt.innerHTML = '<div class="attend-count"><span class="ac-num">'+total+'</span><span class="ac-label">人应到 · 健康全勤</span></div>';
-    else cnt.innerHTML = '<div class="attend-count"><span class="ac-num">'+total+'</span><span class="ac-label">应到</span><span class="ac-bad">'+list.length+'</span><span class="ac-label">请假</span><span class="ac-good">'+healthy+'</span><span class="ac-label">健康</span></div>';
+    if(!list.length) cnt.innerHTML = '<div class="attend-count"><span class="ac-num">'+total+'</span><span class="ac-label">应到 · 全勤</span></div>';
+    else cnt.innerHTML = '<div class="attend-count"><span class="ac-num">'+total+'</span><span class="ac-label">应到</span><span class="ac-bad">'+list.length+'</span><span class="ac-label">请假</span><span class="ac-good">'+healthy+'</span><span class="ac-label">实到</span></div>';
   }
   if(!mr) return;
-  mr.innerHTML = '<div class="morning-report"><span class="mr-label">晨报</span><br>'+esc(buildMorningReport(list))+'</div>';
+  if(!list.length){
+    mr.innerHTML = '<div class="empty-tip" style="margin-top:4px;">今日全勤</div>';
+  } else {
+    mr.innerHTML = '<div class="dd-list" style="margin-top:6px;">' + list.map(x => esc(absenceDetailItem(x))).join('、') + '</div>';
+  }
 }
 /* 出勤上报已迁移至「一句话速记」：在速记中记「学号+原因」即自动计入 */
 function buildMorningReport(preList){
