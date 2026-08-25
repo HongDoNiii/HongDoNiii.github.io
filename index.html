@@ -164,6 +164,12 @@
   }
   .side-btn:hover{background:var(--primary-weak);border-color:var(--primary);color:var(--primary-dark);transform:translateX(2px);}
   .side-tip{font-size:.68rem;color:var(--text-3);line-height:1.7;padding:7px 4px 0;}
+  .sync-status{display:flex;align-items:center;gap:6px;font-size:.68rem;color:var(--text-3);line-height:1.7;padding:7px 4px 0;}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);flex:none;}
+  .sync-dot.ok{background:#16a34a;}
+  .sync-dot.busy{background:#f59e0b;animation:syncPulse 1s infinite;}
+  .sync-dot.err{background:#ef4444;}
+  @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
   @media(max-width:700px){.sidebar{display:none;}}
 
   /* ===== 移动端顶栏 ===== */
@@ -911,8 +917,12 @@
       <button class="side-btn" onclick="doImport()" title="从JSON备份恢复数据">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V3M12 3L7.5 7.5M12 3L16.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         导入恢复</button>
+      <button class="side-btn" onclick="openSyncModal()" title="开启后自动备份并多设备同步">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 18C4.8 18 3 16.2 3 14C3 11.9 4.6 10.3 6.7 10.1C7.2 7.5 9.4 5.5 12 5.5C14.8 5.5 17.1 7.6 17.3 10.3C19.3 10.6 20.8 12.2 20.8 14C20.8 16.2 19 18 16.8 18H7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        云端同步</button>
     </div>
     <div class="side-tip">数据保存在本机浏览器，换设备前请先导出备份。</div>
+    <div class="sync-status" id="syncStatus"><span class="sync-dot" id="syncDot"></span><span id="syncText">云端同步：未开启</span></div>
   </div>
 </aside>
 
@@ -934,6 +944,10 @@
       <button class="btn-ghost" id="btnImport" title="从JSON备份恢复数据">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V3M12 3L7.5 7.5M12 3L16.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <span class="btn-label">导入恢复</span>
+      </button>
+      <button class="btn-ghost" id="btnSync" title="云端同步" onclick="openSyncModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 18C4.8 18 3 16.2 3 14C3 11.9 4.6 10.3 6.7 10.1C7.2 7.5 9.4 5.5 12 5.5C14.8 5.5 17.1 7.6 17.3 10.3C19.3 10.6 20.8 12.2 20.8 14C20.8 16.2 19 18 16.8 18H7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <span class="btn-label">同步</span>
       </button>
       <input type="file" id="fileImport" accept=".json" class="hidden">
     </div>
@@ -1453,7 +1467,7 @@ function syncPeriodsFromTimetable(){
   if(state.sched.weeks) for(const w in state.sched.weeks) state.sched.weeks[w] = remapGrid(state.sched.weeks[w]);
   state.sched.periods = newP;
 }
-function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){ alert('保存失败：浏览器存储空间不足。建议导出备份后清理旧数据。'); } }
+function save(){ try{ state._syncTs = Date.now(); localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){ alert('保存失败：浏览器存储空间不足。建议导出备份后清理旧数据。'); } scheduleSync(); }
 function showToast(msg){ const t=$('#copyToast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 function copyText(txt){
   if(navigator.clipboard && navigator.clipboard.writeText){
@@ -3413,6 +3427,136 @@ function restoreSnap(i){
   }catch(e){ showToast('快照数据异常，恢复失败'); }
 }
 
+/* ================= 云端同步（GitHub 私有仓库：自动备份 + 多设备同步） ================= */
+const SYNC_KEY = LS_KEY + '_sync';
+const SYNC_PATH = 'banzhuren-state.json';
+function getSyncCfg(){ try{ return JSON.parse(localStorage.getItem(SYNC_KEY) || '{}'); }catch(e){ return {}; } }
+function setSyncCfg(o){ localStorage.setItem(SYNC_KEY, JSON.stringify(o)); }
+function syncEnabled(){ const c = getSyncCfg(); return !!(c && c.enabled && c.token && c.owner && c.repo); }
+function syncApiBase(){ const c = getSyncCfg(); return 'https://api.github.com/repos/' + encodeURIComponent(c.owner) + '/' + encodeURIComponent(c.repo) + '/contents/' + SYNC_PATH; }
+
+/* UTF-8 安全的 base64（分块避免大字符串调用栈溢出，学生照片 base64 可能很大） */
+function utf8ToBase64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; const chunk = 0x8000;
+  for(let i=0;i<bytes.length;i+=chunk) bin += String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
+  return btoa(bin);
+}
+function base64ToUtf8(b64){
+  const bin = atob(String(b64).replace(/\s/g,''));
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+async function ghApi(method, url, body){
+  const c = getSyncCfg();
+  const headers = { 'Authorization': 'Bearer ' + c.token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  if(body) headers['Content-Type'] = 'application/json';
+  const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const isJson = (res.headers.get('content-type')||'').includes('application/json');
+  const data = isJson ? await res.json() : await res.text();
+  if(!res.ok){
+    if(res.status === 404 && method === 'GET'){ const e = new Error('NOT_FOUND'); e.code = 404; throw e; }
+    const e = new Error((data && data.message) ? data.message : (typeof data === 'string' ? data : ('HTTP '+res.status)));
+    e.code = res.status; throw e;
+  }
+  return data;
+}
+function setSyncStatus(text, type){
+  const dot = document.getElementById('syncDot'); const txt = document.getElementById('syncText');
+  if(txt) txt.textContent = text;
+  if(dot) dot.className = 'sync-dot' + (type ? ' '+type : '');
+}
+let _syncTimer = null, _syncing = false;
+function scheduleSync(){ if(!syncEnabled()) return; if(_syncTimer) clearTimeout(_syncTimer); _syncTimer = setTimeout(doSyncPush, 1500); }
+async function doSyncPush(){
+  if(!syncEnabled() || _syncing) return; _syncing = true;
+  try{
+    const url = syncApiBase();
+    let sha = null;
+    try{ const cur = await ghApi('GET', url); sha = cur.sha; }catch(e){ if(e.code !== 404) throw e; }
+    const content = utf8ToBase64(JSON.stringify(state));
+    const body = { message: 'sync ' + new Date().toISOString(), content, branch: getSyncCfg().branch || 'main' };
+    if(sha) body.sha = sha;
+    await ghApi('PUT', url, body);
+    const t = new Date(); const p = n => String(n).padStart(2,'0');
+    setSyncStatus('已同步 ' + p(t.getHours())+':'+p(t.getMinutes()), 'ok');
+  }catch(e){
+    setSyncStatus('同步失败：' + (e.message||e).toString().slice(0,40), 'err');
+  }finally{ _syncing = false; }
+}
+async function doSyncPull(){
+  if(!syncEnabled()) return;
+  try{
+    const cur = await ghApi('GET', syncApiBase());
+    const remote = JSON.parse(base64ToUtf8(cur.content));
+    const localTs = state._syncTs || 0, remoteTs = remote._syncTs || 0;
+    if(remoteTs > localTs){ state = remote; migrateState(); save(); setSyncStatus('已从云端拉取最新数据', 'ok'); }
+    else if(remoteTs < localTs){ await doSyncPush(); }
+    else { setSyncStatus('已是最新', 'ok'); }
+  }catch(e){
+    if(e.code === 404){ setSyncStatus('仓库已就绪，等待首次同步', 'ok'); }
+    else setSyncStatus('拉取失败：' + (e.message||e).toString().slice(0,40), 'err');
+  }
+}
+async function syncInit(){
+  if(!syncEnabled()){ setSyncStatus('云端同步：未开启', ''); return; }
+  setSyncStatus('正在同步…', 'busy');
+  try{ await doSyncPull(); renderAll(); }catch(e){ setSyncStatus('同步异常：' + (e.message||e).toString().slice(0,30), 'err'); }
+}
+async function ensureRepo(){
+  const c = getSyncCfg();
+  const repoUrl = 'https://api.github.com/repos/' + encodeURIComponent(c.owner) + '/' + encodeURIComponent(c.repo);
+  try{ await ghApi('GET', repoUrl); return true; }
+  catch(e){
+    if(e.code !== 404) throw e;
+    await ghApi('POST', 'https://api.github.com/user/repos', { name: c.repo, private: true, description: '班主任工作台数据自动备份', auto_init: true });
+    await new Promise(r => setTimeout(r, 1500));   /* 等仓库初始化完成 */
+    return true;
+  }
+}
+function openSyncModal(){
+  const c = getSyncCfg();
+  openModal('云端同步（GitHub 私有仓库）', `
+    <div class="muted mb8" style="line-height:1.9;font-size:.84rem;">
+      把工作台数据自动备份到你自己的 <b>GitHub 私有仓库</b>：每次改动自动上传，打开时自动拉取，等于<b>自动备份 + 多设备同步</b>。<br>
+      数据完全归你所有、不公开（学生证件号/家长电话等不会进公开仓库）。现有 GitHub 永久链接不变。
+    </div>
+    <div class="form-item"><label>GitHub 用户名</label><input id="syncOwner" value="${esc(c.owner||'')}" placeholder="例如 HongDoNiii"></div>
+    <div class="form-item"><label>仓库名（不存在则自动建为私有）</label><input id="syncRepo" value="${esc(c.repo||'banzhuren-data')}" placeholder="banzhuren-data"></div>
+    <div class="form-item"><label>访问令牌 Personal Access Token</label><input id="syncToken" type="password" value="${esc(c.token||'')}" placeholder="ghp_... 或 fine-grained token" style="font-size:14px;">
+      <div class="muted" style="font-size:.74rem;margin-top:4px;">令牌仅存本机浏览器，不会写入页面或备份文件。建议用对该仓库有 read/write 权限的令牌。</div>
+    </div>
+    <div id="syncMsg" class="muted" style="font-size:.8rem;min-height:18px;margin:4px 0;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn" onclick="saveSyncCfg()">保存并启用</button>
+    </div>
+    <div style="margin-top:6px;"><span class="link" style="font-size:.76rem;" onclick="disconnectSync();closeModal();">断开云端同步（保留本机数据）</span></div>`);
+}
+async function saveSyncCfg(){
+  const owner = document.getElementById('syncOwner').value.trim();
+  const repo = document.getElementById('syncRepo').value.trim() || 'banzhuren-data';
+  const token = document.getElementById('syncToken').value.trim();
+  const msg = document.getElementById('syncMsg');
+  if(!owner || !token){ msg.innerHTML = '<span style="color:var(--danger)">请填写用户名和令牌</span>'; return; }
+  setSyncCfg({ owner, repo, token, enabled: true });
+  msg.textContent = '正在验证并创建私有仓库（如不存在）…';
+  try{
+    await ensureRepo();
+    setSyncStatus('正在同步…', 'busy');
+    await doSyncPush();
+    closeModal(); showToast('云端同步已开启'); renderAll();
+  }catch(e){
+    msg.innerHTML = '<span style="color:var(--danger)">启用失败：' + esc((e.message||e).toString().slice(0,140)) + '</span><br>请检查用户名/仓库名/令牌权限（需该仓库 contents 的 read+write，或 classic token 的 repo 权限）。';
+    setSyncStatus('同步失败', 'err');
+  }
+}
+function disconnectSync(){
+  const c = getSyncCfg(); c.enabled = false; setSyncCfg(c);
+  setSyncStatus('云端同步：未开启', ''); showToast('已断开云端同步（本机数据保留）');
+}
+
 /* ================= 一句话速记 / 倒计时 / 值日 / 出勤 ================= */
 function fmtTime(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,'0'); return (d.getMonth()+1)+'/'+d.getDate()+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 
@@ -5243,6 +5387,7 @@ autoGenerateMonthly();                 /* 每月15日自动生成浪花/拾贝/�
 autoSnapshot();                        /* 打开页面即补一份快照 */
 setInterval(autoSnapshot, 60*60*1000); /* 之后每小时自动快照 */
 updateSnapInfo();
+syncInit();                             /* 若已开启云端同步，拉取最新数据 */
 fetchWeather();                        /* 拉取天气与紫外线 */
 setInterval(fetchWeather, 30*60*1000); /* 每 30 分钟刷新一次 */
 </script>
