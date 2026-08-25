@@ -3607,11 +3607,13 @@ function detectModule(clause, ents){
   const add=(m,s)=>scores[m]=(scores[m]||0)+s;
   if(ents.seatOp && !ents.weekday && !ents.periods.length) add('座位',3);
   if(ents.subject && (ents.weekday||ents.periods.length) && /课表|换课|调课|代课|课改|改成|换成|对调|对换|调成|上.*课/.test(t)) add('课表',3);
+  if(ents.op==='swap' && ents.subject) add('课表',4);
   if(ents.weekday && ents.periods.length) add('课表',2);
   if(ents.weekday && ents.periods.length>=2) add('课表',3);
   if(ents.weekday && /对调|互换|交换|对换/.test(t) && ents.subject) add('课表',3);
   if(has(/课表|换课|调课|代课|课改|上.*课/)) add('课表',2);
   if(has(/座位|排座|坐\s*第|坐到|对调|互换|交换/)) add('座位',3);
+  if(/对调|互换|交换|对换/.test(t) && !ents.students.length) add('课表',2);
   if(has(/资料|素材/)) add('资料',3);
   if(has(/练习|考核|小测|小练|听写本|登记.*记录/)) add('成绩',3);
   if(has(/陪餐|陪餐生/)) add('陪餐',3);
@@ -3636,21 +3638,50 @@ function detectModule(clause, ents){
 }
 
 /* ====== 各模块：由实体生成「规范指令」+「理解文案」+「缺失项」 ====== */
-function bSched(ents){
+function bSched(ents, clauseRaw, ctx){
+  clauseRaw = clauseRaw || ''; ctx = ctx || {};
+  const wk = ents.thisWeek ? '本周 ' : '';
+  let subj = ents.subject;
+  const op = ents.op || (subj && ents.periods.length ? 'set' : null);
+  let p1 = ents.periods[0], p2 = ents.periods[1];
+  let subs = resolveSubjects(clauseRaw);
+  const refSwap = /(这两|那两)(节|门|科|课)/.test(clauseRaw) && /对调|互换|交换|对换/.test(clauseRaw);
+  /* 解析对调的两节课：优先显式节次 → 显式科目 → “这两节课”指代上下文 */
+  if(op==='swap' && (p1==null || p2==null)){
+    if(subs.length>=2){
+      const day = ents.weekday || ctx.weekday;
+      if(day){ const fp1=findSubjPeriod(day,subs[0],ents.thisWeek), fp2=findSubjPeriod(day,subs[1],ents.thisWeek); if(fp1!=null&&fp2!=null){ p1=fp1; p2=fp2; } }
+    }
+    if((p1==null||p2==null) && refSwap && ctx.schedMentions && ctx.schedMentions.length>=2){
+      const ms = ctx.schedMentions.slice(-2);
+      p1 = ms[0].period; p2 = ms[1].period; subs = [ms[0].subject, ms[1].subject];
+      if(!ents.weekday) ents.weekday = ms[0].day;
+    }
+  }
   const miss=[];
   if(!ents.weekday) miss.push({field:'weekday',q:'你想改星期几的课？',opts:['周一','周二','周三','周四','周五']});
-  if(!ents.periods.length) miss.push({field:'period',q:'想改第几节？',opts:['第1节','第2节','第3节','第4节','第5节','第6节']});
-  let subj=ents.subject;
-  const op = ents.op || (subj && ents.periods.length ? 'set' : null);
-  if(op==='set' && !subj) miss.push({field:'subject',q:'改成什么课？',opts:SUBJS.slice()});
+  if(op==='swap'){
+    if(p1==null || p2==null){
+      if(!ents.periods.length && subs.length<2) miss.push({field:'period',q:'对调需要两节课（如「第1节和第3节」或两个科目「语文和综合」）',opts:['第1节和第3节','第2节和第4节','语文和综合']});
+      else if(subs.length<2) miss.push({field:'period',q:'对调需要两节课，请补充另一节',opts:['第1节','第2节','第3节','第4节']});
+    }
+  } else {
+    if(!ents.periods.length) miss.push({field:'period',q:'想改第几节？',opts:['第1节','第2节','第3节','第4节','第5节','第6节']});
+    if(op==='set' && !subj) miss.push({field:'subject',q:'改成什么课？',opts:SUBJS.slice()});
+  }
   if(miss.length) return {missing:miss};
   const d='周'+DAY_CN[ents.weekday];
-  const wk = ents.thisWeek?'本周 ':'';
   let canon='', label='';
   if(op==='swap'){
-    const p1=ents.periods[0], p2=ents.periods[1]||ents.periods[0]+1;
-    canon = wk+d+' 第'+p1+'节 第'+p2+'节 对调';
-    label = (wk)+d+' 第'+p1+'节 与 第'+p2+'节 对调';
+    if(subs.length>=2 && (p1==null||p2==null||refSwap)){
+      canon = wk+d+' '+subs[0]+' 与 '+subs[1]+' 对调';
+      label = (wk)+d+' '+subs[0]+' 与 '+subs[1]+' 对调';
+    } else {
+      canon = wk+d+' 第'+p1+'节 第'+p2+'节 对调';
+      let s1='', s2='';
+      try{ const c1=schedCellEffective(ents.weekday,p1,ents.thisWeek), c2=schedCellEffective(ents.weekday,p2,ents.thisWeek); s1=c1&&c1.s||''; s2=c2&&c2.s||''; }catch(e){}
+      label = (wk)+d+' 第'+p1+'节'+(s1?('（'+s1+'）'):'')+' 与 第'+p2+'节'+(s2?('（'+s2+'）'):'')+' 对调';
+    }
   } else if(op==='clear'){
     canon = wk+d+' 第'+ents.periods[0]+'节 调空';
     label = (wk)+d+' 第'+ents.periods[0]+'节 调为空课';
@@ -3760,7 +3791,7 @@ function bRecord(module, ents, clauseRaw){
 }
 function buildCanonical(module, ents, ctx, clauseRaw){
   switch(module){
-    case '课表': return bSched(ents);
+    case '课表': return bSched(ents, clauseRaw, ctx);
     case '值日': return bDuty(ents);
     case '座位': return bSeat(ents);
     case '学生': return bStudent(ents);
@@ -3779,6 +3810,12 @@ function updateMention(ctx, clause){
   if(e.periods && e.periods.length) ctx.period=e.periods[0];
   if(e.subject) ctx.subject=e.subject;
   if(e.location) ctx.location=e.location;
+  /* 记录最近在课表里被点名的「科目@节次」，供「这两节课对换」这类指代消解使用 */
+  if(clause.module==='课表' && e.weekday && e.periods.length && e.subject){
+    ctx.schedMentions = ctx.schedMentions||[];
+    ctx.schedMentions.push({day:e.weekday, period:e.periods[0], subject:e.subject});
+    if(ctx.schedMentions.length>6) ctx.schedMentions.shift();
+  }
 }
 function buildClause(clauseRaw, ctx){
   const ents = extractEntities(clauseRaw, ctx);
@@ -3812,7 +3849,15 @@ function splitClauses(raw){
   });
   return res.filter(s=>s.length>0);
 }
+/* 含「这两节课/那两节课」的对调指代，需要上下文才能成立，不应作为独立分句切分 */
+function isSwapReference(clause){
+  return /对调|互换|交换|对换/.test(clause)
+    && /(这两|那两)(节|门|科|课)/.test(clause)
+    && !/(\d+)\s*节[\s，,。、]*(\d+)\s*节/.test(clause)   // 未同时给出两段显式节次
+    && resolveSubjects(clause).length < 2;               // 未同时点名两个科目
+}
 function isFullInstruction(clause){
+  if(isSwapReference(clause)) return false;
   const cl=buildClause(clause, {});
   return cl.missing.length===0 && cl.module!=='其他';
 }
