@@ -70,6 +70,9 @@
   }
   .side-logo svg path{stroke:var(--primary);}
   .side-title{font-size:1.06rem;font-weight:800;color:var(--text);letter-spacing:.5px;}
+  .side-title, .app-title{cursor:pointer;display:inline-block;transition:opacity .15s;}
+  .side-title:hover, .app-title:hover{opacity:.82;}
+  .rename-input{font:inherit;font-weight:800;color:#111;border:1px solid #4f8cff;border-radius:6px;padding:1px 6px;background:#fff;outline:none;width:8.5em;max-width:140px;box-sizing:border-box;}
   .side-date{font-size:.72rem;color:var(--text-3);letter-spacing:.3px;margin-top:2px;}
   .side-label{font-size:.64rem;font-weight:600;color:var(--text-3);letter-spacing:2.5px;padding:12px 10px 5px;position:relative;z-index:1;}
   .side-label:first-of-type{padding-top:14px;}
@@ -809,7 +812,7 @@
       <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 3V5M16 3V5M4 9H20" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 14L10.8 16.2L15.5 11.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div>
-      <div class="side-title">班主任工作台</div>
+      <div class="side-title" id="wbNameSide" title="点击改名" onclick="startRename(this)">班主任工作台</div>
       <div class="side-date" id="sideDate">—</div>
     </div>
   </div>
@@ -885,7 +888,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 3V5M16 3V5M4 9H20" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 14L10.8 16.2L15.5 11.8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div>
-      <div class="app-title">班主任工作台</div>
+      <div class="app-title" id="wbNameApp" title="点击改名" onclick="startRename(this)">班主任工作台</div>
       <div class="app-sub" id="todayLabel">—</div>
     </div>
     <div class="header-actions">
@@ -1508,7 +1511,8 @@ function defaultState(){
     repOverrides: { week:{deleted:[], added:[]}, month:{deleted:[], added:[]} },
     teacherName: '洪文婷',
     docs: {},
-    archive: { evals:{}, cases:[], talks:[], shibeiStudents:[], autoMonth:'' }
+    archive: { evals:{}, cases:[], talks:[], shibeiStudents:[], autoMonth:'' },
+    name: '班主任工作台'
   };
 }
 let state;
@@ -1536,6 +1540,7 @@ function migrateState(){
   if(!state.attendance || typeof state.attendance !== 'object') state.attendance = {};
   if(!state.docs) state.docs = {};
   if(!state.className) state.className = '二2班';
+  if(!state.name) state.name = '班主任工作台';
   if(!state.classTotal || state.classTotal < 1) state.classTotal = 30;
   // 若已录入学生，班级总人数以实际学生数为准，不再依赖 classTotal 硬编码
   if(state.students.length > 0) state.classTotal = state.students.length;
@@ -2818,7 +2823,7 @@ function delMaterial(id){
   state.materials = state.materials.filter(x=>x.id!==id); save(); renderMaterials();
 }
 function exportMaterials(){
-  let txt = '班主任工作台 · 资料清单（导出于 ' + todayStr() + '）\n\n';
+  let txt = (state.name || '班主任工作台') + ' · 资料清单（导出于 ' + todayStr() + '）\n\n';
   ['教学资料','练习资料'].forEach(tp => {
     const list = state.materials.filter(m=>m.type===tp);
     if(!list.length) return;
@@ -3019,7 +3024,7 @@ $('#modalMask').addEventListener('click', e => { if(e.target === e.currentTarget
 
 /* ================= 备份 ================= */
 $('#btnExport').addEventListener('click', () => {
-  downloadFile('班主任工作台备份_' + todayStr() + '.json', JSON.stringify(state, null, 2), 'application/json');
+  downloadFile((state.name || '班主任工作台') + '备份_' + todayStr() + '.json', JSON.stringify(state, null, 2), 'application/json');
 });
 $('#btnImport').addEventListener('click', () => $('#fileImport').click());
 /* 侧边栏按钮 → 复用同一套导入导出逻辑（移动端顶栏的按钮隐藏但仍在 DOM 中） */
@@ -4884,7 +4889,45 @@ function exportReportPPTX(){
 }
 
 /* ================= 初始化 ================= */
+/* ================= 工作台改名（点击标题即可改，自动保存） ================= */
+let _renaming = false;
+function startRename(el){
+  if(_renaming) return;
+  _renaming = true;
+  const cur = state.name || '班主任工作台';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'rename-input';
+  input.value = cur;
+  input.maxLength = 20;
+  el.textContent = '';
+  el.appendChild(input);
+  input.focus();
+  input.select();
+  const finish = (commit) => {
+    if(!_renaming) return;          /* 防止 blur/Enter 重复触发 */
+    _renaming = false;
+    const v = (input.value || '').trim();
+    if(commit && v) state.name = v;
+    save();
+    renderWbName();
+  };
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){ e.preventDefault(); finish(true); }
+    else if(e.key === 'Escape'){ e.preventDefault(); finish(false); }
+  });
+  input.addEventListener('blur', () => finish(true));
+}
+function renderWbName(){
+  const n = (state.name && state.name.trim()) ? state.name.trim() : '班主任工作台';
+  document.title = n;
+  const s = $('#wbNameSide'), a = $('#wbNameApp');
+  if(s && !_renaming) s.textContent = n;
+  if(a && !_renaming) a.textContent = n;
+}
+
 function renderAll(){
+  renderWbName();
   renderToday();
   renderWeekTodos();
   renderTodos();
