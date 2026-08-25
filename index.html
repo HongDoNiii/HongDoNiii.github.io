@@ -348,27 +348,35 @@
   .sched-table{width:100%;border-collapse:separate;border-spacing:5px;table-layout:fixed;}
   .sched-table th{font-size:.75rem;color:var(--text-2);font-weight:600;padding:6px 2px;letter-spacing:.3px;}
   .sched-cell{
-    background:var(--bg);border-radius:11px;padding:8px 4px;text-align:center;
-    font-size:.78rem;min-height:48px;height:48px;cursor:pointer;color:var(--text-3);
-    transition:all .15s;border:1px dashed transparent;vertical-align:middle;
+    background:var(--bg);border-radius:12px;padding:6px 4px;text-align:center;
+    font-size:.78rem;min-height:54px;height:54px;cursor:pointer;color:var(--text-3);
+    transition:all .15s;border:1px solid transparent;vertical-align:middle;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:hidden;
   }
-  .sched-cell:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px);}
+  .sched-cell:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px);box-shadow:0 6px 16px -8px rgba(13,148,136,.4);}
   .sched-cell.filled{
-    background:linear-gradient(150deg,var(--scbg,var(--primary-weak)) 0%,#ffffff 135%);
+    background:var(--scbg,var(--primary-weak));
     color:var(--sc,var(--primary));
-    font-weight:700;border:1px solid transparent;
-    box-shadow:inset 3px 0 0 var(--sc,var(--primary)), inset 0 -2px 0 rgba(23,26,43,.05);
+    font-weight:700;border:1px solid rgba(0,0,0,.06);
+    box-shadow:inset 4px 0 0 var(--sc,var(--primary));
+    text-align:center;
   }
-  .sched-cell.today-col{outline:2px solid var(--primary);outline-offset:-2px;}
+  .sched-cell.filled .subj-emoji{font-size:1.15rem;line-height:1;margin-bottom:1px;}
+  .sched-cell.filled .subj-name{font-size:.82rem;font-weight:800;line-height:1.1;}
+  .sched-cell .subj-emoji{font-size:1.05rem;line-height:1;}
+  .sched-cell .subj-name{font-weight:800;font-size:.8rem;}
+  .sched-cell.today-col{outline:2px solid var(--primary);outline-offset:-2px;background:var(--primary-weak);}
+  .sched-cell.today-col.filled{outline:none;box-shadow:inset 4px 0 0 var(--sc,var(--primary)), 0 0 0 2px var(--primary);}
   .sched-empty{color:var(--text-3);text-align:center;padding:20px;font-size:.85rem;}
   /* === 阶段四：班级课表 / 当前节次 / 换课提醒 === */
   .sched-cell{position:relative;}
-  .sched-cell.other{opacity:.38;filter:grayscale(.7);}
-  .sched-cell.other:hover{opacity:.62;}
-  .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);background:rgba(245,158,11,.10);}
-  .sched-cell .subj-room{font-size:.6rem;font-weight:400;opacity:.7;display:block;margin-top:1px;}
-  .sched-cell .subj-teacher{font-size:.58rem;font-weight:700;color:#fff;background:rgba(15,23,42,.42);border-radius:6px;padding:0 5px;display:inline-block;margin-top:2px;}
+  .sched-cell.other{opacity:.4;filter:grayscale(.65);}
+  .sched-cell.other:hover{opacity:.65;}
+  .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);background:rgba(245,158,11,.12);}
+  .sched-cell .subj-room{font-size:.58rem;font-weight:500;opacity:.72;display:block;margin-top:1px;line-height:1.1;}
+  .sched-cell .subj-teacher{font-size:.56rem;font-weight:700;color:#fff;background:rgba(15,23,42,.5);border-radius:6px;padding:0 5px;display:inline-block;margin-top:2px;}
   .sched-cell .swap-chip{position:absolute;top:3px;right:3px;background:var(--warning);color:#fff;font-size:9px;font-weight:800;line-height:1.5;padding:0 4px;border-radius:6px;}
+  .sched-cell .now-chip{position:absolute;top:3px;left:3px;background:var(--primary);color:#fff;font-size:8px;font-weight:800;line-height:1.4;padding:1px 5px;border-radius:6px;letter-spacing:.5px;}
   .sched-table tr.now-row td{box-shadow:inset 4px 0 0 var(--primary);background:var(--primary-weak);}
   .sched-table tr.now-row td.sched-cell.filled{box-shadow:inset 4px 0 0 var(--primary);}
   .sched-table tr.now-row th{position:relative;background:var(--primary-weak);}
@@ -386,19 +394,31 @@
   .dismiss-row:hover{background:var(--bg);}
   .dismiss-row:last-child{border-bottom:none;}
   .dismiss-row .name{font-weight:600;min-width:64px;}
-  .dismiss-week{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:12px;}
-  .dismiss-day{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:11px 12px;transition:all .18s;}
+  .dismiss-week{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:14px;}
+  .dismiss-day{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;transition:all .18s;}
   .dismiss-day.today{border-color:transparent;background:linear-gradient(160deg,var(--primary-weak),var(--card) 70%);box-shadow:inset 0 0 0 1.5px var(--primary);}
-  .dismiss-today{margin-bottom:2px;}
-  .dismiss-day.big{padding:18px 20px;}
-  .dismiss-day.big .dd-head{font-size:1.15rem;margin-bottom:10px;}
-  .dismiss-day.big .dd-late,.dismiss-day.big .dd-rest{font-size:.95rem;line-height:1.9;}
-  .dismiss-day.big .dd-name{font-size:.95rem;margin-right:10px;}
-  .dd-head{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.85rem;margin-bottom:7px;}
-  .dd-late,.dd-rest{font-size:.78rem;line-height:1.7;margin-bottom:4px;}
+  .dismiss-today{margin-bottom:6px;}
+  .dismiss-day.big{padding:20px 22px;background:linear-gradient(135deg,#0d9488 0%,#0ea5e9 100%);border:none;color:#fff;box-shadow:0 16px 34px -18px rgba(13,148,136,.75);}
+  .dismiss-day.big .dd-head{font-size:1.25rem;margin-bottom:16px;color:#fff;}
+  .dismiss-day.big .dd-head .btn-text{color:#fff;border-color:rgba(255,255,255,.5);}
+  .dismiss-day.big .dd-head .btn-text:hover{background:rgba(255,255,255,.18);color:#fff;}
+  .dismiss-day.big .tag.tag-blue{background:rgba(255,255,255,.25);color:#fff;border-color:rgba(255,255,255,.5);}
+  .dd-split{display:flex;align-items:stretch;gap:0;}
+  .dd-col{flex:1;min-width:0;}
+  .dd-col.late .dd-num{color:#fff;}
+  .dd-col.rest .dd-num{color:#eafff4;}
+  .dd-num{font-size:2.6rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 2px 10px rgba(0,0,0,.18);}
+  .dd-unit{font-size:.78rem;color:rgba(255,255,255,.9);margin-top:4px;font-weight:600;}
+  .dd-names{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .dd-names span{background:rgba(255,255,255,.92);color:#0f766e;font-weight:600;font-size:.82rem;padding:3px 10px;border-radius:8px;}
+  .dd-names span.muted{background:rgba(255,255,255,.55);color:#1f3b35;}
+  .dd-divider{width:1px;background:rgba(255,255,255,.35);margin:4px 22px;}
+  .dd-head{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.85rem;margin-bottom:9px;}
+  .dd-late,.dd-rest{font-size:.78rem;line-height:1.7;margin-bottom:5px;}
   .dd-tag{display:inline-block;font-weight:700;margin-right:6px;font-size:.72rem;}
   .dd-name{display:inline-block;margin-right:8px;}
   @media(max-width:700px){.dismiss-week{grid-template-columns:1fr;}}
+  @media(max-width:480px){.dd-split{flex-direction:column;gap:14px;}.dd-divider{width:auto;height:1px;margin:0;}}
 
   /* ===== 表格 ===== */
   .table-wrap{overflow-x:auto;}
@@ -455,6 +475,20 @@
   .duty-block{margin-bottom:2px;}
   .duty-block-title{font-size:.82rem;font-weight:700;color:var(--text-2);margin:2px 0 9px;display:flex;align-items:center;gap:6px;}
   .duty-block-title::before{content:'';width:4px;height:13px;border-radius:3px;background:var(--primary);display:inline-block;}
+  /* 今日值日 · 置顶大卡片 */
+  .duty-feature{background:linear-gradient(135deg,#0d9488 0%,#0ea5e9 100%);border-radius:var(--radius-lg);padding:18px 20px;color:#fff;box-shadow:0 14px 32px -16px rgba(13,148,136,.7);}
+  .duty-feature.is-weekend{background:linear-gradient(135deg,#64748b,#94a3b8);}
+  .df-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .df-tag{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:3px 12px;font-size:.78rem;font-weight:700;letter-spacing:1px;}
+  .df-day{font-size:1.15rem;font-weight:800;}
+  .df-head .btn-text{color:#fff;border-color:rgba(255,255,255,.5);}
+  .df-head .btn-text:hover{background:rgba(255,255,255,.18);color:#fff;}
+  .df-body{display:flex;flex-wrap:wrap;gap:8px;min-height:40px;align-items:center;}
+  .df-name{background:rgba(255,255,255,.94);color:#0f766e;font-weight:700;font-size:1rem;padding:7px 16px;border-radius:12px;box-shadow:0 4px 12px -6px rgba(0,0,0,.3);}
+  .df-foot{margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.9);}
+  .duty-edit{display:block;margin-top:8px;font-size:.72rem;color:var(--primary);}
+  .duty-cell.today{background:var(--primary-weak);border-color:var(--primary);}
+  .duty-cell.today .dday{color:var(--primary-dark);}
   .seg{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;}
   .seg-btn{border:none;background:transparent;color:var(--text-2);font-size:.78rem;padding:4px 14px;border-radius:999px;cursor:pointer;transition:all .15s;}
   .seg-btn.active{background:var(--primary);color:#fff;font-weight:600;}
@@ -711,19 +745,16 @@
   .cls-tag{cursor:pointer;font-size:.72rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);padding:2px 9px;border-radius:999px;margin-left:4px;vertical-align:middle;}
   .cls-tag:hover{filter:brightness(.97);}
 
-  /* ===== 今日助手 · 可调大小网格 ===== */
-  .home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;grid-auto-flow:row dense;align-items:start;}
-  @media(max-width:860px){.home-grid{grid-template-columns:1fr;}}
-  .home-grid .card{margin-bottom:0;}
-  .home-grid .hero-card{margin-bottom:0;}
-  .hmod{grid-column:span 1;}
-  .hmod.mod-full{grid-column:1 / -1;}
-  .mod-toggle{
-    margin-left:2px;font-size:.72rem;line-height:1;padding:4px 9px;min-height:26px;border-radius:8px;
-    border:1px solid var(--border);background:var(--card);color:var(--text-2);cursor:pointer;flex-shrink:0;
-    transition:all .15s;
-  }
-  .mod-toggle:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-weak);}
+  /* ===== 今日助手 · 操作台分层布局 ===== */
+  .home-sec-label{font-size:.72rem;font-weight:800;letter-spacing:2.5px;color:var(--text-3);margin:22px 2px 0;display:flex;align-items:center;gap:8px;}
+  .home-sec-label::before{content:'';width:14px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--primary),var(--primary-dark));}
+  .home-priority{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;margin-top:2px;}
+  .home-secondary{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;align-items:start;margin-top:18px;}
+  .card-prio{box-shadow:0 8px 26px -14px rgba(13,148,136,.55);border-color:transparent;}
+  .card-prio .card-title{font-size:1rem;font-weight:700;}
+  .card-prio .card-title svg{width:19px;height:19px;}
+  @media(max-width:920px){.home-priority{grid-template-columns:1fr;}}
+  @media(max-width:640px){.home-secondary{grid-template-columns:1fr;}}
 
   /* ===== 学生档案 ===== */
   .archive-layout{display:grid;grid-template-columns:270px 1fr;gap:18px;align-items:start;}
@@ -968,96 +999,91 @@
     <div id="noteUnderstand"></div>
     <div class="hero-card hmod" id="heroCard" data-mod="hero"></div>
     <div id="todayNotices"></div>
-    <div class="home-grid" id="homeGrid">
-      <div class="card ca-amber hmod" data-mod="todo">
+    <div class="home-sec-label">今日要点</div>
+    <div class="home-priority">
+      <div class="card ca-amber card-prio" data-mod="todo">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="var(--primary)" stroke-width="1.8"/><path d="M8 10.5H16M8 14.5H13" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           今日待办 <span class="count" id="todoCount"></span>
           <span class="spacer"></span>
           <button class="btn-text" onclick="goAddTodo()">添加</button>
-          <button class="mod-toggle" data-mod="todo" onclick="toggleModSize('todo')">半</button>
         </div>
         <div id="todayTodos"></div>
       </div>
-      <div class="card ca-sky hmod" data-mod="sched">
+      <div class="card ca-sky card-prio" data-mod="sched">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           今日课表 <span class="count" id="todayWeek"></span>
           <span class="spacer"></span>
           <button class="btn-text" onclick="switchView('sched')">编辑课表</button>
-          <button class="mod-toggle" data-mod="sched" onclick="toggleModSize('sched')">半</button>
         </div>
         <div id="homeSwapBanner"></div>
         <div id="todaySched"></div>
       </div>
-      <div class="card ca-teal hmod" data-mod="dismiss">
+      <div class="card ca-teal card-prio" data-mod="dismiss">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3.5C7.8 3.5 4.5 6.8 4.5 11V15C4.5 16.4 5.6 17.5 7 17.5H8.5V11.5H6.6C6.9 8.4 9.2 6 12 6C14.8 6 17.1 8.4 17.4 11.5H15.5V17.5H17C18.4 17.5 19.5 16.4 19.5 15V11C19.5 6.8 16.2 3.5 12 3.5Z" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/></svg>
           放学提醒
           <span class="spacer"></span>
           <button class="btn-text" onclick="switchView('dismiss')">详情</button>
-          <button class="mod-toggle" data-mod="dismiss" onclick="toggleModSize('dismiss')">半</button>
         </div>
         <div id="todayDismiss"></div>
       </div>
-      <div class="card ca-violet hmod" data-mod="note" style="display:none;">
+      </div><!-- /home-priority -->
+      <div class="home-sec-label">更多面板</div>
+      <div class="home-secondary">
+      <div class="card ca-violet" data-mod="note" style="display:none;">
         <div class="note-filters" id="noteFilters"></div>
         <div id="noteList"></div>
       </div>
-      <div class="card ca-rose hmod" data-mod="holiday">
+      <div class="card ca-rose" data-mod="holiday">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           节假日倒计时
           <span class="spacer"></span>
-          <button class="mod-toggle" data-mod="holiday" onclick="toggleModSize('holiday')">半</button>
         </div>
         <div id="holidayCD"></div>
       </div>
-      <div class="card ca-sky hmod" data-mod="winter">
+      <div class="card ca-sky" data-mod="winter">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3.5V20M3.5 12H20M6.5 6.5L17.5 17.5M17.5 6.5L6.5 17.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M12 3.5C12 6 10 7 8 7C10 7 11 8.5 11 10.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           寒假倒计时
           <span class="spacer"></span>
-          <button class="mod-toggle" data-mod="winter" onclick="toggleModSize('winter')">半</button>
         </div>
         <div id="winterCD"></div>
       </div>
-      <div class="card ca-teal hmod" data-mod="attend">
+      <div class="card ca-teal" data-mod="attend">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 4H6.5C5.67 4 5 4.67 5 5.5V19.5C5 20.33 5.67 21 6.5 21H17.5C18.33 21 19 20.33 19 19.5V8.5L14.5 4H9Z" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 4V9H19" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/></svg>
           今日出勤 <span class="cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span>
           <span class="spacer"></span>
           <button class="btn-text" onclick="copyMorningReport()">复制晨报</button>
           <button class="btn-text" onclick="openMorningTpl()">编辑格式</button>
-          <button class="mod-toggle" data-mod="attend" onclick="toggleModSize('attend')">半</button>
         </div>
         <div id="attendCount"></div>
         <div id="morningReport"></div>
       </div>
-      <div class="card ca-amber hmod" data-mod="week">
+      <div class="card ca-amber" data-mod="week">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="var(--primary)" stroke-width="1.8"/><path d="M3.5 9.5H20.5M8 3V5.5M16 3V5.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 13.5H11M7.5 16.5H13.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           本周待办 <span class="count" id="weekTodoCount"></span>
           <span class="spacer"></span>
           <button class="btn-text" onclick="goAddTodo()">去添加</button>
-          <button class="mod-toggle" data-mod="week" onclick="toggleModSize('week')">半</button>
         </div>
         <div id="weekTodos"></div>
       </div>
-      <div class="card ca-violet hmod" data-mod="duty">
+      <div class="card ca-violet" data-mod="duty">
         <div class="card-title">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M14.5 3.5L20.5 9.5" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/><path d="M17 6L7.5 15.5C6.2 16.8 6.2 18.2 7 20.5C4.7 19.7 3.3 18.3 3.5 15.5L14.5 6" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 13.5L12 16" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
           本周值日看板
           <span class="spacer"></span>
           <span id="dutyWeekPill"></span>
-          <button class="mod-toggle" data-mod="duty" onclick="toggleModSize('duty')">半</button>
         </div>
         <div id="dutyBoard"></div>
       </div>
-      <div class="card ca-rose hmod" data-mod="tips" style="background:#fffbf2;">
+      <div class="card ca-rose" data-mod="tips" style="background:#fffbf2;">
         <div class="card-title">使用小贴士
           <span class="spacer"></span>
-          <button class="mod-toggle" data-mod="tips" onclick="toggleModSize('tips')">半</button>
         </div>
         <div class="muted" style="line-height:2;">
           · 待办和课表可直接在页面内编辑；换课、图片识别课表、语音待办等 AI 能力，把内容发到 WorkBuddy 对话里即可帮你录入<br>
@@ -1066,7 +1092,7 @@
           · 自动备份已开启（每小时快照，保留最近 5 份）：<span id="snapInfo">—</span>，<span class="link" onclick="showSnaps()">查看 / 恢复快照</span>
         </div>
       </div>
-    </div>
+      </div><!-- /home-secondary -->
   </section>
 
   <!-- ============ 学生信息 ============ -->
@@ -1127,6 +1153,7 @@
           <button class="btn btn-sm btn-outline" onclick="copyDutyToNext()">复制本周到下周</button>
         </div>
         <div class="muted mb8" id="dutyHint">每日值日生 5:30 放学后打扫，自动计入放学名单。点某天可编辑；也可一键速记「周一值日增加2号」「下周周二值日增加3号」。</div>
+        <div id="dutyFeature" class="mb14"></div>
         <div class="duty-block">
           <div class="duty-block-title">本周值日</div>
           <div class="quad-grid" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));" id="dutyGridThis"></div>
@@ -1433,6 +1460,8 @@ function subjClass(s){
   for(const k in SUBJ_STYLE){ if(String(s).indexOf(k) > -1) return ' ' + SUBJ_STYLE[k]; }
   return '';
 }
+const SUBJ_EMOJI = {'语文':'📖','数学':'🔢','英语':'🔤','道法':'⚖️','体育':'🏃','音乐':'🎵','美术':'🎨','综合':'🌈','书法':'🖌️','班队':'🚩','科学':'🔬','信息':'💻','阅读':'📚'};
+function subjEmoji(s){ if(!s) return '📌'; for(const k in SUBJ_EMOJI){ if(String(s).indexOf(k) > -1) return SUBJ_EMOJI[k]; } return '📌'; }
 /* ===== 作息时间表 ===== */
 const DEF_TT = {
   '第1节':['08:20','09:00'], '第2节':['09:10','09:50'], '第3节':['10:05','10:45'],
@@ -1764,33 +1793,7 @@ function renderToday(){
   renderWinterCountdown();
   renderDutyBoard();
   renderAttendance();
-  applyModSizes();   /* 应用首页各模块大小 */
   renderNotes();     /* 同步首页速记模块 */
-}
-
-/* ================= 今日助手 · 模块大小调整 ================= */
-const HOME_FULL_DEFAULT = ['hero','week','duty'];   /* 默认整行展示的模块，其余半宽 */
-function defaultModSize(m){ return HOME_FULL_DEFAULT.indexOf(m) >= 0 ? 'full' : 'half'; }
-function getModSize(m){
-  if(state.home && state.home.sizes && typeof state.home.sizes[m] === 'string') return state.home.sizes[m];
-  return defaultModSize(m);
-}
-function applyModSizes(){
-  $$('.hmod').forEach(el => {
-    const m = el.getAttribute('data-mod');
-    if(m) el.classList.toggle('mod-full', getModSize(m) === 'full');
-  });
-  $$('.mod-toggle').forEach(b => {
-    const m = b.getAttribute('data-mod');
-    b.textContent = getModSize(m) === 'full' ? '全' : '半';
-  });
-}
-function toggleModSize(m){
-  if(!state.home) state.home = {sizes:{}};
-  if(!state.home.sizes) state.home.sizes = {};
-  state.home.sizes[m] = getModSize(m) === 'full' ? 'half' : 'full';
-  applyModSizes();
-  save();
 }
 
 /* ================= 天气与紫外线 ================= */
@@ -2363,15 +2366,29 @@ function seatAction(type){
 function dutyArr(which){ return which==='next' ? state.duty.next : state.duty.groups; }
 function renderDuty(){
   const wd = todayWeekday();
+  const days = ['周一','周二','周三','周四','周五'];
+  const isWork = wd>=1 && wd<=5;
+  // 今日值日 · 置顶大卡片
+  const g = isWork ? state.duty.groups[wd-1] : null;
+  const names = g ? g.members.map(m => { const s = state.students.find(x=>x.id===m); return s?s.name:'(已删除)'; }) : [];
+  let feat = '<div class="duty-feature' + (isWork?'':' is-weekend') + '">';
+  feat += '<div class="df-head"><span class="df-tag">今日值日</span><span class="df-day">' + (isWork?days[wd-1]:'今天周末') + '</span><span class="spacer"></span>';
+  if(isWork) feat += '<button class="btn-text" onclick="openDutyModal(' + (wd-1) + ',\'this\')">编辑今日</button>';
+  feat += '</div>';
+  feat += '<div class="df-body">' + (names.length ? names.map(n=>'<span class="df-name">'+esc(n)+'</span>').join('') : '<span class="muted">今天没有安排值日</span>') + '</div>';
+  feat += '<div class="df-foot">值日生当天 <b style="color:var(--danger);">5:30 放学</b> · 一般 2-3 人打扫</div>';
+  feat += '</div>';
+  $('#dutyFeature').innerHTML = feat;
+
   const fill = (which, elId) => {
     const arr = dutyArr(which);
     const isNext = which==='next';
     document.getElementById(elId).innerHTML = arr.map((g,i) => {
       const names = g.members.map(m => { const s = state.students.find(x=>x.id===m); return s?s.name:'(已删除)'; });
       const isToday = !isNext && wd===i+1;
-      return '<div class="duty-card' + (isToday?' today':'') + '"><div class="duty-day">' + esc(g.day) + (isToday?'<span class="tag tag-blue">今天</span>':'') +
-        '<span class="spacer" style="margin-left:auto;"></span><button class="btn-text" style="min-height:32px;padding:2px 8px;font-size:.75rem;" onclick="openDutyModal(' + i + ',\'' + which + '\')">编辑</button></div>' +
-        '<div class="duty-member">' + (names.length ? names.map(esc).join('、') : '<span class="muted">未安排</span>') + '</div></div>';
+      return '<div class="duty-cell' + (isToday?' today':'') + '"><div class="dday">' + esc(g.day) + (isToday?'<span class="tag tag-blue" style="margin-left:6px;">今天</span>':'') +
+        '</div><div class="dm">' + (names.length ? names.map(n=>'<span>· '+esc(n)+'</span>').join('') : '<span class="muted">未安排</span>') + '</div>' +
+        '<button class="btn-text duty-edit" onclick="openDutyModal(' + i + ',\'' + which + '\')">编辑</button></div>';
     }).join('');
   };
   fill('this','dutyGridThis');
@@ -2463,15 +2480,26 @@ function calcDismissForDay(wd){
 function dismissDayCard(d, isToday, big){
   const days = ['周一','周二','周三','周四','周五'];
   const dm = calcDismissForDay(d);
-  let h = '<div class="dismiss-day' + (isToday?' today':'') + (big?' big':'') + '">';
-  h += '<div class="dd-head">' + days[d-1] + (isToday?'<span class="tag tag-blue">今天</span>':'') +
-       '<span class="spacer"></span><button class="btn-text" style="font-size:.74rem;min-height:28px;" onclick="openDismissEdit(' + d + ')">微调</button></div>';
-  h += '<div class="dd-late"><span class="dd-tag" style="color:var(--danger);">5:30 · ' + dm.late.length + '人</span>' +
-       (dm.late.length ? dm.late.map(x=>'<span class="dd-name">'+esc(x.name)+'</span>').join('') : '<span class="muted">无</span>') + '</div>';
-  h += '<div class="dd-rest"><span class="dd-tag" style="color:var(--success);">4:30 · ' + dm.rest.length + '人</span>' +
-       (dm.rest.length ? dm.rest.map(n=>'<span class="dd-name muted">'+esc(n)+'</span>').join('') : '<span class="muted">无</span>') + '</div>';
-  h += '</div>';
-  return h;
+  if(big){
+    return '<div class="dismiss-day big' + (isToday?' today':'') + '">' +
+      '<div class="dd-head">' + days[d-1] + (isToday?'<span class="tag tag-blue">今天</span>':'') +
+        '<span class="spacer"></span><button class="btn-text" onclick="openDismissEdit(' + d + ')">微调</button></div>' +
+      '<div class="dd-split">' +
+        '<div class="dd-col late"><div class="dd-num">' + dm.late.length + '</div><div class="dd-unit">人 · 5:30 放学</div>' +
+          '<div class="dd-names">' + (dm.late.length ? dm.late.map(x=>'<span>'+esc(x.name)+'</span>').join('') : '<span class="muted">无</span>') + '</div></div>' +
+        '<div class="dd-divider"></div>' +
+        '<div class="dd-col rest"><div class="dd-num">' + dm.rest.length + '</div><div class="dd-unit">人 · 4:30 放学</div>' +
+          '<div class="dd-names">' + (dm.rest.length ? dm.rest.map(n=>'<span>'+esc(n)+'</span>').join('') : '<span class="muted">无</span>') + '</div></div>' +
+      '</div></div>';
+  }
+  return '<div class="dismiss-day' + (isToday?' today':'') + '">' +
+    '<div class="dd-head">' + days[d-1] + (isToday?'<span class="tag tag-blue">今天</span>':'') +
+      '<span class="spacer"></span><button class="btn-text" onclick="openDismissEdit(' + d + ')">微调</button></div>' +
+    '<div class="dd-late"><span class="dd-tag" style="color:var(--danger);">5:30 · ' + dm.late.length + '人</span>' +
+      (dm.late.length ? dm.late.map(x=>'<span class="dd-name">'+esc(x.name)+'</span>').join('') : '<span class="muted">无</span>') + '</div>' +
+    '<div class="dd-rest"><span class="dd-tag" style="color:var(--success);">4:30 · ' + dm.rest.length + '人</span>' +
+      (dm.rest.length ? dm.rest.map(n=>'<span class="dd-name muted">'+esc(n)+'</span>').join('') : '<span class="muted">无</span>') + '</div>' +
+    '</div>';
 }
 function renderDismiss(){
   const wd = todayWeekday();
@@ -2617,6 +2645,7 @@ function renderSched(){
       const base = state.sched.grid[key];
       const overridden = ov !== undefined && JSON.stringify(ov===null?null:ov) !== JSON.stringify(base||null);
       const isToday = isThisWeek && wd===d;
+      const isNowCell = isThisWeek && wd===d && i===np;
       const isMineCell = !cell || cell.t===undefined || cell.t===tn;
       const otherCls = (cell && !isMineCell) ? ' other' : '';
       const cls = ['sched-cell'];
@@ -2634,9 +2663,12 @@ function renderSched(){
         inner = '<span class="break-lbl">' + ttEmoji(p) + ' ' + esc(p) + '</span>' + extra +
                 (p.indexOf('午休') > -1 && d>=1 && d<=5 ? (state.dining && state.dining[d] ? '<span class="dining-lbl">🍱 陪餐 ' + esc(state.dining[d]) + '</span>' : '') : '');
       } else if(cell){
-        inner = esc(cell.s) + (cell.c?'<br><span class="subj-room">'+esc(cell.c)+'</span>':'')
-              + (cell.t?'<br><span class="subj-teacher">'+esc(cell.t)+'</span>':'')
-              + (overridden?'<span class="swap-chip">换</span>':'');
+        inner = '<span class="subj-emoji">'+subjEmoji(cell.s)+'</span>' +
+                '<span class="subj-name">'+esc(cell.s)+'</span>' +
+                (cell.c?'<span class="subj-room">'+esc(cell.c)+'</span>':'') +
+                (cell.t?'<span class="subj-teacher">'+esc(cell.t)+'</span>':'') +
+                (overridden?'<span class="swap-chip">换</span>':'') +
+                (isNowCell?'<span class="now-chip">进行中</span>':'');
       } else inner = '+';
       row += '<td class="'+cls.join(' ')+'" onclick="openSchedModal(' + d + ',' + (i+1) + ')">' + inner + '</td>';
     }
