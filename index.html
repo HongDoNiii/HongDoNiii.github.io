@@ -801,6 +801,41 @@
     html{font-size:14.5px;}
     .mobile-nav a{min-width:54px;padding:5px 5px;font-size:.62rem;}
   }
+
+  /* ============ 学生信息：卡片网格 + 资料卡 ============ */
+  .stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;}
+  .stu-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:transform .12s, box-shadow .12s, border-color .12s;}
+  .stu-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(31,41,55,.10);border-color:var(--primary);}
+  .stu-avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 8px;object-fit:cover;background:linear-gradient(135deg,#6a8dff,#9b6bff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.25rem;}
+  .stu-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+  .stu-card .nm{font-weight:700;font-size:.92rem;line-height:1.2;}
+  .stu-card .no{color:var(--muted);font-size:.72rem;margin-top:2px;}
+  .stu-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:28px 0;}
+
+  .detail-back{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--primary);font-weight:600;margin-bottom:12px;}
+  .detail-back:hover{text-decoration:underline;}
+  .profile-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+  .profile-head{display:flex;align-items:center;gap:18px;padding:22px;background:linear-gradient(135deg,#eef2ff,#f6f0ff);}
+  .profile-photo{width:96px;height:96px;border-radius:18px;object-fit:cover;background:#dfe6ff;display:flex;align-items:center;justify-content:center;color:#4f6bff;font-weight:800;font-size:2rem;flex:0 0 auto;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 14px rgba(31,41,55,.12);}
+  .profile-photo img{width:100%;height:100%;object-fit:cover;}
+  .profile-name{font-size:1.5rem;font-weight:800;}
+  .profile-sub{color:var(--muted);margin-top:4px;font-size:.9rem;}
+  .profile-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;}
+  .profile-body{padding:8px 22px 22px;}
+  .field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px 26px;}
+  .field{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px dashed var(--border);}
+  .field .k{color:var(--muted);font-size:.74rem;}
+  .field .v{font-weight:600;word-break:break-all;}
+  .field .v.empty{color:#c2c8d4;font-weight:400;}
+  @media(max-width:560px){
+    .profile-head{flex-wrap:wrap;}
+    .profile-actions{margin-left:0;width:100%;}
+  }
+
+  /* 学生编辑表单：照片上传 */
+  .photo-upload{display:flex;align-items:center;gap:14px;}
+  .photo-prev{width:72px;height:72px;border-radius:14px;object-fit:cover;background:#dfe6ff;display:flex;align-items:center;justify-content:center;color:#4f6bff;font-weight:800;font-size:1.4rem;overflow:hidden;flex:0 0 auto;}
+  .photo-prev img{width:100%;height:100%;object-fit:cover;}
 </style>
 </head>
 <body>
@@ -1028,12 +1063,14 @@
           学生信息 <span class="count" id="stuCount"></span>
           <span class="spacer"></span>
           <button class="btn btn-sm" onclick="openStudentModal()">添加学生</button>
-          <button class="btn btn-sm btn-outline" onclick="openImportStudents()">批量导入</button>
+          <button class="btn btn-sm btn-outline" onclick="openImportStudents()">Excel/批量导入</button>
         </div>
-        <div class="table-wrap"><table class="data" id="stuTable"></table></div>
+        <div class="muted mb8">点击任意学生卡片，查看 / 编辑个人资料卡（照片、学籍号、家长信息等）。支持全班 Excel 一键上传。</div>
+        <div class="stu-grid" id="stuTable"></div>
       </div>
     </div>
 
+    <div id="cls-student-detail" class="hidden"></div>
   </section>
 
   <!-- ============ 座位表 ============ -->
@@ -1906,35 +1943,94 @@ function renderTodos(){
 /* ================= 学生信息 ================= */
 function renderStudents(){
   $('#stuCount').textContent = '共 ' + state.students.length + ' 人';
-  const male = state.students.filter(s=>s.gender==='男').length;
-  let html = '<tr><th>学号</th><th>姓名</th><th>性别</th><th>社团</th><th>课后看护</th><th>备注</th><th>操作</th></tr>';
+  const el = $('#stuTable');
+  el.innerHTML = '';
+  $('#cls-student-detail').classList.add('hidden');
+  $('#cls-students').classList.remove('hidden');
   if(!state.students.length){
-    $('#stuTable').innerHTML = html + '<tr><td colspan="7" class="muted" style="text-align:center;padding:20px;">暂无学生，点击「添加学生」或「批量导入」</td></tr>';
+    el.innerHTML = '<div class="stu-empty">暂无学生，点击右上角「添加学生」或「Excel/批量导入」</div>';
     return;
   }
-  html += state.students.map(s =>
-    '<tr><td>' + esc(s.no) + '</td><td><b>' + esc(s.name) + '</b></td><td>' + esc(s.gender) + '</td>' +
-    '<td>' + (s.club?'<span class="tag tag-blue">'+esc(s.club)+'</span>':'<span class="muted">—</span>') + '</td>' +
-    '<td>' + (s.care?'<span class="tag tag-orange">看护</span>':'<span class="muted">—</span>') + '</td>' +
-    '<td class="muted">' + esc(s.remark||'—') + '</td>' +
-    '<td><button class="btn-text btn-sm" onclick="openStudentModal(\'' + s.id + '\')">编辑</button><button class="btn-text btn-sm" style="color:var(--danger);" onclick="delStudent(\'' + s.id + '\')">删除</button></td></tr>'
-  ).join('');
-  html += '<tr><td colspan="7" class="muted" style="font-size:.75rem;">男生 ' + male + ' 人 · 女生 ' + (state.students.length-male) + ' 人</td></tr>';
-  $('#stuTable').innerHTML = html;
+  el.innerHTML = state.students.map(s => {
+    const av = s.photo
+      ? '<div class="stu-avatar"><img src="' + s.photo + '" alt=""></div>'
+      : '<div class="stu-avatar">' + esc((s.name||'?').charAt(0)) + '</div>';
+    return '<div class="stu-card" onclick="openStudentDetail(\'' + s.id + '\')">' + av +
+      '<div class="nm">' + esc(s.name) + '</div>' +
+      '<div class="no">学号 ' + esc(s.no||'-') + '</div></div>';
+  }).join('');
 }
+function openStudentDetail(id){
+  const s = state.students.find(x=>x.id===id);
+  if(!s) return;
+  const f = (k,v) => '<div class="field"><span class="k">' + k + '</span><span class="v' + (v?'':' empty') + '">' + (v?esc(v):'未填写') + '</span></div>';
+  const photo = s.photo ? '<div class="profile-photo"><img src="' + s.photo + '" alt=""></div>'
+                        : '<div class="profile-photo">' + esc((s.name||'?').charAt(0)) + '</div>';
+  const html =
+    '<div class="detail-back" onclick="backToStudents()">‹ 返回全班列表</div>' +
+    '<div class="profile-card">' +
+      '<div class="profile-head">' + photo +
+        '<div><div class="profile-name">' + esc(s.name) + '</div>' +
+          '<div class="profile-sub">学号 ' + esc(s.no||'-') + ' · ' + esc(s.gender||'') + (s.club?' · '+esc(s.club):'') + '</div></div>' +
+        '<div class="profile-actions">' +
+          '<button class="btn btn-sm" onclick="openStudentModal(\'' + s.id + '\')">编辑资料</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="profile-body"><div class="field-grid">' +
+        f('学籍号', s.xueji) + f('身份证号', s.idcard) +
+        f('家长姓名', s.parentName) + f('家长电话', s.phone) +
+        f('家庭住址', s.address) + f('家长工作', s.parentJob) +
+        f('出生日期', s.birth) + f('民族', s.nation) +
+        f('课后看护', s.care?'是（5:30 放学）':'否（4:30 放学）') + f('备注', s.remark) +
+      '</div></div>' +
+    '</div>';
+  $('#cls-student-detail').innerHTML = html;
+  $('#cls-student-detail').classList.remove('hidden');
+  $('#cls-students').classList.add('hidden');
+  window.scrollTo({top:0});
+}
+function backToStudents(){
+  $('#cls-student-detail').classList.add('hidden');
+  $('#cls-students').classList.remove('hidden');
+  window.scrollTo({top:0});
+}
+let editingPhoto = '';
 function openStudentModal(id){
   const s = id ? state.students.find(x=>x.id===id) : null;
-  openModal(s ? '编辑学生' : '添加学生', `
+  editingPhoto = s ? (s.photo||'') : '';
+  const prev = editingPhoto ? '<img src="'+editingPhoto+'">' : esc((s?s.name:'新').charAt(0));
+  openModal(s ? '编辑学生资料' : '添加学生', `
+    <div class="photo-upload mb12">
+      <div class="photo-prev" id="mPhotoPrev">${prev}</div>
+      <div>
+        <input type="file" id="mPhoto" accept="image/*" onchange="onPhotoPick(this)">
+        <div class="muted" style="font-size:.72rem;margin-top:4px;">上传学生照片（自动压缩，可选）</div>
+      </div>
+    </div>
     <div class="form-row">
-      <div class="form-item" style="max-width:100px;"><label>学号</label><input id="mNo" value="${s?esc(s.no):autoNo()}" placeholder="01"></div>
+      <div class="form-item" style="max-width:90px;"><label>学号</label><input id="mNo" value="${s?esc(s.no):autoNo()}" placeholder="01"></div>
       <div class="form-item"><label>姓名</label><input id="mName" value="${s?esc(s.name):''}" placeholder="学生姓名"></div>
-      <div class="form-item" style="max-width:110px;"><label>性别</label><select id="mGender"><option${s&&s.gender==='女'?' selected':''}>男</option><option${s&&s.gender==='女'?' selected':''}>女</option></select></div>
+      <div class="form-item" style="max-width:100px;"><label>性别</label><select id="mGender"><option${s&&s.gender==='女'?' selected':''}>男</option><option${s&&s.gender==='女'?' selected':''}>女</option></select></div>
     </div>
     <div class="form-row">
-      <div class="form-item"><label>参加社团（留空表示无）</label><input id="mClub" value="${s?esc(s.club||''):''}" placeholder="如：美术社 / 足球社 / 合唱团"></div>
+      <div class="form-item"><label>学籍号</label><input id="mXueji" value="${s?esc(s.xueji||''):''}" placeholder="如：G330xxx"></div>
+      <div class="form-item"><label>身份证号</label><input id="mIdcard" value="${s?esc(s.idcard||''):''}" placeholder="如：3301xxx"></div>
     </div>
     <div class="form-row">
-      <div class="form-item"><label>备注（职务等）</label><input id="mRemark" value="${s?esc(s.remark||''):''}" placeholder="如：班长 / 体育委员"></div>
+      <div class="form-item"><label>家长姓名</label><input id="mParent" value="${s?esc(s.parentName||''):''}" placeholder="如：王伟"></div>
+      <div class="form-item"><label>家长电话</label><input id="mPhone" value="${s?esc(s.phone||''):''}" placeholder="11 位手机号"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-item"><label>家庭住址</label><input id="mAddress" value="${s?esc(s.address||''):''}" placeholder="详细住址"></div>
+      <div class="form-item"><label>家长工作</label><input id="mJob" value="${s?esc(s.parentJob||''):''}" placeholder="如：个体经营 / 教师"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-item" style="max-width:140px;"><label>出生日期</label><input id="mBirth" value="${s?esc(s.birth||''):''}" placeholder="YYYY-MM-DD"></div>
+      <div class="form-item" style="max-width:90px;"><label>民族</label><input id="mNation" value="${s?esc(s.nation||''):''}" placeholder="汉"></div>
+      <div class="form-item"><label>参加社团</label><input id="mClub" value="${s?esc(s.club||''):''}" placeholder="如：美术社"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-item"><label>备注（职务等）</label><input id="mRemark" value="${s?esc(s.remark||''):''}" placeholder="如：班长"></div>
     </div>
     <div class="check-line"><label><input type="checkbox" id="mCare"${s&&s.care?' checked':''}> 参加课后看护（5:30 放学）</label></div>
     <div class="modal-actions">
@@ -1942,14 +2038,50 @@ function openStudentModal(id){
       <button class="btn" onclick="saveStudent('${id||''}')">保存</button>
     </div>`);
 }
+function onPhotoPick(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  compressPhoto(f, d => {
+    editingPhoto = d || '';
+    const prev = $('#mPhotoPrev');
+    if(prev) prev.innerHTML = d ? '<img src="'+d+'">' : '×';
+  });
+}
+function compressPhoto(file, cb){
+  if(!file || !file.type || !file.type.startsWith('image/')){ cb(null); return; }
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    let w = img.width, h = img.height; const maxW = 480;
+    if(w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    let q = 0.8, data = c.toDataURL('image/jpeg', q);
+    while(data.length > 120*1024 && q > 0.5){ q -= 0.08; data = c.toDataURL('image/jpeg', q); }
+    URL.revokeObjectURL(url);
+    cb(data);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
 function autoNo(){ return String(state.students.length+1).padStart(2,'0'); }
 function saveStudent(id){
   const name = $('#mName').value.trim();
   if(!name){ showToast('请填写姓名'); return; }
-  const data = {no:$('#mNo').value.trim()||autoNo(), name, gender:$('#mGender').value, club:$('#mClub').value.trim(), care:$('#mCare').checked, remark:$('#mRemark').value.trim()};
-  if(id){ Object.assign(state.students.find(x=>x.id===id), data); }
+  const data = {
+    no:$('#mNo').value.trim()||autoNo(),
+    name, gender:$('#mGender').value,
+    xueji:$('#mXueji').value.trim(), idcard:$('#mIdcard').value.trim(),
+    parentName:$('#mParent').value.trim(), phone:$('#mPhone').value.trim(),
+    address:$('#mAddress').value.trim(), parentJob:$('#mJob').value.trim(),
+    birth:$('#mBirth').value.trim(), nation:$('#mNation').value.trim(),
+    club:$('#mClub').value.trim(), remark:$('#mRemark').value.trim(),
+    care:$('#mCare').checked,
+    photo: editingPhoto || ''
+  };
+  if(id){ const t = state.students.find(x=>x.id===id); if(t) Object.assign(t, data); }
   else { const stu = {id:uid(), ...data}; state.students.push(stu); if(!state.seat.order.includes(stu.id)) state.seat.order.push(stu.id); }
-  save(); closeModal(); renderAll(); showToast('已保存');
+  save(); closeModal(); editingPhoto = ''; renderAll(); showToast('已保存');
 }
 function delStudent(id){
   const s = state.students.find(x=>x.id===id);
@@ -1960,53 +2092,213 @@ function delStudent(id){
   state.exams.forEach(e => delete e.scores[id]);
   save(); renderAll();
 }
+let pendingXlsx = null;
+const FIELD_CN = {name:'姓名',no:'学号',xueji:'学籍号',idcard:'身份证',parentName:'家长姓名',phone:'家长电话',address:'住址',parentJob:'家长工作',birth:'出生日期',nation:'民族',gender:'性别',club:'社团',care:'看护',remark:'备注'};
 function openImportStudents(){
-  openModal('批量导入学生', `
-    <div class="muted mb8" style="line-height:1.9;">支持两种方式：<br>1. 上传 CSV 文件（Excel 另存为 CSV）<br>2. 直接粘贴：每行一个学生，格式「学号,姓名,性别,社团,课后看护」或「姓名」（逗号/Tab 分隔均可，可从 Excel 直接复制粘贴）<br>第 5 列「课后看护」填 看护/托管/是/1 即视为参加，留空或不填则不参加。</div>
-    <div class="form-row"><div class="form-item"><label>上传 CSV 文件</label><input type="file" id="csvFile" accept=".csv,.txt"></div></div>
-    <div class="form-item"><label>或粘贴表格内容</label><textarea id="csvText" placeholder="01,王小雨,女,美术社,看护&#10;02,李明轩,男,,&#10;03,陈思思,女,合唱团,托管"></textarea></div>
+  pendingXlsx = null;
+  openModal('Excel / 批量导入学生', `
+    <div class="muted mb8" style="line-height:1.9;">
+      支持三种方式：<br>
+      ① <b>一键上传 Excel（.xlsx）</b>：全班整合表直接上传，按「姓名」自动匹配到每个学生，补全学籍号、身份证、家长电话、住址、家长工作等资料。<br>
+      ② 上传 CSV / TXT 文件（Excel 另存为 CSV）。<br>
+      ③ 直接粘贴：从 Excel 复制整片区域，粘贴到下方文本框（首行写表头更佳）。<br>
+      <span style="color:var(--danger);">⚠ 系统按「姓名」匹配：与「学生信息」一致的更新资料；姓名不存在则新建学生。</span>
+    </div>
+    <div class="form-row"><div class="form-item"><label>上传文件（.xlsx / .csv / .txt）</label><input type="file" id="csvFile" accept=".xlsx,.xls,.csv,.txt"></div></div>
+    <div class="form-item"><label>或粘贴表格内容（首行表头，如：姓名,学号,学籍号,家长电话…）</label><textarea id="csvText" placeholder="姓名,学号,学籍号,身份证,家长电话,住址,家长工作&#10;王小雨,01,G33...,3301...,138...,幸福路...,个体经营"></textarea></div>
+    <div id="importPreview" class="muted" style="font-size:.82rem;background:var(--bg);border-radius:10px;padding:10px;min-height:18px;"></div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal()">取消</button>
       <button class="btn" onclick="importStudents()">导入</button>
     </div>`);
   $('#csvFile').addEventListener('change', function(){
     const f = this.files[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = () => {
-      let txt = r.result;
-      if(txt.indexOf('\uFFFD') >= 0){ // UTF-8 读出乱码，尝试 GBK
-        const r2 = new FileReader();
-        r2.onload = () => { $('#csvText').value = r2.result; showToast('文件已读取，点击「导入」完成'); };
-        r2.readAsText(f, 'GBK');
-        return;
-      }
-      $('#csvText').value = txt; showToast('文件已读取，点击「导入」完成');
-    };
-    r.readAsText(f, 'utf-8');
+    const ext = (f.name.split('.').pop()||'').toLowerCase();
+    if(ext==='xlsx' || ext==='xls'){
+      if(typeof DecompressionStream === 'undefined'){ showToast('当前浏览器不支持解析 xlsx，请另存为 CSV 后上传'); return; }
+      showToast('正在解析 Excel…');
+      f.arrayBuffer().then(ab => readXlsx(ab)).then(rows => {
+        pendingXlsx = { rows };
+        const hdr = mapFromHeader(rows[0]||[]);
+        const hasHdr = !!hdr.name;
+        const dataRows = (hasHdr ? rows.slice(1) : rows).filter(r => r && r.some(c => c && c.toString().trim()));
+        const flds = [];
+        for(const k in hdr) flds.push(FIELD_CN[k] + '✓');
+        $('#importPreview').innerHTML = '✅ 已解析 Excel：共 <b>' + dataRows.length + '</b> 行数据。<br>识别字段：' +
+          (flds.length ? flds.join('、') : '（未识别到表头，将按位置导入）') +
+          '<br>点「导入」即按姓名写入对应学生。';
+      }).catch(e => {
+        pendingXlsx = null;
+        $('#importPreview').innerHTML = '<span style="color:var(--danger)">解析失败：' + esc(e.message) + '。请改用 CSV 或粘贴。</span>';
+        showToast('Excel 解析失败');
+      });
+    } else {
+      const r = new FileReader();
+      r.onload = () => {
+        let txt = r.result;
+        if(txt.indexOf('\uFFFD') >= 0){
+          const r2 = new FileReader();
+          r2.onload = () => { $('#csvText').value = r2.result; showToast('文件已读取，点击「导入」完成'); };
+          r2.readAsText(f, 'GBK');
+          return;
+        }
+        $('#csvText').value = txt; showToast('文件已读取，点击「导入」完成');
+      };
+      r.readAsText(f, 'utf-8');
+    }
   });
 }
 function importStudents(){
-  const text = $('#csvText').value.trim();
-  if(!text){ showToast('请上传文件或粘贴内容'); return; }
-  let count = 0;
-  text.split(/\r?\n/).forEach(line => {
-    line = line.trim(); if(!line) return;
-    if(/^(学号|姓名|序号)/.test(line)) return; // 跳过表头
-    const parts = line.split(/[,，\t]+/).map(x=>x.trim()).filter(x=>x);
-    if(!parts.length) return;
-    const no = parts.length>=3 ? parts[0] : autoNo();
-    const name = parts.length>=3 ? parts[1] : parts[0];
-    const gender = parts.length>=3 ? (parts[2]==='女'?'女':'男') : '男';
-    const club = parts.length>=4 ? parts[3] : '';
-    const careRaw = parts.length>=5 ? parts[4] : '';
-    const care = ['看护','托管','是','1','true','y','yes'].includes((careRaw||'').toLowerCase());
-    if(state.students.some(s=>s.name===name)) return;
-    const stu = {id:uid(), no, name, gender, club, care, remark:''};
-    state.students.push(stu); state.seat.order.push(stu.id); count++;
+  let rows;
+  if(pendingXlsx && pendingXlsx.rows && pendingXlsx.rows.length){
+    rows = pendingXlsx.rows;
+  } else {
+    const text = $('#csvText') ? $('#csvText').value.trim() : '';
+    if(!text){ showToast('请上传文件或粘贴内容'); return; }
+    rows = text.split(/\r?\n/).map(l => l.trim().split(/[,，\t]+/).map(x=>x.trim())).filter(r => r.some(c => c));
+  }
+  if(!rows.length){ showToast('没有可导入的数据'); return; }
+  const hdr = mapFromHeader(rows[0]);
+  const hasHeader = !!hdr.name;
+  const map = hasHeader ? hdr : positionalMap((rows[0]||[]).length);
+  applyStudentImport(rows, map, hasHeader);
+  pendingXlsx = null;
+}
+function applyStudentImport(rows, map, hasHeader){
+  const data = hasHeader ? rows.slice(1) : rows;
+  let matched = 0, created = 0, skipped = 0;
+  data.forEach(r => {
+    if(!r || !r.length) return;
+    const get = f => { const i = map[f]; return (i!=null && r[i]!=null) ? String(r[i]).trim() : ''; };
+    const name = get('name');
+    if(!name){ skipped++; return; }
+    const no = get('no') || autoNo();
+    const gender = get('gender')==='女' ? '女' : '男';
+    const careRaw = (get('care')||'').toLowerCase();
+    const care = ['看护','托管','是','1','true','y','yes'].includes(careRaw);
+    const obj = {
+      no, name, gender, care,
+      xueji:get('xueji'), idcard:get('idcard'), parentName:get('parentName'),
+      phone:get('phone'), address:get('address'), parentJob:get('parentJob'),
+      birth:get('birth'), nation:get('nation'),
+      club:get('club'), remark:get('remark'), photo:''
+    };
+    const ex = state.students.find(s => s.name === name);
+    if(ex){ delete obj.photo; Object.assign(ex, obj); matched++; }
+    else { const stu = {id:uid(), ...obj}; state.students.push(stu); if(!state.seat.order.includes(stu.id)) state.seat.order.push(stu.id); created++; }
   });
   state.demo = false;
   save(); closeModal(); renderAll();
-  showToast('成功导入 ' + count + ' 名学生');
+  showToast('导入完成：更新 ' + matched + ' 人，新建 ' + created + ' 人，跳过 ' + skipped + ' 行');
+}
+
+/* ---------- Excel(.xlsx) 解析：仅用浏览器内置 API，不引外部库 ---------- */
+function colToIndex(letters){ let n=0; for(const ch of letters) n = n*26 + (ch.charCodeAt(0)-64); return n-1; }
+function mapFromHeader(header){
+  const KEYWORDS = [
+    ['name', /姓名|名字|学生/],
+    ['no', /学号|编号|序号/],
+    ['xueji', /学籍/],
+    ['idcard', /身份证|证件/],
+    ['phone', /电话|手机|联系/],
+    ['address', /住址|地址|家庭住址/],
+    ['parentJob', /家长工作|工作|职业/],
+    ['birth', /出生|生日/],
+    ['nation', /民族/],
+    ['gender', /性别/],
+    ['club', /社团/],
+    ['care', /看护|托管/],
+    ['remark', /备注|职务/],
+    ['parentName', /家长姓名|家长名|监护人|父亲|母亲|家长/]
+  ];
+  const map = {};
+  (header||[]).forEach((h,i) => {
+    const s = String(h||'').trim();
+    if(!s) return;
+    for(const [f,re] of KEYWORDS){ if(re.test(s)){ if(map[f]==null) map[f]=i; break; } }
+  });
+  return map;
+}
+function positionalMap(n){
+  if(n>=5) return {no:0,name:1,gender:2,club:3,care:4};
+  if(n>=3) return {no:0,name:1,gender:2,club:3};
+  return {name:0};
+}
+async function readXlsx(buf){
+  const u8 = new Uint8Array(buf);
+  const dv = new DataView(buf);
+  let eocd = -1;
+  for(let i=u8.length-22; i>=0; i--){
+    if(u8[i]===0x50 && u8[i+1]===0x4b && u8[i+2]===0x05 && u8[i+3]===0x06){ eocd=i; break; }
+  }
+  if(eocd<0) throw new Error('不是有效的 xlsx 文件');
+  const cdOffset = dv.getUint32(eocd+16, true);
+  const cdCount = dv.getUint16(eocd+10, true);
+  const entries = [];
+  let p = cdOffset;
+  for(let i=0;i<cdCount;i++){
+    if(dv.getUint32(p,true)!==0x02014b50) break;
+    const method = dv.getUint16(p+10, true);
+    const compSize = dv.getUint32(p+20, true);
+    const fnLen = dv.getUint16(p+28, true);
+    const extraLen = dv.getUint16(p+30, true);
+    const commLen = dv.getUint16(p+32, true);
+    const localOffset = dv.getUint32(p+42, true);
+    let name = '';
+    for(let j=0;j<fnLen;j++) name += String.fromCharCode(u8[p+46+j]);
+    entries.push({name, method, compSize, localOffset});
+    p += 46 + fnLen + extraLen + commLen;
+  }
+  async function getEntry(name){
+    const e = entries.find(x => x.name===name || x.name==='xl/'+name || x.name==='/xl/'+name);
+    if(!e) return null;
+    const lo = e.localOffset;
+    const lfnLen = dv.getUint16(lo+26, true);
+    const lextraLen = dv.getUint16(lo+28, true);
+    const dataStart = lo + 30 + lfnLen + lextraLen;
+    const comp = u8.subarray(dataStart, dataStart + e.compSize);
+    let out;
+    if(e.method===0){ out = comp; }
+    else {
+      const fmt = (comp[0]===0x78) ? 'deflate' : 'deflate-raw';
+      const ds = new DecompressionStream(fmt);
+      const w = ds.writable.getWriter(); w.write(comp); w.close();
+      const ab = await new Response(ds.readable).arrayBuffer();
+      out = new Uint8Array(ab);
+    }
+    return new TextDecoder('utf-8').decode(out);
+  }
+  const ssText = await getEntry('sharedStrings.xml');
+  const shared = [];
+  if(ssText){
+    const doc = new DOMParser().parseFromString(ssText, 'application/xml');
+    doc.querySelectorAll('si').forEach(si => {
+      let t=''; si.querySelectorAll('t').forEach(tt => t += tt.textContent); shared.push(t);
+    });
+  }
+  const sheetText = await getEntry('worksheets/sheet1.xml');
+  if(!sheetText) throw new Error('未找到工作表 sheet1');
+  const sdoc = new DOMParser().parseFromString(sheetText, 'application/xml');
+  const rows = [];
+  sdoc.querySelectorAll('sheetData > row').forEach(rEl => {
+    const cells = {}; let maxCol = 0;
+    rEl.querySelectorAll('c').forEach(cEl => {
+      const ref = cEl.getAttribute('r') || '';
+      const m = ref.match(/^([A-Z]+)(\d+)$/);
+      const col = m ? colToIndex(m[1]) : 0;
+      const t = cEl.getAttribute('t');
+      let val = '';
+      if(t==='s'){ const v = cEl.querySelector('v'); if(v) val = shared[parseInt(v.textContent,10)] || ''; }
+      else if(t==='inlineStr'){ const is = cEl.querySelector('is'); if(is){ let tt=''; is.querySelectorAll('t').forEach(x => tt += x.textContent); val = tt; } }
+      else { const v = cEl.querySelector('v'); if(v) val = v.textContent; }
+      cells[col] = val;
+      if(col>maxCol) maxCol = col;
+    });
+    const arr = [];
+    for(let i=0;i<=maxCol;i++) arr.push(cells[i]||'');
+    rows.push(arr);
+  });
+  return rows;
 }
 
 /* ================= 座位表 ================= */
