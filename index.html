@@ -317,8 +317,8 @@ svg{flex-shrink:0;}
 .home-card-title .count{font-size:.68rem;font-weight:600;color:var(--text-3);background:var(--bg);padding:1px 8px;border-radius:10px;}
 .home-card-title .spacer{flex:1;}
 
-.home-timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:space-between;height:100%;min-height:0;}
-.home-timeline li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--border);}
+.home-timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;min-height:0;}
+.home-timeline li{display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px dashed var(--border);}
 .home-timeline li:last-child{border-bottom:none;padding-bottom:0;}
 .home-timeline li:first-child{padding-top:0;}
 .ht-time{flex:0 0 44px;font-size:.66rem;font-weight:700;color:var(--primary-dark);background:var(--primary-weak);border-radius:8px;text-align:center;padding:4px 0;line-height:1.25;}
@@ -347,9 +347,13 @@ svg{flex-shrink:0;}
 .todo-more{display:flex;align-items:center;justify-content:center;padding:7px;font-size:.75rem;font-weight:600;color:var(--primary-dark);background:var(--primary-weak);border-radius:9px;cursor:pointer;margin-top:8px;transition:background .15s;}
 .todo-more:hover{background:var(--primary-weak-2);}
 
-.home-aux{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-@media(max-width:1100px){.home-aux{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:640px){.home-aux{grid-template-columns:1fr;}}
+.home-aux{display:grid;grid-template-columns:1fr;gap:14px;}
+.daily-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.daily-col{display:flex;flex-direction:column;min-height:0;}
+.daily-title{display:flex;align-items:center;gap:6px;font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.daily-title .hct-icon{font-size:1rem;}
+@media(max-width:1100px){.daily-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:720px){.daily-grid{grid-template-columns:1fr;}}
 
 .home-attend .attend-count{padding:4px 0 10px;}
 .home-attend .ac-num{font-size:1.3rem;font-weight:800;}
@@ -400,13 +404,11 @@ svg{flex-shrink:0;}
 .sched-cell.break .break-lbl{font-size:.7rem;font-weight:600;letter-spacing:.5px;opacity:.85;display:block;}
 .sched-cell.break .break-time{font-size:.58rem;opacity:.65;font-weight:500;display:block;margin-top:1px;}
 .sched-cell.break .dining-lbl{font-size:.7rem;background:#fff;border-radius:7px;padding:3px 7px;margin-top:4px;display:inline-block;color:#0C807F;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-.dining-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border);}
-.dining-summary-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;}
-.dining-summary-item.today{background:var(--primary-weak);border-color:var(--primary-weak-2);box-shadow:inset 0 0 0 1.5px var(--primary);}
-.dining-summary-item .ds-day{font-size:.68rem;color:var(--text-3);margin-bottom:2px;}
-.dining-summary-item .ds-teacher{font-size:.86rem;font-weight:700;color:var(--text);}
-.dining-summary-item .ds-empty{font-size:.78rem;color:var(--text-3);}
-@media(max-width:860px){.dining-summary{grid-template-columns:repeat(3,1fr);}.dining-summary-item:nth-child(4),.dining-summary-item:nth-child(5){grid-column:span 1;}}
+.dining-row th{background:#F6FAF8;color:#0C807F;font-weight:700;vertical-align:middle;}
+.dining-cell{background:#F6FAF8;border:1px dashed #A7E3DE !important;cursor:pointer;transition:all .12s;min-height:52px;height:52px;}
+.dining-cell:hover{background:#E6F6F1;border-color:var(--primary) !important;}
+.dining-cell .dining-name{font-size:.78rem;font-weight:700;color:#0C807F;display:block;}
+.dining-cell.today-col{background:#E6F6F1;box-shadow:inset 0 0 0 1.5px var(--primary);}
 .sched-cell.overridden{box-shadow:inset 0 0 0 2px var(--warning);}
 .sched-cell.break.overridden{box-shadow:inset 0 0 0 2px var(--warning);background:rgba(245,158,11,.10);}
 .swap-banner{display:flex;align-items:center;gap:8px;background:var(--warning-weak);border:1px solid #F6D9A8;color:#B45309;border-radius:10px;padding:8px 12px;font-weight:600;font-size:.82rem;margin-bottom:10px;}
@@ -888,14 +890,13 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
 }
 .home-schedule,.home-todo{display:flex;flex-direction:column;min-height:0;}
 @media(min-width:701px){
-  #view-today.active{display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:560px;overflow:hidden;}
+  #view-today.active{display:flex;flex-direction:column;min-height:0;overflow:visible;}
   #view-today.active .today-top{flex:0 0 auto;}
   #view-today.active .stats-strip{flex:0 0 auto;}
-  #view-today.active .home-grid{flex:1 1 auto;min-height:0;}
-  #view-today.active .home-aux{flex:0 0 auto;}
+  #view-today.active .home-grid{min-height:0;}
   #view-today.active .home-card{display:flex;flex-direction:column;min-height:0;}
-  #view-today.active #todaySched{flex:1 1 auto;}
-  #view-today.active #todayTodos{flex:1 1 auto;overflow:auto;max-height:380px;}
+  #view-today.active #todaySched{flex:1 1 auto;min-height:0;}
+  #view-today.active #todayTodos{max-height:360px;overflow:auto;}
 }
 @media(max-width:1180px){
   .home-grid{grid-template-columns:1fr 1fr;}
@@ -1092,18 +1093,23 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
 
     <!-- 底部小卡：值日 / 放学 / 出勤 -->
     <div class="home-aux">
-      <div class="home-card home-duty">
-        <div class="home-card-title"><span class="hct-icon">🧹</span> 值日看板 <span class="spacer"></span><span id="dutyWeekPill"></span></div>
-        <div id="dutyBoard"></div>
-      </div>
-      <div class="home-card home-dismiss">
-        <div class="home-card-title"><span class="hct-icon">🚗</span> 放学提醒 <span class="spacer"></span><button class="btn-text" onclick="switchView('dismiss')">详情</button></div>
-        <div id="todayDismiss"></div>
-      </div>
-      <div class="home-card home-attend">
-        <div class="home-card-title"><span class="hct-icon">📋</span> 今日出勤 <span class="home-cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span></div>
-        <div id="attendCount"></div>
-        <div id="morningReport"></div>
+      <div class="home-card home-daily">
+        <div class="home-card-title"><span class="hct-icon">📋</span> 今日事务 <span class="spacer"></span><button class="btn-text" onclick="switchView('dismiss')">放学详情</button></div>
+        <div class="daily-grid">
+          <div class="daily-col home-duty">
+            <div class="daily-title"><span class="hct-icon">🧹</span> 值日看板 <span class="spacer"></span><span id="dutyWeekPill"></span></div>
+            <div id="dutyBoard"></div>
+          </div>
+          <div class="daily-col home-dismiss">
+            <div class="daily-title"><span class="hct-icon">🚗</span> 放学提醒</div>
+            <div id="todayDismiss"></div>
+          </div>
+          <div class="daily-col home-attend">
+            <div class="daily-title"><span class="hct-icon">✅</span> 今日出勤 <span class="home-cls-tag" id="clsTag" onclick="editClass()" title="点击修改班级/人数"></span></div>
+            <div id="attendCount"></div>
+            <div id="morningReport"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1285,7 +1291,6 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
         <div class="week-bar" id="weekBar"></div>
         <div class="muted mb8" id="schedHint"></div>
         <div class="table-wrap"><table class="sched-table" id="schedTable"></table></div>
-        <div class="dining-summary" id="diningSummary"></div>
       </div>
     </div>
 
@@ -1475,7 +1480,11 @@ function subjClass(s){
   return '';
 }
 /* 我本人任教的学科（班主任通常教语文/道法/班队），这些课彩色显示，其余灰色 */
-function isMySubject(s){ if(!s) return false; return /语文|道法|班队/.test(s); }
+function isMySubject(s, t){ 
+  const tn = state && state.teacherName ? state.teacherName : '洪文婷';
+  if(t && tn && t === tn) return true;
+  return false;
+}
 const SUBJ_EMOJI = {'语文':'📖','数学':'🔢','英语':'🔤','道法':'⚖️','体育':'🏃','音乐':'🎵','美术':'🎨','综合':'🌈','书法':'🖌️','班队':'🚩','科学':'🔬','信息':'💻','阅读':'📚'};
 function subjEmoji(s){ if(!s) return '📌'; for(const k in SUBJ_EMOJI){ if(String(s).indexOf(k) > -1) return SUBJ_EMOJI[k]; } return '📌'; }
 /* ===== 作息时间表 ===== */
@@ -1692,6 +1701,14 @@ function migrateState(){
   if(state.sched.periods.indexOf('晚托') < 0) state.sched.periods.push('晚托');
   if(!state.sched.weeks) state.sched.weeks = {};
   if(!state.sched.startDate) state.sched.startDate = mondayStr();
+  /* 阶段五：若学生列表为空且仍为示例模式，自动补回 30 人模拟数据，避免首次打开看不到内容 */
+  if(!state.students.length && state.demo !== false){
+    const demo = defaultState();
+    state.students = demo.students;
+    state.seat = demo.seat;
+    state.duty = demo.duty;
+    state.classTotal = state.students.length;
+  }
   /* 阶段四：班主任姓名 + 旧单元格补任课教师；课表不再分我的/班级，统一一张表用颜色区分 */
   if(!state.teacherName) state.teacherName = '洪文婷';
   delete state.sched.view;   /* 移除旧的双视图字段 */
@@ -1831,11 +1848,11 @@ function renderToday(){
           bodyHtml += '<div class="ht-subj">午休</div>';
           if(dv) bodyHtml += '<div class="ht-dining">陪餐：' + esc(dv) + '</div>';
         } else if(isAfterSchool && cell){
-          const mine = isMySubject(cell.s);
+          const mine = isMySubject(cell.s, cell.t);
           const subjCls = mine ? 's-mine mine' : (subjClass(cell.s) + ' other');
           bodyHtml += '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + (cell.t ? esc(cell.t) : '') + (cell.c ? ' · ' + esc(cell.c) : '') + '</div>';
         } else if(cell){
-          const mine = isMySubject(cell.s);
+          const mine = isMySubject(cell.s, cell.t);
           const subjCls = mine ? 's-mine mine' : (subjClass(cell.s) + ' other');
           bodyHtml += '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>';
         } else {
@@ -1844,7 +1861,7 @@ function renderToday(){
         html += '<li class="break'+(isNow?' now':'')+'"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + (time || esc(p)) + '</span><div class="ht-body">' + bodyHtml + '</div></li>';
         return;
       }
-      const mine = cell && isMySubject(cell.s);
+      const mine = cell && isMySubject(cell.s, cell.t);
       const subjCls = cell ? (mine ? 's-mine mine' : (subjClass(cell.s) + ' other')) : '';
       html += '<li class="' + (cell?'has':'') + (isNow?' now':'') + '"><span class="ht-dot"></span><span class="ht-time'+(isNow?' now':'')+'">' + (time || esc(p)) + '</span><div class="ht-body">' +
         (cell ? '<div class="ht-subj ' + subjCls + '">' + esc(cell.s) + '</div><div class="ht-meta">' + esc(cell.c||'') + (cell.t ? ' · ' + esc(cell.t) : '') + '</div>' : '<div class="ht-meta">空堂</div>') +
@@ -2036,6 +2053,19 @@ function renderTodos(){
 }
 
 /* ================= 学生信息 ================= */
+function loadDemoStudents(){
+  const demo = defaultState();
+  state.students = demo.students;
+  state.seat = demo.seat;
+  state.duty = demo.duty;
+  state.dismiss = demo.dismiss;
+  state.dining = demo.dining;
+  state.sched = demo.sched;
+  state.demo = true;
+  state.classTotal = state.students.length;
+  state.className = state.className || '三（1）班';
+  save(); renderAll(); showToast('已加载 30 人示例数据');
+}
 function renderStudents(){
   $('#stuCount').textContent = '共 ' + state.students.length + ' 人';
   const el = $('#stuTable');
@@ -2043,7 +2073,7 @@ function renderStudents(){
   $('#cls-student-detail').classList.add('hidden');
   $('#cls-students').classList.remove('hidden');
   if(!state.students.length){
-    el.innerHTML = '<tr><td colspan="6" class="stu-empty">暂无学生，点击右上角「添加学生」或「Excel/批量导入」</td></tr>';
+    el.innerHTML = '<tr><td colspan="6" class="stu-empty">暂无学生，点击右上角「添加学生」或「Excel/批量导入」<br><button class="btn btn-sm" style="margin-top:10px;" onclick="loadDemoStudents()">加载 30 人示例数据</button></td></tr>';
     return;
   }
   const rows = state.students.map(s => {
@@ -2731,8 +2761,8 @@ function renderSched(){
       const base = state.sched.grid[key];
       const overridden = ov !== undefined && JSON.stringify(ov===null?null:ov) !== JSON.stringify(base||null);
       const isToday = isThisWeek && wd===d;
-      const mine = cell && isMySubject(cell.s);
-      const subjCls = (cell && !isBreak) ? (mine ? 's-mine' : subjClass(cell.s)) : '';
+      const mine = cell && isMySubject(cell.s, cell.t);
+      const subjCls = (cell && !isBreak) ? (mine ? 's-mine' : (subjClass(cell.s) + ' other')) : '';
       const cls = ['sched-cell'];
       if(isBreak) cls.push('break');
       else if(cell) cls.push('filled');
@@ -2765,12 +2795,17 @@ function renderSched(){
     row += '</tr>';
     body += row;
   });
-  $('#schedTable').innerHTML = head + body;
+  /* 把陪餐安排作为课表最下面一行，融入完整课表 */
+  const diningRow = '<tr class="dining-row"><th style="font-size:.72rem;">陪餐</th>' + [1,2,3,4,5].map(d => {
+    const teacher = state.dining && state.dining[d] ? esc(state.dining[d]) : '';
+    const isToday = isThisWeek && wd === d;
+    return '<td class="sched-cell dining-cell' + (isToday ? ' today-col' : '') + '" onclick="openDiningEdit(' + d + ')">' + (teacher ? '<span class="dining-name">' + teacher + '</span>' : '<span style="opacity:.35;font-size:1rem;line-height:1;">+</span>') + '</td>';
+  }).join('') + '</tr>';
+  $('#schedTable').innerHTML = head + body + diningRow;
   const filled = Object.keys(state.sched.grid).length;
   const adj = Object.keys(wkGrid).length;
   $('#schedInfo').textContent = '已排 ' + filled + ' 节课' + (adj ? ' · 本周 ' + adj + ' 处调整' : '');
-  $('#schedHint').innerHTML = '同一张课表：<b style="color:#C2185B;">粉色 = 我的课</b>，其他学科保留各自颜色；<b style="color:var(--warning);">橙框</b>表示本周有换课。';
-  renderDiningSummary();
+  $('#schedHint').innerHTML = '同一张课表：<b style="color:#C2185B;">粉色 = 我的课</b>，其他老师课显示灰色；<b style="color:var(--warning);">橙框</b>表示本周有换课。';
   renderSchedSwapBanner();
   renderSchedNow();
 }
@@ -2993,6 +3028,21 @@ function saveDining(){
     if(v) state.dining[d] = v; else delete state.dining[d];
   });
   save(); renderAll(); showToast('陪餐安排已保存，午休时段已更新');
+}
+function openDiningEdit(day){
+  const teacher = diningOf(day) || '';
+  openModal(DIN_DAYS[day-1] + ' 陪餐教师', `
+    <div class="form-item"><label>陪餐教师</label><input id="dinEdit" value="${esc(teacher)}" placeholder="如：王老师"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn" onclick="saveDiningEdit(${day})">保存</button>
+    </div>`);
+}
+function saveDiningEdit(day){
+  const v = $('#dinEdit').value.trim();
+  if(!state.dining) state.dining = {};
+  if(v) state.dining[day] = v; else delete state.dining[day];
+  save(); renderAll(); showToast('陪餐安排已保存');
 }
 function renderDiningSummary(){
   const el = $('#diningSummary');
