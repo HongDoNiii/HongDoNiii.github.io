@@ -893,38 +893,43 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
   70%{opacity:0;}
   100%{transform:scale(2.6);opacity:0;}
 }
-/* ===== 全站动态水波纹背景 ===== */
+/* ===== 全站动态水波纹背景（蓝绿粉黄融合） ===== */
 body::before{
   content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(42% 40% at 16% 20%, rgba(43,179,154,.20), rgba(43,179,154,0) 62%),
-    radial-gradient(38% 42% at 84% 16%, rgba(91,200,176,.17), rgba(91,200,176,0) 62%),
-    radial-gradient(48% 46% at 78% 84%, rgba(34,197,194,.15), rgba(34,197,194,0) 64%),
-    radial-gradient(40% 44% at 22% 86%, rgba(125,211,196,.18), rgba(125,211,196,0) 62%),
-    linear-gradient(135deg,#F2F8F4 0%,#E9F6F1 50%,#F2F8F4 100%);
-  background-size:200% 200%,200% 200%,200% 200%,200% 200%,100% 100%;
-  animation:wbBgFlow 18s ease-in-out infinite;
+    radial-gradient(40% 38% at 12% 16%, rgba(59,130,246,.34), rgba(59,130,246,0) 62%),    /* 蓝 */
+    radial-gradient(34% 40% at 88% 12%, rgba(244,114,182,.30), rgba(244,114,182,0) 62%),   /* 粉 */
+    radial-gradient(44% 42% at 82% 84%, rgba(16,185,129,.32), rgba(16,185,129,0) 63%),     /* 绿 */
+    radial-gradient(36% 42% at 18% 88%, rgba(251,191,36,.30), rgba(251,191,36,0) 62%),      /* 黄 */
+    radial-gradient(46% 44% at 50% 48%, rgba(45,212,191,.20), rgba(45,212,191,0) 64%),      /* 青绿 */
+    radial-gradient(30% 30% at 62% 28%, rgba(167,139,250,.22), rgba(167,139,250,0) 60%),    /* 紫点缀 */
+    linear-gradient(135deg,#F3FBFF 0%,#FBF3FB 50%,#FFFCF2 100%);                             /* 浅彩基底 */
+  background-size:300% 300%,300% 300%,300% 300%,300% 300%,300% 300%,300% 300%,100% 100%;
+  animation:wbBgFlow 13s ease-in-out infinite;
 }
 @keyframes wbBgFlow{
-  0%{background-position:0% 0%,100% 0%,0% 100%,100% 100%,0 0;}
-  50%{background-position:100% 100%,0% 100%,100% 0%,0% 0%,0 0;}
-  100%{background-position:0% 0%,100% 0%,0% 100%,100% 100%,0 0;}
+  0%{background-position:0% 0%,100% 0%,0% 100%,100% 100%,50% 50%,0% 0%,0 0;}
+  50%{background-position:100% 100%,0% 100%,100% 0%,0% 0%,50% 50%,100% 100%,0 0;}
+  100%{background-position:0% 0%,100% 0%,0% 100%,100% 100%,50% 50%,0% 0%,0 0;}
 }
 body::after{
-  content:'';position:fixed;left:50%;top:32%;width:62vmax;height:62vmax;
+  content:'';position:fixed;left:38%;top:30%;width:70vmax;height:70vmax;
   transform:translate(-50%,-50%);border-radius:50%;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle,rgba(43,179,154,.12) 0%,rgba(43,179,154,0) 70%);
-  animation:wbBreath 13s ease-in-out infinite;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(59,130,246,.16), rgba(59,130,246,0) 60%),
+    radial-gradient(circle at 70% 70%, rgba(244,114,182,.16), rgba(244,114,182,0) 60%);
+  animation:wbBreath 11s ease-in-out infinite;
 }
 @keyframes wbBreath{
-  0%,100%{transform:translate(-50%,-50%) scale(.8);opacity:.55;}
-  50%{transform:translate(-50%,-50%) scale(1.18);opacity:1;}
+  0%,100%{transform:translate(-50%,-50%) scale(.82);opacity:.55;}
+  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1;}
 }
-/* 面板毛玻璃 · 让动态背景透出 */
+/* 面板毛玻璃 · 让动态背景透出（更强质感） */
 .home-card,.card,.sched-card,.stu-card,.profile-card,.note-card,.rep-card,.rep-stat,.modal,.home-schedule,.home-todo,.grid-today,.grid-week{
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(14px) saturate(1.15);
-  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(18px) saturate(1.3);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.55);
 }
 .home-hero{
   position:relative;overflow:hidden;
@@ -948,6 +953,17 @@ body::after{
 .home-hero-sub{font-size:.88rem;color:var(--primary-dark);margin-top:4px;position:relative;z-index:1;opacity:.92;}
 .home-hero-date{text-align:right;color:var(--primary-dark);font-size:.85rem;line-height:1.6;position:relative;z-index:1;}
 .home-hero-date .d{font-size:1.1rem;font-weight:700;color:var(--primary-darker);}
+.home-hero-main{position:relative;z-index:1;flex:1;min-width:0;}
+.hero-meta{margin-top:12px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-chip{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;font-weight:600;
+  color:#0F766E;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.7);
+  padding:5px 12px;border-radius:99px;box-shadow:0 4px 12px -6px rgba(15,118,110,.25);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.hero-chip b{font-size:.92rem;font-weight:800;color:#134E4A;}
+.hero-tip{font-size:.78rem;color:#0F766E;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.6);
+  padding:6px 12px;border-radius:12px;line-height:1.5;max-width:440px;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 .today-top{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:stretch;margin-bottom:14px;}
 .today-top .home-hero{margin-bottom:0;}
 .countdown-strip{
@@ -1140,6 +1156,13 @@ body::after{
         <div class="home-hero-main">
           <div class="home-hero-greet" id="heroGreet">Hi，洪老师</div>
           <div class="home-hero-sub" id="heroSub">开启元气满满的一天！</div>
+          <div class="hero-meta">
+            <div class="hero-chips">
+              <span class="hero-chip"><b id="heroWeather">—</b> <span id="heroWeatherK">天气</span></span>
+              <span class="hero-chip">🌞 紫外线 <b id="heroUV">—</b> <span id="heroUVK">—</span></span>
+            </div>
+            <div class="hero-tip" id="heroTip">💡 温馨提示加载中…</div>
+          </div>
         </div>
         <div class="home-hero-date" id="heroDate">—</div>
       </div>
@@ -1867,6 +1890,8 @@ function renderToday(){
   $('#heroGreet').textContent = 'Hi，' + teacherTitle;
   $('#heroSub').textContent = heroSub;
   $('#heroDate').innerHTML = '<div class="d">' + wd + ' · ' + t.slice(5).replace('-','/') + '</div><div>第 ' + cw + ' 教学周</div>';
+  const tipEl = document.getElementById('heroTip');
+  if(tipEl) tipEl.textContent = '💡 ' + (heroTip || '今天也要元气满满哦～');
 
   // 统计条
   const totalStu = state.students.length;
@@ -1994,10 +2019,10 @@ function applyWeatherDOM(){
     we.textContent = em[0] + ' ' + Math.round(w.temp) + '°';
     wek.textContent = em[1] + ' · 上海';
     uv.textContent = (typeof w.uv === 'number' && !isNaN(w.uv)) ? (Math.round(w.uv*10)/10) : '—';
-    uvk.textContent = '紫外线 · ' + ((typeof w.uv === 'number' && !isNaN(w.uv)) ? uvLevel(w.uv) : '无数据');
+    uvk.textContent = (typeof w.uv === 'number' && !isNaN(w.uv)) ? uvLevel(w.uv) : '无数据';
   }else{
     we.textContent = '—'; wek.textContent = '天气';
-    uv.textContent = '—'; uvk.textContent = '紫外线';
+    uv.textContent = '—'; uvk.textContent = '—';
   }
 }
 function fetchWeather(){
@@ -2010,6 +2035,23 @@ function fetchWeather(){
       applyWeatherDOM();
     }).catch(()=>{ applyWeatherDOM(); });
 }
+/* 随机温馨提示（每日打开随机一条，不随渲染跳动） */
+const HERO_TIPS = [
+  '课间提醒孩子们多喝水，科学护嗓更精神～',
+  '今天有语文课，不妨带孩子们做一次一分钟即兴表达小练笔。',
+  '天气渐凉，留意孩子们的衣裳增减，预防感冒。',
+  '午休后安排五分钟静心阅读，下午状态更稳。',
+  '放学路队记得清点人数，安全第一。',
+  '给今天表现棒的孩子一句具体表扬，比泛泛夸更有效。',
+  '备课时多备一个开放式问题，课堂会更活跃。',
+  '紫外线偏强，户外活动前提醒孩子们做好防晒。',
+  '今天适合安排一次小组合作，培养孩子们的协作力。',
+  '睡前整理好明天的教具，明天一早更从容。',
+  '朗读时带着表情和手势，孩子们更容易入情入境。',
+  '批改作业写一句鼓励的话，孩子会记得很久。'
+];
+let heroTip = '';
+function genHeroTip(){ heroTip = HERO_TIPS[Math.floor(Math.random()*HERO_TIPS.length)]; }
 
 /* ================= 今日新闻 ================= */
 let newsCache = null;
@@ -5701,6 +5743,7 @@ function renderAll(){
 }
 $('#todoDate').value = todayStr();
 renderTplList();
+genHeroTip();                            /* 生成当日随机温馨提示 */
 viewWeek = currentWeekNum();
 renderAll();
 /* 双保险：关键按钮用 addEventListener 绑定，避免某些预览环境的内联 onclick 被拦截 */
