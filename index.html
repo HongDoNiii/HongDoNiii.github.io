@@ -861,6 +861,14 @@ table.data tr:last-child td{border-bottom:none;}
 .field .v{font-weight:600;word-break:break-all;}
 .field .v.empty{color:#C2C8D4;font-weight:400;}
 @media(max-width:560px){.profile-head{flex-wrap:wrap;}.profile-actions{margin-left:0;width:100%;}}
+/* ===== 个人文档（Word 上传） ===== */
+.doc-zone{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.doc-empty{font-size:.76rem;color:var(--text-3);}
+.doc-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.6);border:1px solid var(--border);}
+.doc-ico{font-size:1.1rem;flex:0 0 auto;}
+.doc-name{font-size:.83rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-size{font-size:.7rem;color:var(--text-3);flex:0 0 auto;}
+.doc-actions{display:flex;gap:6px;flex:0 0 auto;}
 
 /* ============ 学生编辑表单：照片上传 ============ */
 .photo-upload{display:flex;align-items:center;gap:14px;}
@@ -2327,9 +2335,11 @@ function renderStudents(){
     '<th>姓名</th><th>学号</th><th>性别</th><th>家长电话</th><th>家长姓名</th><th>住址</th><th>职务/社团</th><th>放学</th>' +
     '</tr></thead><tbody>' + rows + '</tbody>';
 }
+let currentStudentId = '';
 function openStudentDetail(id){
   const s = state.students.find(x=>x.id===id);
   if(!s) return;
+  currentStudentId = id;
   const f = (k,v) => '<div class="field"><span class="k">' + k + '</span><span class="v' + (v?'':' empty') + '">' + (v?esc(v):'未填写') + '</span></div>';
   const photo = s.photo ? '<div class="profile-photo"><img src="' + s.photo + '" alt=""></div>'
                         : '<div class="profile-photo">' + esc((s.name||'?').charAt(0)) + '</div>';
@@ -2357,6 +2367,12 @@ function openStudentDetail(id){
           f('社团', s.club) + f('职务/备注', s.remark) +
           f('课后看护', s.care?'是（5:30 放学）':'否（4:30 放学）') + f('性别', s.gender) +
         '</div>' +
+        '<div class="profile-sec-title">📎 个人文档（Word）</div>' +
+        '<div class="doc-zone" id="docZone">' + renderStudentDocs(s) + '</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+          '<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'stuDocFile\').click()">📤 上传 Word 文档</button>' +
+          '<input type="file" id="stuDocFile" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none" onchange="onStudentDocPick(this)">' +
+        '</div>' +
       '</div>' +
     '</div>';
   $('#cls-student-detail').innerHTML = html;
@@ -2368,6 +2384,64 @@ function backToStudents(){
   $('#cls-student-detail').classList.add('hidden');
   $('#cls-students').classList.remove('hidden');
   window.scrollTo({top:0});
+}
+/* ===== 学生个人文档（Word 上传） ===== */
+function renderStudentDocs(s){
+  const docs = s.docs || [];
+  if(!docs.length) return '<div class="doc-empty">暂无上传的 Word 文档</div>';
+  return docs.map((d,i)=>'<div class="doc-item">' +
+    '<span class="doc-ico">📄</span>' +
+    '<span class="doc-name" title="' + esc(d.name) + '">' + esc(d.name) + '</span>' +
+    (d.size ? '<span class="doc-size">' + fmtSize(d.size) + '</span>' : '') +
+    '<span class="doc-actions">' +
+      '<button class="btn-text btn-sm" onclick="downloadStudentDoc(\'' + s.id + '\',' + i + ')">下载</button>' +
+      '<button class="btn-text btn-sm" style="color:var(--danger);" onclick="delStudentDoc(\'' + s.id + '\',' + i + ')">删除</button>' +
+    '</span>' +
+  '</div>').join('');
+}
+function fmtSize(b){
+  if(!b && b!==0) return '';
+  if(b < 1024) return b + ' B';
+  if(b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/1024/1024).toFixed(1) + ' MB';
+}
+function onStudentDocPick(input){
+  const id = currentStudentId;
+  const s = state.students.find(x=>x.id===id);
+  if(!s) return;
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const okExt = /\.(docx?|DOCX?)$/.test(file.name);
+  if(!okExt && !/word/.test(file.type)){
+    showToast('请选择 Word 文档（.doc / .docx）'); input.value=''; return;
+  }
+  if(file.size > 6*1024*1024){
+    showToast('文件超过 6MB，可能无法存入本地（建议压缩后再上传）'); input.value=''; return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    s.docs = s.docs || [];
+    s.docs.push({name:file.name, size:file.size, data:e.target.result});
+    save(); openStudentDetail(id); showToast('已上传：' + file.name);
+  };
+  reader.onerror = () => { showToast('读取文件失败，请重试'); };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+function downloadStudentDoc(id, idx){
+  const s = state.students.find(x=>x.id===id);
+  if(!s || !s.docs || !s.docs[idx]) return;
+  const d = s.docs[idx];
+  const a = document.createElement('a');
+  a.href = d.data; a.download = d.name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function delStudentDoc(id, idx){
+  const s = state.students.find(x=>x.id===id);
+  if(!s || !s.docs || !s.docs[idx]) return;
+  if(!confirm('确定删除文档「' + (s.docs[idx].name||'') + '」？')) return;
+  s.docs.splice(idx,1);
+  save(); openStudentDetail(id); showToast('已删除文档');
 }
 let editingPhoto = '';
 function openStudentModal(id){
