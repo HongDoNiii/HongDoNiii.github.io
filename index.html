@@ -81,7 +81,7 @@ svg{flex-shrink:0;}
   padding:22px 16px 18px;overflow-y:auto;
   /* 渐变毛玻璃：蓝紫粉融入 + 浅色玻璃基底，底层动态背景透出 */
   background:
-    linear-gradient(155deg, rgba(99,102,241,.18) 0%, rgba(139,92,246,.14) 34%, rgba(59,130,246,.16) 64%, rgba(244,114,182,.14) 100%),
+    linear-gradient(155deg, rgba(99,102,241,.18) 0%, rgba(139,92,246,.10) 30%, rgba(59,130,246,.15) 58%, rgba(250,203,107,.10) 80%, rgba(244,114,182,.13) 100%),
     linear-gradient(180deg, rgba(255,255,255,.48) 0%, rgba(255,255,255,.34) 100%);
   background-size:220% 220%, 100% 100%;
   animation:wbSideFlow 15s ease-in-out infinite;
@@ -242,7 +242,7 @@ svg{flex-shrink:0;}
 .btn-sm{padding:7px 14px;min-height:38px;font-size:.82rem;border-radius:10px;}
 .btn-danger-outline{background:var(--card);color:var(--danger);border:1.5px solid var(--danger);box-shadow:none;}
 .btn-danger-outline:hover{background:var(--danger-weak);transform:translateY(-1px);}
-.btn-text{color:var(--primary);min-height:36px;padding:4px 10px;font-size:.85rem;font-weight:600;border-radius:9px;transition:all .15s;}
+.btn-text{color:var(--primary);background:transparent;box-shadow:none;border:1px solid transparent;min-height:36px;padding:4px 10px;font-size:.85rem;font-weight:600;border-radius:9px;transition:all .15s;}
 .btn-text:hover{background:var(--primary-weak);}
 .btn:focus-visible,.side-tab:focus-visible,.subnav button:focus-visible{outline:2px solid #7DD3D0;outline-offset:2px;}
 
@@ -278,6 +278,18 @@ svg{flex-shrink:0;}
 .tag-blue{background:var(--primary-weak);color:var(--primary-dark);}
 .tag-gray{background:var(--bg);color:var(--text-2);border:1px solid var(--border);}
 .tag-orange{background:var(--warning-weak);color:var(--warning);}
+.tag-ex{background:#EAF0FF;color:#4F5FBF;}      /* 运动时间 */
+.tag-rest{background:#E8F8F0;color:#1E9E5A;}     /* 休息时间 */
+.tag-brk{background:#FFF3E6;color:#C2410C;}      /* 课间 */
+.break-tag{display:inline-block;margin-top:3px;padding:1px 8px;border-radius:99px;font-size:.58rem;font-weight:700;letter-spacing:.3px;}
+.break-tag.ex{background:#EAF0FF;color:#4F5FBF;}
+.break-tag.rest{background:#E8F8F0;color:#1E9E5A;}
+.break-tag.brk{background:#FFF3E6;color:#C2410C;}
+/* 周五安排参考 */
+.tt-ref{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.tt-ref-row{display:flex;align-items:center;gap:10px;font-size:.82rem;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.62);border:1px solid var(--border);}
+.tt-ref-name{font-weight:600;min-width:72px;}
+.tt-ref-time{font-family:monospace;color:var(--text-2);font-size:.78rem;}
 .todo-del{color:var(--text-3);min-height:36px;min-width:36px;display:flex;align-items:center;justify-content:center;border-radius:9px;transition:all .15s;}
 .todo-del:hover{color:var(--danger);background:var(--danger-weak);}
 .today-subj{color:var(--sc,var(--primary));font-weight:700;}
@@ -934,12 +946,12 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
 body::before{
   content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(40% 38% at 12% 16%, rgba(64,132,247,.18), rgba(64,132,247,0) 62%),     /* 蓝 */
-    radial-gradient(34% 40% at 88% 12%, rgba(173,122,243,.15), rgba(173,122,243,0) 62%),   /* 紫 */
-    radial-gradient(42% 42% at 82% 84%, rgba(247,140,190,.17), rgba(247,140,190,0) 63%),   /* 粉 */
-    radial-gradient(36% 38% at 16% 86%, rgba(250,203,107,.16), rgba(250,203,107,0) 62%),    /* 黄 */
-    radial-gradient(46% 44% at 50% 48%, rgba(140,180,255,.11), rgba(140,180,255,0) 64%),    /* 浅蓝晕染 */
-    radial-gradient(30% 30% at 64% 30%, rgba(214,160,235,.10), rgba(214,160,235,0) 60%),    /* 浅紫点缀 */
+    radial-gradient(40% 38% at 12% 18%, rgba(64,132,247,.20), rgba(64,132,247,0) 62%),      /* 蓝（主） */
+    radial-gradient(42% 42% at 82% 82%, rgba(247,140,190,.18), rgba(247,140,190,0) 63%),   /* 粉（主） */
+    radial-gradient(36% 38% at 18% 86%, rgba(250,203,107,.18), rgba(250,203,107,0) 62%),    /* 黄（主） */
+    radial-gradient(46% 44% at 50% 48%, rgba(140,180,255,.12), rgba(140,180,255,0) 64%),    /* 浅蓝晕染 */
+    radial-gradient(28% 30% at 90% 12%, rgba(173,122,243,.11), rgba(173,122,243,0) 60%),   /* 紫（小点缀） */
+    radial-gradient(30% 30% at 62% 30%, rgba(250,180,210,.11), rgba(250,180,210,0) 60%),    /* 浅粉点缀 */
     linear-gradient(135deg,#F7F9FF 0%,#FBF6FF 50%,#FFFDF6 100%);                            /* 浅彩基底 */
   background-size:300% 300%,300% 300%,300% 300%,300% 300%,300% 300%,300% 300%,100% 100%;
   animation:wbBgFlow 13s ease-in-out infinite;
@@ -970,7 +982,7 @@ body::after{
 }
 .home-hero{
   position:relative;overflow:hidden;
-  background:linear-gradient(120deg,#E9F1FF 0%,#ECE6FF 25%,#FBE9F4 50%,#ECE6FF 75%,#E9F1FF 100%);
+  background:linear-gradient(120deg,#E9F1FF 0%,#F4E7F3 25%,#FBE9F4 50%,#F4E7F3 75%,#E9F1FF 100%);
   background-size:300% 300%;animation:wbFlow 9s ease infinite;
   border:1px solid var(--primary-weak-2);border-radius:var(--radius-lg);
   padding:22px 28px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
@@ -1423,6 +1435,7 @@ body::after{
           周课表 <span class="count" id="schedInfo"></span>
           <span class="spacer"></span>
           <button class="btn btn-sm btn-outline" onclick="switchView('tt')">作息时间</button>
+          <button class="btn btn-sm btn-outline" onclick="openImportSched()">导入课表</button>
           <button class="btn btn-sm btn-outline" onclick="clearSchedConfirm()">清空课表</button>
         </div>
         <div class="rep-head" style="margin:2px 0 12px;gap:10px;justify-content:space-between;">
@@ -1447,8 +1460,22 @@ body::after{
           <button class="btn btn-sm btn-outline" onclick="openTTPasteModal()">粘贴文本导入</button>
           <button class="btn btn-sm" onclick="openTTEdit(-1)">添加时段</button>
         </div>
-        <div class="muted mb8">时间表有变化时在这里更新，周课表和今日课表的节次、时间会自动跟着调整。<br>默认作息为周一至周四；周五三~五年级略有不同（午餐 11:55-12:15、午休 12:15-12:45、体育活动 12:45-13:20，下午第6节后另有体育活动 14:50-15:25，放学 15:30），可在周五当天灵活备注。</div>
+        <div class="muted mb8">已按中北一小 2026 学年第一学期两张时间表整理：<b>🏃 运动时间</b>（大课间 / 体育活动）、<b style="color:#1E9E5A;">休息时间</b>（午休 / 午餐 / 午间休息）、<b style="color:#C2410C;">课间</b>（眼保健操）都已标注。下方「周五三~五年级安排」与周一至周四不同，请注意。<br>时间表有变化时在这里更新，周课表和今日课表的节次、时间会自动跟着调整。</div>
         <div id="ttList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">周五三~五年级安排（与周一至周四不同）</div>
+        <div class="muted mb8">按学校时间表，周五下午结构不同：午餐后先午间休息，再体育活动；第6节后另有体育活动，放学 15:30。下周课表仍按周一至周四结构，周五差异请当天灵活备注。</div>
+        <div class="tt-ref">
+          <div class="tt-ref-row"><span class="tt-ref-name">午餐</span><span class="tt-ref-time">11:55 – 12:15</span><span class="tag tag-rest">休息时间</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">午间休息</span><span class="tt-ref-time">12:15 – 12:45</span><span class="tag tag-rest">休息时间</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">体育活动</span><span class="tt-ref-time">12:45 – 13:20</span><span class="tag tag-ex">运动时间</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">第5节</span><span class="tt-ref-time">13:20 – 13:55</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">课间休息</span><span class="tt-ref-time">14:00 – 14:15</span><span class="tag tag-brk">课间</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">第6节</span><span class="tt-ref-time">14:15 – 14:50</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">体育活动</span><span class="tt-ref-time">14:50 – 15:25</span><span class="tag tag-ex">运动时间</span></div>
+          <div class="tt-ref-row"><span class="tt-ref-name">放学</span><span class="tt-ref-time">15:30</span></div>
+        </div>
       </div>
       <div class="card">
         <div class="card-title">
@@ -1628,15 +1655,35 @@ function isMySubject(s, t){
 }
 const SUBJ_EMOJI = {'语文':'📖','数学':'🔢','英语':'🔤','道法':'⚖️','体育':'🏃','音乐':'🎵','美术':'🎨','综合':'🌈','书法':'🖌️','班队':'🚩','科学':'🔬','信息':'💻','阅读':'📚'};
 function subjEmoji(s){ if(!s) return '📌'; for(const k in SUBJ_EMOJI){ if(String(s).indexOf(k) > -1) return SUBJ_EMOJI[k]; } return '📌'; }
-/* ===== 作息时间表 ===== */
+/* ===== 作息时间表（中北一小 2026 学年第一学期） ===== */
 const DEF_TT = {
-  // 中北一小 2026 学年第一学期作息（周一至周四，三~五年级）
+  // 周一至周四（三~五年级通用）节次起止时间
   '第1节':['08:20','08:55'], '第2节':['09:10','09:45'], '第3节':['10:30','11:05'],
   '第4节':['11:20','11:55'], '午休':['11:55','13:20'], '第5节':['13:20','13:55'],
   '第6节':['14:15','14:50'], '第7节':['15:05','15:40']
 };
-function ttTypeOf(name){ return /午休|午间|午餐|晚托|课间|休息|放学|清洁|保洁|社团/.test(name) ? 'break' : 'class'; }
-function ttEmoji(name){ return name.indexOf('午休')>-1 ? '🌙' : name.indexOf('晚托')>-1 ? '🌆' : '☕'; }
+/* 完整一日结构（含休息 / 运动 / 课间，按两张表标注） */
+const DEF_TIMETABLE = [
+  {name:'第1节', start:'08:20', end:'08:55', type:'class'},
+  {name:'第2节', start:'09:10', end:'09:45', type:'class'},
+  {name:'大课间', start:'09:45', end:'10:25', type:'exercise'},
+  {name:'第3节', start:'10:30', end:'11:05', type:'class'},
+  {name:'第4节', start:'11:20', end:'11:55', type:'class'},
+  {name:'午休', start:'11:55', end:'13:20', type:'rest'},
+  {name:'第5节', start:'13:20', end:'13:55', type:'class'},
+  {name:'课间·眼保健操', start:'13:55', end:'14:15', type:'break'},
+  {name:'第6节', start:'14:15', end:'14:50', type:'class'},
+  {name:'课间', start:'14:50', end:'15:05', type:'break'},
+  {name:'第7节', start:'15:05', end:'15:40', type:'class'}
+];
+function ttTypeOf(name){
+  if(/体育活动|大课间|运动/.test(name)) return 'exercise';
+  if(/午休|午间|午餐|休息|放学|清洁|保洁|社团/.test(name)) return 'rest';
+  if(/课间|眼保健操/.test(name)) return 'break';
+  return 'class';
+}
+function ttTypeLabel(t){ return t==='exercise' ? '运动时间' : t==='rest' ? '休息时间' : t==='break' ? '课间' : '上课'; }
+function ttEmoji(name){ return name.indexOf('午休')>-1 ? '🌙' : /运动|大课间|体育/.test(name) ? '🏃' : name.indexOf('课间')>-1 ? '☕' : '📖'; }
 /* 时间表 → 课表节次同步：按名称把已排课程迁移到新节次位置 */
 function syncPeriodsFromTimetable(){
   const oldP = state.sched.periods;
@@ -1750,15 +1797,14 @@ function defaultState(){
     dismiss: { overrides: {} },
     dining: { '1':'王老师', '2':'李老师', '3':'张老师', '4':'陈老师', '5':'刘老师' },
     sched: {
-      periods: ['第1节','第2节','第3节','第4节','午休','第5节','第6节','第7节'],
+      periods: ['第1节','第2节','大课间','第3节','第4节','午休','第5节','课间·眼保健操','第6节','课间','第7节'],
       startDate: mondayStr(),
       grid: {
-        '1-1':{s:'语文',c:'三(1)'}, '1-2':{s:'语文',c:'三(1)'}, '1-4':{s:'道法',c:'三(1)'}, '1-6':{s:'语文',c:'三(2)'},
-        '2-1':{s:'数学',c:'三(1)'}, '2-3':{s:'语文',c:'三(1)'}, '2-6':{s:'体育',c:'三(1)'}, '2-7':{s:'书法',c:'三(1)'},
-        '3-2':{s:'语文',c:'三(2)'}, '3-4':{s:'综合',c:'三(1)'}, '3-6':{s:'语文',c:'三(1)'},
-        '4-1':{s:'语文',c:'三(1)'}, '4-3':{s:'美术',c:'三(1)'}, '4-6':{s:'语文',c:'三(3)'}, '4-7':{s:'班队',c:'三(1)'},
-        '5-2':{s:'语文',c:'三(1)'}, '5-4':{s:'音乐',c:'三(1)'}, '5-6':{s:'语文',c:'三(2)'},
-        '1-5':{s:'午会',t:'洪文婷',c:'三(1)'}, '2-5':{s:'午读',t:'李老师',c:'三(1)'}, '3-5':{s:'劳动',t:'张老师',c:'三(1)'}, '4-5':{s:'班务',t:'陈老师',c:'三(1)'}, '5-5':{s:'安全',t:'刘老师',c:'三(1)'}
+        '1-1':{s:'语文',c:'三(1)'}, '1-2':{s:'语文',c:'三(1)'}, '1-5':{s:'道法',c:'三(1)'}, '1-6':{s:'午会',t:'洪文婷',c:'三(1)'}, '1-7':{s:'语文',c:'三(2)'},
+        '2-1':{s:'数学',c:'三(1)'}, '2-4':{s:'语文',c:'三(1)'}, '2-6':{s:'午读',t:'李老师',c:'三(1)'}, '2-7':{s:'体育',c:'三(1)'}, '2-9':{s:'书法',c:'三(1)'},
+        '3-2':{s:'语文',c:'三(2)'}, '3-5':{s:'综合',c:'三(1)'}, '3-6':{s:'劳动',t:'张老师',c:'三(1)'}, '3-7':{s:'语文',c:'三(1)'},
+        '4-1':{s:'语文',c:'三(1)'}, '4-4':{s:'美术',c:'三(1)'}, '4-6':{s:'班务',t:'陈老师',c:'三(1)'}, '4-7':{s:'语文',c:'三(3)'}, '4-9':{s:'班队',c:'三(1)'},
+        '5-2':{s:'语文',c:'三(1)'}, '5-5':{s:'音乐',c:'三(1)'}, '5-6':{s:'安全',t:'刘老师',c:'三(1)'}, '5-7':{s:'语文',c:'三(2)'}
       },
       weeks: { '1': { '2-1': {s:'语文', c:'三(1)'} } }
     },
@@ -1841,8 +1887,8 @@ function migrateState(){
   if(!Array.isArray(state.archive.talks)) state.archive.talks = [];
   if(!Array.isArray(state.archive.shibeiStudents)) state.archive.shibeiStudents = [];
   if(!state.archive.autoMonth) state.archive.autoMonth = '';
-  if(!state.sched) state.sched = { periods:['第1节','第2节','第3节','第4节','午休','第5节','第6节','第7节'], grid:{}, weeks:{}, startDate:'' };
-  if(!Array.isArray(state.sched.periods)) state.sched.periods = ['第1节','第2节','第3节','第4节','午休','第5节','第6节','第7节'];
+  if(!state.sched) state.sched = { periods:['第1节','第2节','大课间','第3节','第4节','午休','第5节','课间·眼保健操','第6节','课间','第7节'], grid:{}, weeks:{}, startDate:'' };
+  if(!Array.isArray(state.sched.periods)) state.sched.periods = ['第1节','第2节','大课间','第3节','第4节','午休','第5节','课间·眼保健操','第6节','课间','第7节'];
   /* 午休作为固定时段行追加，不影响已有 grid 键位；晚托按学校新时间表不再默认保留 */
   if(state.sched.periods.indexOf('午休') < 0) state.sched.periods.push('午休');
   if(!state.sched.weeks) state.sched.weeks = {};
@@ -1860,12 +1906,24 @@ function migrateState(){
   const _fixT = (c)=>{ if(c && c.t === undefined) c.t = _tn; };
   for(const k in (state.sched.grid||{})) _fixT(state.sched.grid[k]);
   for(const w in (state.sched.weeks||{})) for(const k in (state.sched.weeks[w]||{})) _fixT(state.sched.weeks[w][k]);
-  /* 作息时间表：老数据没有则按现有节次生成默认时段 */
-  if(!Array.isArray(state.timetable) || !state.timetable.length){
-    state.timetable = state.sched.periods.map(p => {
-      const d = DEF_TT[p] || ['', ''];
-      return {name:p, start:d[0], end:d[1], type:ttTypeOf(p)};
-    });
+  /* 作息时间表：按学校两张表重建（含大课间/课间/午休，并标注运动·休息·课间） */
+  if(!Array.isArray(state.timetable) || !state.timetable.length || !state.timetable.some(r => r.name === '大课间')){
+    const canon = DEF_TIMETABLE.map(r => ({name:r.name, start:r.start, end:r.end, type:r.type}));
+    const newP = canon.map(r => r.name);
+    if(state.sched.periods.join('|') !== newP.join('|')){
+      const oldP = state.sched.periods, used = {}, mapIdx = {};
+      oldP.forEach((nm, i) => {
+        if(mapIdx[nm] === undefined){
+          const ni = newP.indexOf(nm);
+          if(ni > -1 && !used[ni]){ mapIdx[i] = ni; used[ni] = true; }
+        }
+      });
+      const remap = g => { const ng = {}; for(const k in g){ const m = k.match(/^([1-5])-(\d+)$/); if(!m){ ng[k]=g[k]; continue; } const oi = parseInt(m[2],10)-1; if(mapIdx[oi]!==undefined) ng[m[1]+'-'+(mapIdx[oi]+1)] = g[k]; } return ng; };
+      state.sched.grid = remap(state.sched.grid);
+      if(state.sched.weeks) for(const w in state.sched.weeks) state.sched.weeks[w] = remap(state.sched.weeks[w]);
+      state.sched.periods = newP;
+    }
+    state.timetable = canon;
   }
   if(!state.dining || typeof state.dining !== 'object') state.dining = {};
   /* 若陪餐完全未设置，填充默认示例值，方便新用户/清空后看到效果 */
@@ -2889,7 +2947,7 @@ function currentPeriodIndex(){
   }
   return -1;
 }
-function schedPeriodType(i){ const p = state.sched.periods[i]||''; const tt = state.timetable[i]||{}; return (tt.type==='break' || p==='午休' || p==='晚托') ? 'break' : 'class'; }
+function schedPeriodType(i){ const p = state.sched.periods[i]||''; const tt = state.timetable[i]||{}; return (tt.type && tt.type!=='class') ? 'break' : ((p==='午休'||p==='晚托') ? 'break' : 'class'); }
 function renderSchedSwapBanner(){
   const d = todayWeekday();
   if(d<1||d>5){ const el=$('#schedSwapBanner'); if(el) el.innerHTML=''; return; }
@@ -2933,9 +2991,10 @@ function renderSched(){
   let body = '';
   state.sched.periods.forEach((p,i) => {
     const tt = state.timetable[i] || {};
-    const isBreak = tt.type === 'break' || p==='午休' || p==='晚托';
+    const isBreak = (tt.type && tt.type!=='class') || p==='午休' || p==='晚托';
     const rng = tt.start && tt.end ? tt.start + '–' + tt.end : '';
-    const lbl = /^第.+节$/.test(p) ? esc(p.replace('第','').replace('节','')) + '节课' : esc(p);
+    const shortName = p.replace('·眼保健操','').replace('课间·','');
+    const lbl = /^第.+节$/.test(p) ? esc(p.replace('第','').replace('节','')) + '节课' : esc(shortName);
     const rowCls = i===np ? ' now-row' : '';
     let row = '<tr class="'+rowCls.trim()+'"><th style="font-size:.72rem;">' + lbl + (rng ? '<br><span style="font-weight:400;font-size:.56rem;color:var(--text-3);letter-spacing:0;">' + rng + '</span>' : '') + '</th>';
     for(let d=1; d<=5; d++){
@@ -2958,6 +3017,7 @@ function renderSched(){
       if(isBreak){
         const isNoon = p.indexOf('午休') > -1;
         const isAfterSchool = p.indexOf('晚托') > -1;
+        const typeTag = tt.type==='exercise' ? '<span class="break-tag ex">运动时间</span>' : tt.type==='rest' ? '<span class="break-tag rest">休息时间</span>' : tt.type==='break' ? '<span class="break-tag brk">课间</span>' : '';
         let extra = (rng ? '<span class="break-time">' + rng + '</span>' : '');
         if(isAfterSchool && cell){
           extra += '<span class="subj-name" style="font-size:.7rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
@@ -2966,7 +3026,7 @@ function renderSched(){
           extra += '<span class="subj-name" style="font-size:.7rem;margin-top:1px;">'+esc(cell.s||'')+'</span>';
           if(cell.t) extra += '<span class="subj-teacher" style="font-size:.6rem;">'+esc(cell.t)+'</span>';
         }
-        inner = '<span class="break-lbl">' + esc(p) + '</span>' + extra;
+        inner = '<span class="break-lbl">' + esc(p) + '</span>' + typeTag + extra;
       } else if(cell){
         inner = '<span class="subj-name">'+esc(cell.s)+'</span>' +
                 (cell.c?'<span class="subj-room">'+esc(cell.c)+'</span>':'') +
@@ -3057,6 +3117,74 @@ function clearSchedConfirm(){
   if(!confirm('确定清空基础课表和所有周的换课调整吗？此操作不可撤销。')) return;
   state.sched.grid = {}; state.sched.weeks = {}; save(); renderAll(); showToast('课表已清空');
 }
+/* ================= 导入课表（周课表） ================= */
+function parseSchedCell(s){
+  s = (s||'').trim();
+  if(!s) return null;
+  let t = '', c = '';
+  const parts = s.split(/[\/／]/);
+  let main = parts[0].trim();
+  if(parts[1]) t = parts[1].trim();
+  const m = main.match(/[（(]([^（）()]+)[）)]/);
+  if(m){ c = m[1].trim(); main = main.replace(m[0],'').trim(); }
+  const subj = main.split(/[\s·・、]+/)[0].trim();
+  if(!subj) return null;
+  const o = {s:subj};
+  if(c) o.c = c;
+  if(t) o.t = t;
+  return o;
+}
+function openImportSched(){
+  openModal('导入课表（周课表）', `
+    <div class="muted mb8" style="line-height:1.9;">
+      从 Excel 复制整片课表区域，粘贴到下方（首行可写「周一 周二 周三 周四 周五」表头，可省略）。<br>
+      每行对应一个<b>节次</b>（按当前作息顺序：第1节 → 第2节 → 大课间 → … → 第7节），每列对应周一~周五。<br>
+      单元格写法：<b>科目</b>（可加 <b>班级</b>如「语文 三(1)」、<b>老师</b>用斜杠「语文/洪文婷」）。<br>
+      <span style="color:var(--danger);">⚠ 只导入「上课」节次，大课间 / 午休 / 课间等会自动跳过。</span>
+    </div>
+    <div class="form-item"><label>粘贴课表（5 列：周一~周五）</label><textarea id="schedImportText" style="min-height:170px;" placeholder="第1节	语文	数学	语文	语文	数学&#10;第2节	语文	语文	数学	语文	语文&#10;大课间&#10;第3节	道法	语文	语文	综合	语文&#10;第4节	美术	语文	语文	音乐	语文"></textarea></div>
+    <div class="muted" style="font-size:.78rem;">提示：Excel 中直接 Ctrl+C 复制表格，再 Ctrl+V 粘贴到上面即可；也可保存为 .csv 后复制文本。</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn" onclick="importSched()">导入到周课表</button>
+    </div>`);
+}
+function importSched(){
+  const ta = $('#schedImportText');
+  const text = ta ? ta.value.trim() : '';
+  if(!text){ showToast('请先粘贴课表内容'); return; }
+  const rawRows = text.split(/\r?\n/).map(l => l.trim()).filter(l => l);
+  if(!rawRows.length){ showToast('没有可导入的数据'); return; }
+  /* 检测表头行：含 3 个以上「周X」则视为表头并跳过 */
+  const dayKw = /周\s*([一二三四五])/;
+  const hdr = rawRows[0].split(/[\t,，]+/).map(x => x.trim());
+  const dayCount = hdr.filter(h => dayKw.test(h)).length;
+  let rows = dayCount >= 3 ? rawRows.slice(1) : rawRows;
+  let filled = 0;
+  rows.forEach((line, ri) => {
+    const cells = line.split(/[\t,，]+/).map(x => x.trim());
+    let pIdx = -1;
+    if(cells[0] && (dayKw.test(cells[0]) === false) && /^第.+节$|午休|大课间|课间|运动|休息/.test(cells[0])){
+      pIdx = state.sched.periods.indexOf(cells[0]);
+      cells.shift();
+    }
+    if(pIdx < 0) pIdx = ri;
+    const pName = state.sched.periods[pIdx];
+    if(pName === undefined) return;
+    const tt = state.timetable[pIdx] || {};
+    if(tt.type && tt.type !== 'class') return; /* 跳过休息 / 运动 / 课间行 */
+    for(let d = 1; d <= 5; d++){
+      const cellTxt = cells[d-1];
+      if(!cellTxt) continue;
+      const cc = parseSchedCell(cellTxt);
+      if(cc){ state.sched.grid[d + '-' + (pIdx+1)] = cc; filled++; }
+    }
+  });
+  if(!filled){ showToast('未识别到可导入的课程，请检查格式'); return; }
+  state.demo = false;
+  save(); closeModal(); renderAll();
+  showToast('已导入 ' + filled + ' 节课到周课表');
+}
 
 /* ================= 作息时间表 ================= */
 let ttParsed = null;
@@ -3064,10 +3192,12 @@ function renderTT(){
   const el = $('#ttList');
   if(!el) return;
   el.innerHTML = state.timetable.length ? state.timetable.map((r, i) => {
-    const isBreak = r.type === 'break';
+    const tag = r.type==='exercise' ? '<span class="tag tag-ex">运动时间</span>' : r.type==='rest' ? '<span class="tag tag-rest">休息时间</span>' : r.type==='break' ? '<span class="tag tag-brk">课间</span>' : '';
+    const iconBg = r.type==='exercise' ? '#EAF0FF;color:#4F5FBF' : r.type==='rest' ? '#E8F8F0;color:#1E9E5A' : r.type==='break' ? '#FFF3E6;color:#C2410C' : 'var(--primary-weak);color:var(--primary-dark)';
+    const idxLbl = r.type==='class' ? (r.name.replace('第','').replace('节','') || (i+1)) : ttEmoji(r.name);
     return '<div class="mat-item">' +
-      '<div class="mat-icon" style="background:' + (isBreak ? '#fff7ed;color:#c2410c;' : 'var(--primary-weak);color:var(--primary-dark);') + '"><b style="font-size:.82rem;">' + (isBreak ? ttEmoji(r.name) : esc(r.name.replace('第','').replace('节','')) || (i+1)) + '</b></div>' +
-      '<div style="flex:1"><div class="mat-name">' + esc(r.name) + (isBreak ? ' <span class="tag tag-orange">休息</span>' : '') + '</div>' +
+      '<div class="mat-icon" style="background:' + iconBg + '"><b style="font-size:.82rem;">' + esc(idxLbl) + '</b></div>' +
+      '<div style="flex:1"><div class="mat-name">' + esc(r.name) + ' ' + tag + '</div>' +
       '<div class="mat-meta">' + (r.start && r.end ? r.start + ' – ' + r.end : '时间未设置') + '</div></div>' +
       '<div style="display:flex;gap:2px;flex-shrink:0;">' +
       '<button class="btn-text btn-sm" onclick="ttMove(' + i + ',-1)" title="上移">↑</button>' +
@@ -3076,7 +3206,7 @@ function renderTT(){
       '<button class="btn-text btn-sm" style="color:var(--danger);" onclick="ttDel(' + i + ')">删除</button>' +
       '</div></div>';
   }).join('') : '<div class="empty-tip">还没有时段，点击「添加时段」逐条录入，或用「粘贴文本导入」一次生成</div>';
-  const n = state.timetable.filter(r => r.type !== 'break').length;
+  const n = state.timetable.filter(r => r.type === 'class').length;
   $('#ttInfo').textContent = '共 ' + state.timetable.length + ' 个时段 · ' + n + ' 个上课节次';
 }
 function openTTEdit(i){
@@ -3089,8 +3219,10 @@ function openTTEdit(i){
     </div>
     <div class="form-item" style="margin-top:8px;"><label>类型</label>
       <select id="ttType">
-        <option value="class"${r.type !== 'break' ? ' selected' : ''}>上课时段（课表里占一行格子）</option>
-        <option value="break"${r.type === 'break' ? ' selected' : ''}>休息时段（如午休、大课间、晚托）</option>
+        <option value="class"${(!r.type || r.type==='class') ? ' selected' : ''}>上课时段（课表里占一行格子）</option>
+        <option value="exercise"${r.type==='exercise' ? ' selected' : ''}>运动时间（大课间 / 体育活动）</option>
+        <option value="rest"${r.type==='rest' ? ' selected' : ''}>休息时间（午休 / 午餐 / 午间休息）</option>
+        <option value="break"${r.type==='break' ? ' selected' : ''}>课间（眼保健操等）</option>
       </select></div>
     <div class="muted" style="margin-top:8px;font-size:.78rem;line-height:1.7;">保存后周课表的节次与时间显示会自动同步；同名节次上已排的课程会保留并自动对位。</div>
     <div class="modal-actions">
