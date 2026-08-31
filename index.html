@@ -436,6 +436,17 @@ svg{flex-shrink:0;}
 .sched-board{background:linear-gradient(180deg, rgba(var(--primary-rgb),.05), rgba(var(--primary-rgb),.015));border:1px solid var(--border);border-radius:16px;padding:14px 14px 12px;margin-top:2px;}
 .sched-grid{display:flex;gap:10px;align-items:flex-start;overflow-x:auto;justify-content:flex-start;padding:4px 2px 8px;max-width:1320px;margin:0 auto;}
 .sched-col{flex:1 1 0;min-width:98px;display:flex;flex-direction:column;gap:7px;}
+.sched-daytabs{display:none;}
+@media(max-width:700px){
+  .sched-daytabs{display:flex;gap:6px;margin:2px 0 10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .sched-daytabs::-webkit-scrollbar{display:none;}
+  .sched-daytabs .sdt{flex:1 0 auto;min-width:52px;padding:8px 4px;border:1px solid var(--border);background:#fff;border-radius:10px;font-size:.8rem;font-weight:700;color:var(--text-3);transition:all .15s;cursor:pointer;}
+  .sched-daytabs .sdt.active{color:#fff;background:var(--primary);border-color:var(--primary);box-shadow:0 4px 12px -4px rgba(var(--primary-rgb),.5);}
+  .sched-daytabs .sdt.today:not(.active){border-color:var(--primary);color:var(--primary);}
+  .sched-grid.mobile{overflow:visible;max-width:100%;}
+  .sched-grid.mobile .sched-col{min-width:0;width:100%;}
+  .sched-grid.mobile .sched-col-head{display:none;}
+}
 .sched-col.sched-axis{display:none;}
 .sched-col.sched-col-fri{flex:1 1 0;min-width:118px;background:linear-gradient(180deg, rgba(var(--primary-rgb),.06), rgba(var(--primary-rgb),.02));border-radius:14px;padding:6px 4px;box-shadow:inset 0 0 0 1px rgba(var(--primary-rgb),.18);}
 .sched-col-head{font-size:.8rem;font-weight:800;color:var(--text-2);text-align:center;padding:8px 4px;letter-spacing:.5px;position:sticky;top:0;z-index:2;background:rgba(var(--primary-rgb),.09);border-radius:12px;margin-bottom:3px;}
@@ -3715,6 +3726,8 @@ function renderSchedNow(){
   const el=$('#schedNow');
   if(el) el.innerHTML = '<span class="pulse"></span>' + esc(txt);
 }
+let schedMDay = (function(){ const w=todayWeekday(); return (w>=1&&w<=5)?w:1; })();
+function setSchedMDay(d){ schedMDay = d; renderSched(); }
 function renderSched(){
   renderWeekBar();
   const cw = currentWeekNum();
@@ -3726,6 +3739,8 @@ function renderSched(){
   const periods = state.sched.periods;
   const fris = state.sched.fridayPeriods;
   const dayNames = {1:'周一',2:'周二',3:'周三',4:'周四',5:'周五'};
+  const isMobileView = window.innerWidth <= 700;
+  const renderDays = isMobileView ? [schedMDay] : [1,2,3,4,5];
   /* 构建单日一列（周五列独立、自带时间标签，可与周一至周四错开） */
   function dayCol(d){
     const isFri = d===5;
@@ -3802,8 +3817,13 @@ function renderSched(){
     return '<div class="sched-col' + (isFri?' sched-col-fri':'') + '"><div class="sched-col-head'+(isToday?' today-col':'')+'">'+dayNames[d]+(isFri?' · 单独作息':'')+'</div>' + cells + '</div>';
   }
   /* 时间不再单列展示，每格下方已标注时段起止时间（见 dayCol） */
-  const cols = [1,2,3,4,5].map(dayCol).join('');
-  $('#schedTable').innerHTML = '<div class="sched-grid">' + cols + '</div>';
+  const dayTabs = isMobileView ? (
+    '<div class="sched-daytabs">' +
+    [1,2,3,4,5].map(d => '<button class="sdt'+(d===schedMDay?' active':'')+((isThisWeek&&d===wd)?' today':'')+'" onclick="setSchedMDay('+d+')">'+dayNames[d]+'</button>').join('') +
+    '</div>'
+  ) : '';
+  const cols = renderDays.map(dayCol).join('');
+  $('#schedTable').innerHTML = dayTabs + '<div class="sched-grid'+(isMobileView?' mobile':'')+'">' + cols + '</div>';
   const filled = Object.keys(state.sched.grid).length + Object.keys(state.sched.fridayGrid).length;
   const adj = Object.keys(wkGrid).length;
   $('#schedInfo').textContent = '已排 ' + filled + ' 节课' + (adj ? ' · 本周 ' + adj + ' 处调整' : '');
