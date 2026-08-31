@@ -1225,7 +1225,7 @@ body::after{
       <button class="side-btn" onclick="doImport()" title="从JSON备份恢复数据">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V3M12 3L7.5 7.5M12 3L16.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         导入恢复</button>
-      <button class="side-btn" onclick="openSyncModal()" title="开启后自动备份并多设备同步">
+      <button class="side-btn" onclick="doSyncNow()" title="一键同步所有设备数据">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 18C4.8 18 3 16.2 3 14C3 11.9 4.6 10.3 6.7 10.1C7.2 7.5 9.4 5.5 12 5.5C14.8 5.5 17.1 7.6 17.3 10.3C19.3 10.6 20.8 12.2 20.8 14C20.8 16.2 19 18 16.8 18H7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
         云端同步</button>
     </div>
@@ -1253,7 +1253,7 @@ body::after{
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V3M12 3L7.5 7.5M12 3L16.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19C4 20.1 4.9 21 6 21H18C19.1 21 20 20.1 20 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <span class="btn-label">导入恢复</span>
       </button>
-      <button class="btn-ghost" id="btnSync" title="云端同步" onclick="openSyncModal()">
+      <button class="btn-ghost" id="btnSync" title="一键云端同步" onclick="doSyncNow()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 18C4.8 18 3 16.2 3 14C3 11.9 4.6 10.3 6.7 10.1C7.2 7.5 9.4 5.5 12 5.5C14.8 5.5 17.1 7.6 17.3 10.3C19.3 10.6 20.8 12.2 20.8 14C20.8 16.2 19 18 16.8 18H7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
         <span class="btn-label">同步</span>
       </button>
@@ -4812,6 +4812,12 @@ async function syncInit(){
   if(!syncEnabled()){ setSyncStatus('云端同步：未开启', ''); return; }
   setSyncStatus('正在同步…', 'busy');
   try{ await doSyncPull(); renderAll(); }catch(e){ setSyncStatus('同步异常：' + (e.message||e).toString().slice(0,30), 'err'); }
+}
+async function doSyncNow(){
+  if(!syncEnabled()){ openSyncModal(); return; }
+  setSyncStatus('正在同步…','busy');
+  try{ await doSyncPull(); await doSyncPush(); renderAll(); showToast('已同步到所有设备'); }
+  catch(e){ setSyncStatus('同步失败：' + (e.message||e).toString().slice(0,40), 'err'); }
 }
 async function ensureRepo(){
   const c = getSyncCfg();
