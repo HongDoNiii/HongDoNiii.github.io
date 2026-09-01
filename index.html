@@ -881,6 +881,9 @@ table.data tr:last-child td{border-bottom:none;}
 
 /* ============ 学生信息：清晰表格 + 资料卡 ============ */
 .stu-table{width:100%;border-collapse:collapse;}
+.stu-cb{width:36px;text-align:center;padding-left:6px;padding-right:6px;}
+.stu-table td.stu-cb,.stu-table th.stu-cb{text-align:center;}
+.stu-check{width:16px;height:16px;cursor:pointer;accent-color:#3b82f6;}
 .stu-table th{font-size:.72rem;font-weight:600;color:var(--text-2);padding:11px 10px;background:var(--bg);border-bottom:1.5px solid var(--border-strong);text-align:left;white-space:nowrap;}
 .stu-table td{padding:11px 10px;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle;cursor:pointer;transition:background .12s;white-space:nowrap;}
 .stu-table td:nth-child(6){white-space:normal;}
@@ -1360,6 +1363,8 @@ body::after{
           <button class="btn btn-sm btn-text" id="btnLoadDemoStu">加载 30 人示例</button>
           <button class="btn btn-sm" onclick="openStudentModal()">添加学生</button>
           <button class="btn btn-sm btn-outline" onclick="openImportStudents()">Excel/批量导入</button>
+          <button class="btn btn-sm btn-outline" onclick="delChecked()">删除选中</button>
+          <button class="btn btn-sm btn-danger" onclick="clearAllStudents()">清空全部</button>
         </div>
         <div class="muted mb8">点击任意一行查看 / 编辑个人资料卡。若列表为空，点击右上角「加载 30 人示例」一键体验。</div>
         <div class="table-wrap"><table class="data stu-table" id="stuTable"></table></div>
@@ -2043,7 +2048,7 @@ function migrateState(){
   if(!state.sched.weeks) state.sched.weeks = {};
   if(!state.sched.startDate) state.sched.startDate = mondayStr();
   /* 阶段五：若学生列表为空，自动补回 30 人模拟学生，确保学生信息/成绩追踪等页面有内容可看 */
-  if(!state.students.length){
+  if(!state.students.length && !state._noAutoDemo){
     const demo = defaultState();
     state.students = demo.students;
     state.classTotal = state.students.length;
@@ -2500,7 +2505,7 @@ function loadDemoStudents(){
 }
 function renderStudents(){
   // 健壮兜底：只要学生列表为空，就自动从示例数据补回，避免任何情况下出现空白
-  if(!state.students.length){
+  if(!state.students.length && !state._noAutoDemo){
     const demo = defaultState();
     state.students = demo.students;
     state.classTotal = state.students.length;
@@ -2518,6 +2523,7 @@ function renderStudents(){
       : '<span class="stu-mini-av">' + esc((s.name||'?').charAt(0)) + '</span>';
     const tag = (s.remark || s.club || '');
     return '<tr onclick="openStudentDetail(\'' + s.id + '\')">' +
+      '<td class="stu-cb"><input type="checkbox" class="stu-check" value="' + s.id + '" onclick="event.stopPropagation()"></td>' +
       '<td><span class="stu-name">' + av + '<span class="stu-name-txt">' + esc(s.name) + '</span></span></td>' +
       '<td class="stu-no">' + esc(s.no||'-') + '</td>' +
       '<td class="stu-gender">' + esc(s.gender||'-') + '</td>' +
@@ -2529,6 +2535,7 @@ function renderStudents(){
       '</tr>';
   }).join('');
   el.innerHTML = '<thead><tr>' +
+    '<th class="stu-cb"><input type="checkbox" id="stuCheckAll" title="全选" onclick="toggleStuCheckAll(this)"></th>' +
     '<th>姓名</th><th>学号</th><th>性别</th><th>家长电话</th><th>家长姓名</th><th>住址</th><th>职务/社团</th><th>放学</th>' +
     '</tr></thead><tbody>' + rows + '</tbody>';
 }
@@ -2942,6 +2949,42 @@ function delStudent(id){
   if(state.activities) state.activities.forEach(a => a.members = a.members.filter(m=>m!==id));
   if(state.conflicts) state.conflicts = state.conflicts.filter(c=>c.a!==id && c.b!==id);
   state.exams.forEach(e => delete e.scores[id]);
+  save(); renderAll();
+}
+function toggleStuCheckAll(el){
+  document.querySelectorAll('#stuTable .stu-check').forEach(cb => cb.checked = el.checked);
+}
+function delChecked(){
+  const ids = Array.from(document.querySelectorAll('#stuTable .stu-check:checked')).map(cb => cb.value);
+  if(!ids.length){ showToast('请先勾选要删除的学生'); return; }
+  delStudents(ids);
+}
+function delStudents(ids){
+  if(!ids || !ids.length) return;
+  if(!confirm('确定删除选中的 ' + ids.length + ' 名学生吗？相关成绩、座位、值日数据将一并移除。')) return;
+  const set = new Set(ids);
+  state.students = state.students.filter(x => !set.has(x.id));
+  state.seat.order = state.seat.order.filter(x => !set.has(x));
+  state.duty.groups.forEach(g => g.members = g.members.filter(m => !set.has(m)));
+  if(state.duty.even) state.duty.even.forEach(g => g.members = g.members.filter(m => !set.has(m)));
+  if(state.duty.next) state.duty.next.forEach(g => g.members = g.members.filter(m => !set.has(m)));
+  if(state.activities) state.activities.forEach(a => a.members = a.members.filter(m => !set.has(m)));
+  if(state.conflicts) state.conflicts = state.conflicts.filter(c => !set.has(c.a) && !set.has(c.b));
+  state.exams.forEach(e => ids.forEach(id => delete e.scores[id]));
+  save(); renderAll();
+}
+function clearAllStudents(){
+  if(!state.students.length){ showToast('学生列表已经是空的'); return; }
+  if(!confirm('确定清空全部 ' + state.students.length + ' 名学生吗？\n此操作不可恢复，相关成绩、座位、值日数据将一并移除。\n建议先点左侧栏「导出备份」留底。')) return;
+  state.students = [];
+  state.seat.order = [];
+  state.duty.groups.forEach(g => g.members = []);
+  if(state.duty.even) state.duty.even.forEach(g => g.members = []);
+  if(state.duty.next) state.duty.next.forEach(g => g.members = []);
+  if(state.activities) state.activities.forEach(a => a.members = []);
+  if(state.conflicts) state.conflicts = [];
+  state.exams.forEach(e => e.scores = {});
+  state._noAutoDemo = true;
   save(); renderAll();
 }
 let pendingXlsx = null;
