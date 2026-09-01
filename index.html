@@ -894,6 +894,16 @@ table.data tr:last-child td{border-bottom:none;}
 .cb-name{font-weight:600;color:var(--text-1);}
 .cb-club{color:var(--primary-dark);font-size:.74rem;}
 .cb-empty{color:var(--text-3);text-align:center;font-size:.85rem;padding:8px 0;}
+/* 社团周看板——按星期组织的三列明细表 */
+.cb-table-wrap{overflow-x:auto;margin-top:2px;}
+.cb-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:.86rem;}
+.cb-table th{background:var(--primary-weak);color:var(--primary-darker);font-weight:600;text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;}
+.cb-table td{padding:8px 14px;border-bottom:1px solid var(--border);color:var(--text-1);}
+.cb-table tbody tr:last-child td{border-bottom:none;}
+.cb-table tbody tr:hover td{background:#F2F6F8;}
+.cb-td-day{font-weight:600;color:var(--primary-dark);white-space:nowrap;}
+.cb-td-name{font-weight:500;}
+.cb-td-club{color:var(--primary-dark);}
 .cb-uns{margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 14px;}
 .cb-uns-title{font-size:.8rem;color:#c2410c;font-weight:600;margin-bottom:8px;}
 .cb-uns-list{display:flex;flex-wrap:wrap;gap:8px;}
@@ -2997,13 +3007,14 @@ function renderClubBoard(){
     board.innerHTML = '<div class="empty-tip">还没有学生登记社团。在「学生信息」里编辑学生、填写「参加社团」即可在此按星期显示。</div>';
     return;
   }
-  const cols = days.map(d => {
-    const list = clubStudents.filter(s => Array.isArray(s.clubDays) && s.clubDays.includes(d));
-    const rows = list.length ? list.map(s =>
-      '<div class="cb-item"><span class="cb-name">'+esc(s.name)+'</span><span class="cb-club">'+esc(s.club)+'</span></div>'
-    ).join('') : '<div class="cb-empty">—</div>';
-    return '<div class="cb-col"><div class="cb-day">'+dn[d]+'</div>'+rows+'</div>';
-  }).join('');
+  const rows = [];
+  days.forEach(d => {
+    clubStudents.forEach(s => {
+      if(Array.isArray(s.clubDays) && s.clubDays.includes(d)){
+        rows.push('<tr><td class="cb-td-day">'+dn[d]+'</td><td class="cb-td-name">'+esc(s.name)+'</td><td class="cb-td-club">'+esc(s.club)+'</td></tr>');
+      }
+    });
+  });
   const unscheduled = clubStudents.filter(s => !Array.isArray(s.clubDays) || !s.clubDays.length);
   let uns = '';
   if(unscheduled.length){
@@ -3012,7 +3023,9 @@ function renderClubBoard(){
         '<span class="cb-item"><span class="cb-name">'+esc(s.name)+'</span><span class="cb-club">'+esc(s.club)+'</span></span>'
       ).join('') + '</div></div>';
   }
-  board.innerHTML = '<div class="cb-grid">'+cols+'</div>'+uns;
+  board.innerHTML = '<div class="cb-table-wrap"><table class="cb-table"><thead><tr><th>星期</th><th>学生名称</th><th>社团名称</th></tr></thead><tbody>' +
+    (rows.length ? rows.join('') : '<tr><td colspan="3" class="cb-empty">本周暂无社团排期</td></tr>') +
+    '</tbody></table></div>' + uns;
 }
 function delStudent(id){
   const s = state.students.find(x=>x.id===id);
