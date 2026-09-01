@@ -886,6 +886,25 @@ table.data tr:last-child td{border-bottom:none;}
 .stu-check{width:16px;height:16px;cursor:pointer;accent-color:#3b82f6;}
 .stu-table th{font-size:.72rem;font-weight:600;color:var(--text-2);padding:11px 10px;background:var(--bg);border-bottom:1.5px solid var(--border-strong);text-align:left;white-space:nowrap;}
 .stu-table td{padding:11px 10px;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle;cursor:pointer;transition:background .12s;white-space:nowrap;}
+/* 社团周看板 */
+.cb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.cb-col{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;min-height:80px;display:flex;flex-direction:column;gap:7px;}
+.cb-day{font-weight:700;font-size:.85rem;color:var(--primary-dark);text-align:center;padding-bottom:6px;border-bottom:1px dashed var(--border-strong);margin-bottom:2px;}
+.cb-item{display:flex;flex-direction:column;gap:1px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 9px;font-size:.8rem;}
+.cb-name{font-weight:600;color:var(--text-1);}
+.cb-club{color:var(--primary-dark);font-size:.74rem;}
+.cb-empty{color:var(--text-3);text-align:center;font-size:.85rem;padding:8px 0;}
+.cb-uns{margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 14px;}
+.cb-uns-title{font-size:.8rem;color:#c2410c;font-weight:600;margin-bottom:8px;}
+.cb-uns-list{display:flex;flex-wrap:wrap;gap:8px;}
+.cb-uns .cb-item{background:#fff;border-color:#fed7aa;}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:.82rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:5px 11px;cursor:pointer;user-select:none;transition:all .12s;}
+.chip input{accent-color:#3b82f6;margin:0;}
+.chip:has(input:checked){background:var(--primary-weak);border-color:var(--primary-weak-2);color:var(--primary-darker);font-weight:600;}
+@media(max-width:760px){
+  .cb-grid{grid-template-columns:repeat(2,1fr);}
+}
 .stu-table td:nth-child(6){white-space:normal;}
 .stu-table td:nth-child(7),.stu-table td:nth-child(8){text-align:center;}
 .stu-table tr:hover td{background:#F2F6F8;}
@@ -1363,11 +1382,13 @@ body::after{
           <button class="btn btn-sm btn-text" id="btnLoadDemoStu">加载 30 人示例</button>
           <button class="btn btn-sm" onclick="openStudentModal()">添加学生</button>
           <button class="btn btn-sm btn-outline" onclick="openImportStudents()">Excel/批量导入</button>
+          <button class="btn btn-sm btn-outline" id="btnClubBoard" onclick="toggleStuBoard()">📅 社团周看板</button>
           <button class="btn btn-sm btn-outline" onclick="delChecked()">删除选中</button>
           <button class="btn btn-sm btn-danger" onclick="clearAllStudents()">清空全部</button>
         </div>
         <div class="muted mb8">点击任意一行查看 / 编辑个人资料卡。若列表为空，点击右上角「加载 30 人示例」一键体验。</div>
         <div class="table-wrap"><table class="data stu-table" id="stuTable"></table></div>
+        <div id="clubBoard" class="hidden"></div>
       </div>
     </div>
 
@@ -1999,6 +2020,16 @@ try{
   state = raw ? JSON.parse(raw) : defaultState();
 }catch(e){ state = defaultState(); }
 /* 老版本数据迁移：补齐按周课表所需字段（不丢已有数据） */
+/* 学生社团活动星期：根据名字 hash 分配 1-2 个星期，作为未设置时的合理默认（范围 1-5，不超 2 天） */
+function guessClubDays(name){
+  let h = 0; const str = name || '';
+  for(let i=0;i<str.length;i++) h = (h*31 + str.charCodeAt(i)) >>> 0;
+  const a = 1 + (h % 5);
+  let b = 1 + ((h >> 3) % 5);
+  if(b === a) b = (a % 5) + 1;
+  const set = [a, b];
+  return set.filter((v,i)=>set.indexOf(v)===i);
+}
 function migrateState(){
   if(!Array.isArray(state.students)) state.students = [];
   if(!Array.isArray(state.todos)) state.todos = [];
@@ -2100,6 +2131,9 @@ function migrateState(){
     state.students.forEach(s => {
       if(s && s.careSeg === undefined) s.careSeg = (s.care === true) ? '2' : '';
       if(s && s.care === undefined) s.care = !!s.careSeg;
+      /* 社团活动星期：旧数据补空数组；有社团但未排星期则按名字分配默认 */
+      if(s && !Array.isArray(s.clubDays)) s.clubDays = [];
+      if(s && s.club && !s.clubDays.length) s.clubDays = guessClubDays(s.name);
     });
   }
   if(!state.ttGrade) state.ttGrade = '三年级';
@@ -2505,6 +2539,7 @@ function loadDemoStudents(){
   save(); renderAll(); showToast('已加载 30 人示例数据');
 }
 function renderStudents(){
+  if(stuBoardMode === 'clubboard'){ renderClubBoard(); return; }
   // 健壮兜底：只要学生列表为空，就自动从示例数据补回，避免任何情况下出现空白
   if(!state.students.length && !state._noAutoDemo){
     const demo = defaultState();
@@ -2874,6 +2909,9 @@ function openStudentModal(id){
       <div class="form-item" style="max-width:140px;"><label>出生日期</label><input id="mBirth" value="${s?esc(s.birth||''):''}" placeholder="YYYY-MM-DD"></div>
       <div class="form-item" style="max-width:90px;"><label>民族</label><input id="mNation" value="${s?esc(s.nation||''):''}" placeholder="汉"></div>
       <div class="form-item"><label>参加社团</label><input id="mClub" value="${s?esc(s.club||''):''}" placeholder="如：美术社"></div>
+      <div class="form-item" style="flex:1 1 100%;"><label>社团活动星期（用于「社团周看板」按星期显示，可多选）</label>
+        <div id="mClubDays" class="chip-group">${(function(){const dn={1:'周一',2:'周二',3:'周三',4:'周四',5:'周五'};return [1,2,3,4,5].map(d=>'<label class="chip"><input type="checkbox" value="'+d+'" '+((s&&Array.isArray(s.clubDays)&&s.clubDays.includes(d))?'checked':'')+'> '+dn[d]+'</label>').join('');})()}</div>
+      </div>
     </div>
     <div class="form-row">
       <div class="form-item"><label>备注（职务等）</label><input id="mRemark" value="${s?esc(s.remark||''):''}" placeholder="如：班长"></div>
@@ -2931,6 +2969,7 @@ function saveStudent(id){
     address:$('#mAddress').value.trim(), parentJob:$('#mJob').value.trim(),
     birth:$('#mBirth').value.trim(), nation:$('#mNation').value.trim(),
     club:$('#mClub').value.trim(), remark:$('#mRemark').value.trim(),
+    clubDays: Array.from(document.querySelectorAll('#mClubDays input:checked')).map(c=>+c.value),
     role:$('#mRole').value.trim(),
     careSeg:$('#mCareSeg').value, care: !!$('#mCareSeg').value,
     photo: editingPhoto || ''
@@ -2938,6 +2977,42 @@ function saveStudent(id){
   if(id){ const t = state.students.find(x=>x.id===id); if(t) Object.assign(t, data); }
   else { const stu = {id:uid(), ...data}; state.students.push(stu); if(!state.seat.order.includes(stu.id)) state.seat.order.push(stu.id); }
   save(); closeModal(); editingPhoto = ''; renderAll(); showToast('已保存');
+}
+let stuBoardMode = 'list';
+function toggleStuBoard(){
+  stuBoardMode = (stuBoardMode === 'clubboard') ? 'list' : 'clubboard';
+  const btn = document.getElementById('btnClubBoard');
+  if(btn) btn.textContent = (stuBoardMode === 'clubboard') ? '📋 返回名单' : '📅 社团周看板';
+  renderStudents();
+}
+function renderClubBoard(){
+  const stuTable = document.getElementById('stuTable');
+  const board = document.getElementById('clubBoard');
+  if(stuTable) stuTable.classList.add('hidden');
+  if(board) board.classList.remove('hidden');
+  const days = [1,2,3,4,5];
+  const dn = {1:'周一',2:'周二',3:'周三',4:'周四',5:'周五'};
+  const clubStudents = state.students.filter(s => s.club);
+  if(!clubStudents.length){
+    board.innerHTML = '<div class="empty-tip">还没有学生登记社团。在「学生信息」里编辑学生、填写「参加社团」即可在此按星期显示。</div>';
+    return;
+  }
+  const cols = days.map(d => {
+    const list = clubStudents.filter(s => Array.isArray(s.clubDays) && s.clubDays.includes(d));
+    const rows = list.length ? list.map(s =>
+      '<div class="cb-item"><span class="cb-name">'+esc(s.name)+'</span><span class="cb-club">'+esc(s.club)+'</span></div>'
+    ).join('') : '<div class="cb-empty">—</div>';
+    return '<div class="cb-col"><div class="cb-day">'+dn[d]+'</div>'+rows+'</div>';
+  }).join('');
+  const unscheduled = clubStudents.filter(s => !Array.isArray(s.clubDays) || !s.clubDays.length);
+  let uns = '';
+  if(unscheduled.length){
+    uns = '<div class="cb-uns"><div class="cb-uns-title">⚠️ 以下社团尚未排星期（在学生资料卡设置「社团活动星期」后会自动归入对应日期）</div>' +
+      '<div class="cb-uns-list">' + unscheduled.map(s =>
+        '<span class="cb-item"><span class="cb-name">'+esc(s.name)+'</span><span class="cb-club">'+esc(s.club)+'</span></span>'
+      ).join('') + '</div></div>';
+  }
+  board.innerHTML = '<div class="cb-grid">'+cols+'</div>'+uns;
 }
 function delStudent(id){
   const s = state.students.find(x=>x.id===id);
