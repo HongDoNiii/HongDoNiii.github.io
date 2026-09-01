@@ -4328,10 +4328,12 @@ function saveExam(){
   save(); closeModal(); renderExams();
 }
 function renderTrend(){
-  const sid = $('#trendStudent').value;
+  const sel = $('#trendStudent');
+  const sid = sel ? sel.value : '';
   const area = $('#trendArea');
-  if(!sid){ area.innerHTML = '<div class="empty-tip">请先在「学生信息」中添加学生</div>'; return; }
+  if(!sid){ if(area) area.innerHTML = '<div class="empty-tip">请先在「学生信息」中添加学生</div>'; return; }
   const stu = state.students.find(s=>s.id===sid);
+  if(!stu){ if(sel){ sel.value = state.students[0] ? state.students[0].id : ''; } renderTrend(); return; }
   const data = state.exams.map(e => ({name:e.name, score:e.scores[sid]}));
   const valid = data.filter(d=>d.score!=null);
   if(!valid.length){ area.innerHTML = '<div class="empty-tip">「' + esc(stu.name) + '」暂无成绩记录</div>'; return; }
@@ -4369,6 +4371,7 @@ function renderTrend(){
 }
 function genComment(sid){
   const stu = state.students.find(s=>s.id===sid);
+  if(!stu) return '该学生不存在或已被删除，无法生成评语。';
   const data = state.exams.map(e => e.scores[sid]).filter(x=>x!=null);
   if(data.length===0) return '暂无成绩数据。';
   const name = stu.name;
