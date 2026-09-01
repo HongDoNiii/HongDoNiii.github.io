@@ -3071,7 +3071,7 @@ function renderClubBoard(){
   const dn = {1:'周一',2:'周二',3:'周三',4:'周四',5:'周五'};
   const clubStudents = state.students.filter(s => s.club);
   if(!clubStudents.length){
-    board.innerHTML = '<div class="empty-tip">还没有学生登记社团。在「学生信息」里编辑学生、填写「参加社团」即可在此按星期显示。</div>';
+    board.innerHTML = '<div class="empty-tip">还没有学生登记社团。<br>点击上方「📋 返回名单」可查看学生名单；编辑学生填写「参加社团」后，这里会按星期显示。</div>';
     return;
   }
   const PALETTE = [
@@ -4874,7 +4874,12 @@ $('#fileImport').addEventListener('change', function(){
       const data = JSON.parse(r.result);
       if(!data.students || !data.todos){ showToast('文件格式不正确'); return; }
       if(confirm('导入将覆盖当前全部数据，确定继续吗？建议先导出一份当前数据备份。')){
-        state = data; migrateState(); viewWeek = currentWeekNum(); save(); renderAll(); showToast('数据恢复成功');
+        state = data; migrateState(); viewWeek = currentWeekNum();
+        /* 导入后强制回到学生名单视图，避免用户误以为学生没导入 */
+        stuBoardMode = 'list';
+        const btn = document.getElementById('btnClubBoard');
+        if(btn) btn.textContent = '📅 社团周看板';
+        save(); renderAll(); showToast('数据恢复成功');
       }
     }catch(e){ showToast('文件解析失败，请确认是本工作台导出的 JSON'); }
   };
