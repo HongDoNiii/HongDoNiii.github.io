@@ -904,6 +904,12 @@ table.data tr:last-child td{border-bottom:none;}
 .cb-td-day{font-weight:600;color:var(--primary-dark);white-space:nowrap;}
 .cb-td-name{font-weight:500;}
 .cb-td-club{color:var(--primary-dark);}
+/* 社团色块：周次横排成列，每个社团一个色块，成员竖向显示 */
+.cb-block{background:var(--bc,#fff);border:1px solid var(--bc-bd,#ddd);border-radius:8px;padding:6px 9px;margin-bottom:7px;}
+.cb-block-title{font-weight:700;font-size:.8rem;color:var(--bc-tx,#333);margin-bottom:3px;display:flex;align-items:center;gap:4px;}
+.cb-note{font-weight:500;font-size:.66rem;opacity:.75;}
+.cb-block-members{display:flex;flex-direction:column;gap:1px;}
+.cb-member{font-size:.78rem;color:var(--bc-tx,#333);line-height:1.4;}
 .cb-uns{margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 14px;}
 .cb-uns-title{font-size:.8rem;color:#c2410c;font-weight:600;margin-bottom:8px;}
 .cb-uns-list{display:flex;flex-wrap:wrap;gap:8px;}
@@ -3007,25 +3013,44 @@ function renderClubBoard(){
     board.innerHTML = '<div class="empty-tip">还没有学生登记社团。在「学生信息」里编辑学生、填写「参加社团」即可在此按星期显示。</div>';
     return;
   }
-  const rows = [];
-  days.forEach(d => {
-    clubStudents.forEach(s => {
-      if(Array.isArray(s.clubDays) && s.clubDays.includes(d)){
-        rows.push('<tr><td class="cb-td-day">'+dn[d]+'</td><td class="cb-td-name">'+esc(s.name)+'</td><td class="cb-td-club">'+esc(s.club)+'</td></tr>');
-      }
-    });
-  });
+  const PALETTE = [
+    {bg:'#EDE9FE',bd:'#A78BFA',tx:'#5B21B6'},
+    {bg:'#DBEAFE',bd:'#60A5FA',tx:'#1E40AF'},
+    {bg:'#FEF3C7',bd:'#FBBF24',tx:'#92400E'},
+    {bg:'#FCE7F3',bd:'#F472B6',tx:'#9D174D'},
+    {bg:'#D1FAE5',bd:'#34D399',tx:'#065F46'},
+    {bg:'#FEE2E2',bd:'#F87171',tx:'#991B1B'},
+    {bg:'#E0F2FE',bd:'#38BDF8',tx:'#075985'},
+    {bg:'#F1F5F9',bd:'#94A3B8',tx:'#334155'}
+  ];
+  const clubs = [...new Set(clubStudents.map(s => s.club).filter(Boolean))].sort();
+  const colorMap = {};
+  clubs.forEach((c, i) => { colorMap[c] = PALETTE[i % PALETTE.length]; });
+  const block = (club, members, note) => {
+    const ms = members.map(s => '<div class="cb-member">'+esc(s.name)+'</div>').join('');
+    const c = colorMap[club];
+    return '<div class="cb-block" style="--bc:'+c.bg+';--bc-bd:'+c.bd+';--bc-tx:'+c.tx+'">'+
+      '<div class="cb-block-title">'+esc(club)+(note?' <span class="cb-note">'+note+'</span>':'')+'</div>'+
+      '<div class="cb-block-members">'+ms+'</div></div>';
+  };
+  const cols = days.map(d => {
+    const list = clubStudents.filter(s => Array.isArray(s.clubDays) && s.clubDays.includes(d));
+    if(!list.length) return '<div class="cb-col"><div class="cb-day">'+dn[d]+'</div><div class="cb-empty">—</div></div>';
+    const byClub = {};
+    list.forEach(s => { (byClub[s.club] = byClub[s.club] || []).push(s); });
+    const blocks = Object.keys(byClub).sort().map(c => block(c, byClub[c], ''));
+    return '<div class="cb-col"><div class="cb-day">'+dn[d]+'</div>'+blocks.join('')+'</div>';
+  }).join('');
   const unscheduled = clubStudents.filter(s => !Array.isArray(s.clubDays) || !s.clubDays.length);
   let uns = '';
   if(unscheduled.length){
+    const byClub = {};
+    unscheduled.forEach(s => { (byClub[s.club] = byClub[s.club] || []).push(s); });
+    const blocks = Object.keys(byClub).sort().map(c => block(c, byClub[c], '未排星期'));
     uns = '<div class="cb-uns"><div class="cb-uns-title">⚠️ 以下社团尚未排星期（在学生资料卡设置「社团活动星期」后会自动归入对应日期）</div>' +
-      '<div class="cb-uns-list">' + unscheduled.map(s =>
-        '<span class="cb-item"><span class="cb-name">'+esc(s.name)+'</span><span class="cb-club">'+esc(s.club)+'</span></span>'
-      ).join('') + '</div></div>';
+      '<div class="cb-uns-list">'+blocks.join('')+'</div></div>';
   }
-  board.innerHTML = '<div class="cb-table-wrap"><table class="cb-table"><thead><tr><th>星期</th><th>学生名称</th><th>社团名称</th></tr></thead><tbody>' +
-    (rows.length ? rows.join('') : '<tr><td colspan="3" class="cb-empty">本周暂无社团排期</td></tr>') +
-    '</tbody></table></div>' + uns;
+  board.innerHTML = '<div class="cb-grid">'+cols+'</div>'+uns;
 }
 function delStudent(id){
   const s = state.students.find(x=>x.id===id);
