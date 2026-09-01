@@ -1041,6 +1041,67 @@ html{font-size:clamp(14.5px, 4.5vw, 18px);}
   table.data{display:block;width:100%;overflow-x:auto;white-space:nowrap;}
   .duty-grid{display:block;width:100%;overflow-x:auto;}
   textarea,input,select{font-size:16px;}
+
+  /* ===== 移动端首页视觉优化 ===== */
+  /* 顶栏更清爽 */
+  .app-header{background:linear-gradient(90deg,rgba(var(--primary-rgb),.82),rgba(var(--primary-rgb),.68));box-shadow:0 6px 18px -10px rgba(var(--primary-rgb),.45);}
+  .header-inner{padding:10px 14px;gap:9px;}
+  .logo{width:34px;height:34px;border-radius:10px;}
+  .app-title{font-size:.95rem;}
+  .app-sub{font-size:.62rem;}
+  .header-actions{gap:6px;}
+  .btn-ghost{padding:7px 9px;min-height:34px;border-radius:9px;font-size:.78rem;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.1);}
+  .btn-ghost svg{width:15px;height:15px;}
+  #btnImport{display:none;}
+
+  /* 提示条更柔和紧凑 */
+  .notice{padding:9px 12px;border-radius:12px;font-size:.78rem;margin-bottom:10px;gap:8px;line-height:1.45;}
+  .notice-amber{background:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%);border-color:#FDE68A;color:#92400E;}
+  .notice-red{background:linear-gradient(135deg,#FEF2F2 0%,#FEE2E2 100%);border-color:#FECACA;color:#B91C1C;}
+  .notice-blue{background:linear-gradient(135deg,#F0F9FF 0%,#E0F2FE 100%);border-color:#BAE6FD;color:#0E7490;}
+
+  /* 速记更紧凑 */
+  .quick-note-top{margin-bottom:12px;}
+  .qnt-input-wrap{padding:8px 12px;border-radius:12px;border-top-width:2px;}
+  .qnt-input{font-size:15px;min-height:22px;}
+  .qnt-btn{min-height:42px;padding:0 16px;font-size:.9rem;}
+
+  /* Hero 卡片减弱动画、更清新 */
+  .home-hero{padding:18px 20px;border-radius:18px;margin-bottom:12px;background:linear-gradient(120deg,#F3F6FF 0%,#FAF3FF 50%,#FFF7F3 100%);border:1px solid var(--primary-weak-2);box-shadow:0 12px 30px -18px rgba(var(--primary-rgb),.28);animation:none;}
+  .home-hero::after,.home-hero::before{opacity:.25;}
+  .home-hero-greet{font-size:1.35rem;color:var(--primary-darker);}
+  .home-hero-sub{font-size:.82rem;color:var(--primary-dark);opacity:.9;}
+  .home-hero-date{font-size:.78rem;}
+  .home-hero-date .d{font-size:1rem;}
+  .hero-chip{padding:4px 10px;font-size:.72rem;}
+  .hero-chip b{font-size:.8rem;}
+  .hero-tip{font-size:.72rem;padding:5px 10px;border-radius:10px;max-width:100%;}
+
+  /* 倒计时条更紧凑 */
+  .today-top{gap:12px;margin-bottom:12px;}
+  .countdown-strip{padding:12px 16px;border-radius:16px;gap:12px;min-width:0;box-shadow:0 10px 24px -18px rgba(var(--primary-rgb),.25);animation:none;}
+  .countdown-strip .cds-label{font-size:.75rem;padding-right:10px;}
+  .countdown-strip .cd-item b{font-size:.85rem;}
+  .cd-row{gap:10px;}
+
+  /* 统计条更精致 */
+  .stats-strip{gap:8px;margin-bottom:12px;}
+  .stat-pill{padding:12px 6px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#FFFFFF 0%,var(--bg) 100%);border:1px solid var(--border);box-shadow:0 4px 12px -6px rgba(31,46,40,.06);}
+  .stat-pill .v{font-size:1.25rem;color:var(--primary);}
+  .stat-pill .k{font-size:.6rem;margin-top:3px;}
+
+  /* 底部导航更圆润 */
+  .mobile-nav{padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:4px;background:rgba(255,255,255,.94);border-top:1px solid rgba(var(--primary-rgb),.12);box-shadow:0 -6px 22px rgba(15,23,42,.05);}
+  .mobile-nav a{min-width:56px;min-height:48px;padding:5px 6px;border-radius:14px;font-size:.62rem;gap:3px;}
+  .mobile-nav a svg{width:20px;height:20px;}
+  .mobile-nav a.active{background:linear-gradient(180deg,var(--primary-weak) 0%,rgba(255,255,255,0) 100%);color:var(--primary);box-shadow:inset 0 0 0 1px rgba(var(--primary-rgb),.15);}
+
+  /* 卡片间距收紧 */
+  .container{padding:14px 14px 86px;}
+  .home-grid{gap:12px;margin-bottom:12px;}
+  .home-card{padding:14px 16px;border-radius:16px;}
+  .home-card-title{font-size:.95rem;margin-bottom:10px;}
+
   .footer{margin-bottom:8px;}
 }
 @media(max-width:380px){
@@ -2255,12 +2316,12 @@ function renderToday(){
   const healthy = totalStu - absList.length;
   const doneToday = state.todos.filter(x => x.done && x.date === t).length;
   $('#statsStrip').innerHTML =
-    '<div class="stat-pill"><div class="v">' + totalStu + '</div><div class="k">班级人数</div></div>' +
-    '<div class="stat-pill"><div class="v">' + boys + '</div><div class="k">男生</div></div>' +
-    '<div class="stat-pill"><div class="v">' + girls + '</div><div class="k">女生</div></div>' +
-    '<div class="stat-pill"><div class="v">' + healthy + '</div><div class="k">今日出勤</div></div>' +
-    '<div class="stat-pill"><div class="v">' + pend.length + '</div><div class="k">待办</div></div>' +
-    '<div class="stat-pill"><div class="v">' + doneToday + '</div><div class="k">已完成</div></div>';
+    '<div class="stat-pill"><div class="v">' + totalStu + '</div><div class="k">👥 班级人数</div></div>' +
+    '<div class="stat-pill"><div class="v">' + boys + '</div><div class="k">👦 男生</div></div>' +
+    '<div class="stat-pill"><div class="v">' + girls + '</div><div class="k">👧 女生</div></div>' +
+    '<div class="stat-pill"><div class="v">' + healthy + '</div><div class="k">✅ 今日出勤</div></div>' +
+    '<div class="stat-pill"><div class="v">' + pend.length + '</div><div class="k">📝 待办</div></div>' +
+    '<div class="stat-pill"><div class="v">' + doneToday + '</div><div class="k">🎉 已完成</div></div>';
 
   // 今日待办（显示前 6 条）
   const allTodayTodos = state.todos.filter(x => !x.done && x.date <= t).sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
